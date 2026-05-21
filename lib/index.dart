@@ -1,0 +1,118 @@
+// Export pages
+export '/auth/quickartsplash_screen/quickartsplash_screen_widget.dart'
+    show QuickartsplashScreenWidget;
+export '/auth/intro_screen/intro_screen_widget.dart' show IntroScreenWidget;
+export '/auth/login_on_board_screen/login_on_board_screen_widget.dart'
+    show LoginOnBoardScreenWidget;
+export '/auth/sign_up_screen/sign_up_screen_widget.dart'
+    show SignUpScreenWidget;
+export '/auth/login_screen/login_screen_widget.dart' show LoginScreenWidget;
+export '/auth/otp_screen/otp_screen_widget.dart' show OtpScreenWidget;
+export '/homepage_quickkart/dashboard_screen/dashboard_screen_widget.dart'
+    show DashboardScreenWidget;
+export '/product_detailsand_categories/top_deals_screen/top_deals_screen_widget.dart'
+    show TopDealsScreenWidget;
+export '/termaand_condition/termsand_condition/termsand_condition_widget.dart'
+    show TermsandConditionWidget;
+export '/address/address_list_screen/address_list_screen_widget.dart'
+    show AddressListScreenWidget;
+export '/address/add_address_screen/add_address_screen_widget.dart'
+    show AddAddressScreenWidget;
+export '/faq/faq/faq_widget.dart' show FaqWidget;
+export '/faq/faq2/faq2_widget.dart' show Faq2Widget;
+export '/profile_section/profile_page/profile_page_widget.dart'
+    show ProfilePageWidget;
+export '/product_detailsand_categories/repeat_orders/repeat_orders_widget.dart'
+    show RepeatOrdersWidget;
+export '/profile_section/edit_profile/edit_profile_widget.dart'
+    show EditProfileWidget;
+export '/product_detailsand_categories/favourites_screen/favourites_screen_widget.dart'
+    show FavouritesScreenWidget;
+export '/product_detailsand_categories/notify_products_list_screen/notify_products_list_screen_widget.dart'
+    show NotifyProductsListScreenWidget;
+export '/cart/daily_cart_screen/daily_cart_screen_widget.dart'
+    show DailyCartScreenWidget;
+export '/product_detailsand_categories/categories_screen/categories_screen_widget.dart'
+    show CategoriesScreenWidget;
+export '/product_detailsand_categories/search_product/search_screen/search_screen_widget.dart'
+    show SearchScreenWidget;
+export '/product_detailsand_categories/trending_products_screen/trending_products_screen_widget.dart'
+    show TrendingProductsScreenWidget;
+export '/product_detailsand_categories/additional_cat_screen/additional_cat_screen_widget.dart'
+    show AdditionalCatScreenWidget;
+export '/product_detailsand_categories/brand_list_screen/brand_list_screen_widget.dart'
+    show BrandListScreenWidget;
+export '/product_detailsand_categories/search_product/search_result_screen/search_result_screen_widget.dart'
+    show SearchResultScreenWidget;
+export '/product_detailsand_categories/search_product/search_product_screen/search_product_screen_widget.dart'
+    show SearchProductScreenWidget;
+export '/address/google_maps_redirect/google_maps_redirect_widget.dart'
+    show GoogleMapsRedirectWidget;
+export '/card_payment/wallet_screen/wallet_screen_widget.dart'
+    show WalletScreenWidget;
+export '/profile_section/contact_us_screen/contact_us_screen_widget.dart'
+    show ContactUsScreenWidget;
+export '/product_detailsand_categories/fresh_food_screen/fresh_food_screen_widget.dart'
+    show FreshFoodScreenWidget;
+export '/notifications/notifications_widget.dart' show NotificationsWidget;
+export '/card_payment/card_screen/card_screen_widget.dart'
+    show CardScreenWidget;
+export '/profile_section/edit_profile2/edit_profile2_widget.dart'
+    show EditProfile2Widget;
+export '/product_detailsand_categories/search_product/searchby_banner/searchby_banner_widget.dart'
+    show SearchbyBannerWidget;
+export '/order/cancel_order_screen/cancel_order_screen_widget.dart'
+    show CancelOrderScreenWidget;
+export '/product_detailsand_categories/sneaky_product_list_screen/sneaky_product_list_screen_widget.dart'
+    show SneakyProductListScreenWidget;
+export '/cart/couponsand_offers/couponsand_offers_widget.dart'
+    show CouponsandOffersWidget;
+export '/order/daily_orders/order_tracking_page/order_tracking_page_widget.dart'
+    show OrderTrackingPageWidget;
+export '/cart/order_success_fail_screen/order_success_fail_screen_widget.dart'
+    show OrderSuccessFailScreenWidget;
+export '/order/order_cancel_screen/order_cancel_screen_widget.dart'
+    show OrderCancelScreenWidget;
+export '/cart/cart_subscription_screen/cart_subscription_screen_widget.dart'
+    show CartSubscriptionScreenWidget;
+export '/cart/payment_screen/payment_screen_widget.dart'
+    show PaymentScreenWidget;
+export '/product_detailsand_categories/product_details_screen/product_details_screen_widget.dart'
+    show ProductDetailsScreenWidget;
+export '/note_i_o_s_notes/note_i_o_s_notes_widget.dart' show NoteIOSNotesWidget;
+export '/note_android_notes/note_android_notes_widget.dart'
+    show NoteAndroidNotesWidget;
+export '/product_detailsand_categories/brand_product_list_screen/brand_product_list_screen_widget.dart'
+    show BrandProductListScreenWidget;
+export '/rating_review/rating_order_screen/rating_order_screen_widget.dart'
+    show RatingOrderScreenWidget;
+export '/trial_pack/trial_product_cart_screen/trial_product_cart_screen_widget.dart'
+    show TrialProductCartScreenWidget;
+export '/trial_pack/trial_product_listing/trial_product_listing_widget.dart'
+    show TrialProductListingWidget;
+export '/rating_review/product_rating_reveiw_screen/product_rating_reveiw_screen_widget.dart'
+    show ProductRatingReveiwScreenWidget;
+export '/product_detailsand_categories/occasional_category/occasional_category_widget.dart'
+    show OccasionalCategoryWidget;
+export '/trial_pack/trial_packcategories/trial_packcategories_widget.dart'
+    show TrialPackcategoriesWidget;
+export '/order/daily_orders/all_orders_t_a_b_l_i_s_t/all_orders_t_a_b_l_i_s_t_widget.dart'
+    show AllOrdersTABLISTWidget;
+export '/order/subscription_screen/subscription_order_products/subscription_order_products_widget.dart'
+    show SubscriptionOrderProductsWidget;
+export '/pdf_view/pdf_view_widget.dart' show PdfViewWidget;
+export '/order/subscription_screen/subscription_order_products_info/subscription_order_products_info_widget.dart'
+    show SubscriptionOrderProductsInfoWidget;
+export '/product_detailsand_categories/sub_categories_screen/sub_categories_screen_widget.dart'
+    show SubCategoriesScreenWidget;
+export '/product_detailsand_categories/featured_category/featured_category_widget.dart'
+    show FeaturedCategoryWidget;
+export '/note_deeplinkflutterchanges/note_deeplinkflutterchanges_widget.dart'
+    show NoteDeeplinkflutterchangesWidget;
+export '/product_detailsand_categories/search_product/searchby_popup_banner/searchby_popup_banner_widget.dart'
+    show SearchbyPopupBannerWidget;
+export '/web_view_app/web_view_app_widget.dart' show WebViewAppWidget;
+export '/address/google_maps_redirect_copy/google_maps_redirect_copy_widget.dart'
+    show GoogleMapsRedirectCopyWidget;
+export '/cart/daily_cart_screen_copy/daily_cart_screen_copy_widget.dart'
+    show DailyCartScreenCopyWidget;

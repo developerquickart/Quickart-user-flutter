@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <string name="app_name">QuicKart</string>
+    <string name="facebook_app_id">1128688264494554</string>
+    <string name="facebook_client_token">e46ac63d0bdc22e222f07252bb8052fd</string>
+    <string name="fb_login_protocol_scheme">fb1128688264494554</string>
+
+</resources>

@@ -1,0 +1,140 @@
+import 'package:flutter/material.dart';
+import 'flutter_flow/flutter_flow_util.dart';
+
+abstract class FFAppConstants {
+  static const String baseURL = 'https://www.quickart.ae/quickart-2/';
+  static const Color indigoColor = Color(4281217406);
+  static const int appBarIconFont = 28;
+  static const Color yellowColor = Color(4294893361);
+  static const Color whiteColor = Color(4294967295);
+  static const Color blackColor666666 = Color(4284900966);
+  static const int appBartitleFont = 20;
+  static const Color NeutralBlack50Color = Color(4294309365);
+  static const Color blackColor0A0A0A = Color(4278848010);
+  static const String internetString =
+      'Internet Connection Not Available\nPlease Check Your Connection.....';
+  static const String errorOTP = 'Plese enter OTP';
+  static const String loginCheck = 'go to register details page';
+  static const Color lightBlack7a7a7a = Color(4286216826);
+  static const Color primaryYellowColor = Color(4294702048);
+  static const Color textBlack = Color(4282203453);
+  static const Color primaryPurpleE4D8F5 = Color(4292533232);
+  static const Color lightGreen = Color(4290962102);
+  static const Color GreenColorBorder = Color(4292667864);
+  static const Color darkGreen = Color(4280585284);
+  static const Color primaryPurple2 = Color(4282335607);
+  static const Color primaryPurpleF6F2FC = Color(4294374140);
+  static const Color primaryPurple7E65AC = Color(4282335607);
+  static const Color purpleBDA6E1 = Color(4290619105);
+  static const Color neutralBlack8F8F8F = Color(4287598479);
+  static const Color neutralWhiteF5F5F5 = Color(4294309365);
+  static const Color primaryPurple937AC1 = Color(4287855297);
+  static const Color neutralBlackE0E0E0 = Color(4292927712);
+  static const Color neutralBlack3D3D3D = Color(4282203453);
+  static const Color green86DF67 = Color(4280585284);
+  static const Color appBarColor = Color(4294967295);
+  static const String isFavourite = 'true';
+  static const double percentageCheck = 0.0;
+  static const String checkTrueCondition = 'yes';
+  static const String orderStatusCompleted = 'Completed';
+  static const String orderStatusCancelled = 'Cancelled';
+  static const String orderStatusInProgress = 'In Progress';
+  static const Color primaryPurple695294 = Color(4282335607);
+  static const Color green68DF3F = Color(4280585284);
+  static const Color yellowDDC66C = Color(4292724332);
+  static const Color redDF3F56 = Color(4292820822);
+  static const String noImage = '';
+  static const Color bgColor = Color(4294703359);
+  static const Color lightGreyColor = Color(4294045933);
+  static const Color greenDCE9D8 = Color(4292667864);
+  static const Color green44AC20 = Color(4280585284);
+  static const Color greyF4F6F4 = Color(4294244084);
+  static const Color purpleF6F2FC = Color(4294374140);
+  static const Color purpleE4D8F5 = Color(4290888922);
+  static const Color purple7E65AC = Color(4282335607);
+  static const Color redE2B6BC = Color(4293047996);
+  static const Color redFEEEF0 = Color(4294897392);
+  static const String isActiveOrderStatus = 'Active';
+  static const String isInactiveOrderStatus = 'Inactive';
+  static const String isCancelledOrderStatus = 'Cancelled';
+  static const String isDelieveryCompleted = 'Complete';
+  static const String isDelieveryPending = 'Pending';
+  static const String isDelieveryPause = 'Paused';
+  static const String isDelieveryCancelled = 'Cancelled';
+  static const Color blackA3A3A3 = Color(4288914339);
+  static const String isSubcribe = 'false';
+  static const String repeatDays = 'Please select repeat days';
+  static const String subscriptionDurationString =
+      'Please select subscription duration';
+  static const String StartDateofDelivery =
+      'Please select start date of delivery';
+  static const String timeSlotString = 'Please select time slot';
+  static const Color appBarIconandTitleColor = Color(4278848010);
+  static const Color gradientLightPurple = Color(3958175215);
+  static const Color gradientDarkPurple = Color(774995648);
+  static const String orderStatusPending = 'Pending';
+  static const String checkSubDate = 'checkSubDate';
+  static const String subscriptionDateMsg =
+      'You cannot pause delivery for past or current dates.';
+  static const String customersupportmail = 'customersupport@quickart.ae';
+  static const String customersupportphone = '+97142390322';
+  static const String orderStatusPause = 'Pause';
+  static const String orderStatusResume = 'Resume';
+  static const String userPhonenoVerification = 'Mobile No already registerd';
+  static const String userEmailVerification = 'User not found';
+  static const String orderStatusConfirm = 'Confirmed';
+  static const String orderStatusReadyForPickUp = 'Ready For Pick Up';
+  static const String orderStatusOutForDelivery = 'Out_For_Delivery';
+  static const String subscriptionOrderPause = 'My orders Pause';
+  static const String customersupportinstagram = 'quickartuae';
+  static const String customersupportfacebook = 'QuicKart.uae';
+  static const String customersupportlinkedin = 'QuicKart';
+  static const String customersupporttiktok = 'Will come back';
+  static const String instagram = 'fchdtryhdtyt';
+  static const String customersupportwhatsapp = 'Chat with us';
+  static const String allAvailability = 'all';
+  static const String quickAvailability = 'quick';
+  static const String subscriptionAvailability = 'subscription';
+  static const Color f1f0edbg = Color(4294045933);
+  static const Color green77ac43 = Color(4286032963);
+  static const String orderOutForDelivery = 'Out_For_Delivery';
+  static const String isCompletedOrderStatus = 'Completed';
+  static const String errorMessage = 'Internal Server Error';
+  static const String forcefullyUpdate = '0';
+  static const String appVersion = '1.0.20';
+  static const String appVersioniOS = '3.1';
+  static const String appVersionAndroid = '3.1';
+  static const Color textFieldBorderColor = Color(4292927712);
+  static const String isOrderConfirmed = 'Confirmed';
+  static const String productNotFound =
+      'Oops! It looks like we don\'t have that product right now.';
+  static const String weekRepeatMsg =
+      'Please select at least 2 repeat days for a 1 week subscription ';
+  static const String saveMsg = 'Freshness Awaits! Complete Your Order Now.';
+  static const String subscriptionDateCheckMsg =
+      'The subscription date you selected is in the past. Please choose another date.';
+  static const String updateWhatsNewText =
+      'UI improvements, added multiple functionalities . Experience optimized performance and relevant product suggestion for better browsing.';
+  static const String cartEmptyString =
+      'Your cart is waiting! Find something you love and add it to your cart.';
+  static const String notifyMe = 'false';
+  static const String stockNotify = '0';
+  static const Color notifyMeUnSelectedColor = Color(4292401368);
+  static const Color notifyMeSelectedColor = Color(4294957420);
+  static const String noStock = 'No more stock available';
+  static const int stockNotifyInt = 0;
+  static const double discountperdouble = 1.0;
+  static const int zeroValue = 0;
+  static const String statusAPI1 = '1';
+  static const Color navBarColor = Color(4287926416);
+  static const Color productBgClr = Color(4294046968);
+  static const Color calculatorColor = Color(4280585284);
+  static const Color redNotifyWish = Color(4294924643);
+  static const String checkStatus = '1';
+  static const Color greyBgd6d2d3 = Color(4292268755);
+  static const String unavailable = 'Currently unavailable';
+  static const String notified = 'Tap the bell to get notified';
+  static const String guestMsg =
+      'Only registered members can share their referral links.';
+  static const String orderStatusPaymentFailed = 'Payment_failed';
+}

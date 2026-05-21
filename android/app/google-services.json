@@ -1,0 +1,108 @@
+{
+  "project_info": {
+    "project_number": "616864050624",
+    "project_id": "quickart-customer",
+    "storage_bucket": "quickart-customer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616864050624:android:66c902fc47f9038db92c25",
+        "android_client_info": {
+          "package_name": "com.quickart.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616864050624-21ecqshjhs62ambcm70u9ui0sa09rjh1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quickart.customer",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "616864050624-dbd7hhv56lurmkelhbb5osfqdlv0m8c1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quickart.customer",
+            "certificate_hash": "3168da1947d7832b69450ced7e49c8d8c90bc880"
+          }
+        },
+        {
+          "client_id": "616864050624-esm3b11qn3oe2adocsgnjerf0mo0teef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADFo7zhqMoXkb9Ll6D-yD3mAYJ9nnU2ko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616864050624-22nc31ihl859ss4v6tdt58qki3iag3cg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "616864050624-1q390a7i45n6llcc8tatrqtm54v8fk1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quickart.customer",
+                "app_store_id": "1624846848"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616864050624:android:84b491e9ec023f69b92c25",
+        "android_client_info": {
+          "package_name": "com.quickartcustomer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616864050624-82hnf80c6fmujsqibv2n9ntnvd2tneid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quickartcustomer",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "616864050624-esm3b11qn3oe2adocsgnjerf0mo0teef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADFo7zhqMoXkb9Ll6D-yD3mAYJ9nnU2ko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616864050624-22nc31ihl859ss4v6tdt58qki3iag3cg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "616864050624-1q390a7i45n6llcc8tatrqtm54v8fk1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quickart.customer",
+                "app_store_id": "1624846848"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
