@@ -91,7 +91,7 @@ class _FreshFoodScreenWidgetState extends State<FreshFoodScreenWidget> {
             backgroundColor: FFAppConstants.appBarColor,
             automaticallyImplyLeading: false,
             title: Text(
-              'Fresh Picks',
+              'Subscription Products',
               style: FlutterFlowTheme.of(context).headlineMedium.override(
                     font: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w600,

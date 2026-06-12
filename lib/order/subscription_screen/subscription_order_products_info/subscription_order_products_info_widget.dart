@@ -277,7 +277,7 @@ class _SubscriptionOrderProductsInfoWidgetState
               centerTitle: false,
               elevation: 2.0,
             ),
-            body: SafeArea(
+             body: SafeArea(
               top: true,
               child: Stack(
                 children: [
@@ -340,7 +340,7 @@ class _SubscriptionOrderProductsInfoWidgetState
                                       //     ),
                                       //   }.withoutNulls,
                                       // );
-                                       context.pop(true);
+                                                         context.pop(true);
                                     },
                                     child: Icon(
                                       Icons.cancel_outlined,
@@ -1204,7 +1204,7 @@ class _SubscriptionOrderProductsInfoWidgetState
                         child: Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Container(
-                            width: MediaQuery.sizeOf(context).width * 0.9,
+                            width: MediaQuery.sizeOf(context).width * 0.93,
                             height: MediaQuery.sizeOf(context).height * 0.8,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
@@ -1337,7 +1337,7 @@ class _SubscriptionOrderProductsInfoWidgetState
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    15.0, 5.0, 15.0, 10.0),
+                                                    10.0, 5.0, 10.0, 10.0),
                                             child: Container(
                                               width: MediaQuery.sizeOf(context)
                                                       .width *
@@ -1349,7 +1349,7 @@ class _SubscriptionOrderProductsInfoWidgetState
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                        2.0, 2.0, 2.0, 2.0),
+                                                        0.0, 2.0, 0.0, 2.0),
                                                 child: Builder(
                                                   builder: (context) {
                                                     final resumeTimeSlot =
@@ -1370,7 +1370,7 @@ class _SubscriptionOrderProductsInfoWidgetState
                                                       gridDelegate:
                                                           SliverGridDelegateWithFixedCrossAxisCount(
                                                         crossAxisCount: 6,
-                                                        crossAxisSpacing: 8.0,
+                                                        crossAxisSpacing: 5.0,
                                                         mainAxisSpacing: 10.0,
                                                         childAspectRatio: 0.75,
                                                       ),

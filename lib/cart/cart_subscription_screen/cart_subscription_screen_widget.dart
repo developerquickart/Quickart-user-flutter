@@ -1461,57 +1461,90 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                   );
 
                                                                                                                   if ((_model.apiResultAddsubCart12?.succeeded ?? true)) {
-                                                                                                                    logFirebaseEvent('Button_update_app_state');
-                                                                                                                    FFAppState().subCartSavingAmount = QuickartGroup.addtosubcartCall.savingPrice(
-                                                                                                                      (_model.apiResultAddsubCart12?.jsonBody ?? ''),
-                                                                                                                    )!;
-                                                                                                                    FFAppState().subCartTotalPrice = QuickartGroup.addtosubcartCall.totalPrice(
-                                                                                                                      (_model.apiResultAddsubCart12?.jsonBody ?? ''),
-                                                                                                                    )!;
-                                                                                                                    FFAppState().subCartTotalItem = QuickartGroup.addtosubcartCall.totalItems(
-                                                                                                                      (_model.apiResultAddsubCart12?.jsonBody ?? ''),
-                                                                                                                    )!;
-                                                                                                                    FFAppState().refreshTrigger = true;
-                                                                                                                    safeSetState(() {});
-                                                                                                                    logFirebaseEvent('Button_refresh_database_request');
-                                                                                                                    safeSetState(() => _model.apiRequestCompleter = null);
-                                                                                                                    await _model.waitForApiRequestCompleted();
-                                                                                                                    logFirebaseEvent('Button_google_analytics_event');
-                                                                                                                    logFirebaseEvent(
-                                                                                                                      'Add To Sub Cart',
-                                                                                                                      parameters: {
-                                                                                                                        'Screen Name': 'Subscription Cart Screen',
-                                                                                                                        'API Name': 'Add To SubCart',
-                                                                                                                      },
-                                                                                                                    );
-                                                                                                                    logFirebaseEvent('Button_custom_action');
-                                                                                                                    await actions.facebookEventClass(
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.varient_id''',
-                                                                                                                      ).toString(),
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.product_name''',
-                                                                                                                      ).toString(),
-                                                                                                                      'subscription product',
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.price''',
-                                                                                                                      ),
-                                                                                                                      1,
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.mrp''',
-                                                                                                                      ),
-                                                                                                                      'add',
-                                                                                                                      FFAppState().emptyJson,
-                                                                                                                      'emptyjons',
-                                                                                                                      ' ',
-                                                                                                                      ' ',
-                                                                                                                      ' ',
-                                                                                                                      ' ',
-                                                                                                                    );
+                                                                                                                    if (FFAppConstants.statusAPI1 ==
+                                                                                                                        getJsonField(
+                                                                                                                          (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                          r'''$.status''',
+                                                                                                                        ).toString()) {
+                                                                                                                      logFirebaseEvent('Button_update_app_state');
+                                                                                                                      FFAppState().subCartSavingAmount = QuickartGroup.addtosubcartCall.savingPrice(
+                                                                                                                        (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                      )!;
+                                                                                                                      FFAppState().subCartTotalPrice = QuickartGroup.addtosubcartCall.totalPrice(
+                                                                                                                        (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                      )!;
+                                                                                                                      FFAppState().subCartTotalItem = QuickartGroup.addtosubcartCall.totalItems(
+                                                                                                                        (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                      )!;
+                                                                                                                      FFAppState().refreshTrigger = true;
+                                                                                                                      safeSetState(() {});
+                                                                                                                      logFirebaseEvent('Button_refresh_database_request');
+                                                                                                                      safeSetState(() => _model.apiRequestCompleter = null);
+                                                                                                                      await _model.waitForApiRequestCompleted();
+                                                                                                                      logFirebaseEvent('Button_google_analytics_event');
+                                                                                                                      logFirebaseEvent(
+                                                                                                                        'Add To Sub Cart',
+                                                                                                                        parameters: {
+                                                                                                                          'Screen Name': 'Subscription Cart Screen',
+                                                                                                                          'API Name': 'Add To SubCart',
+                                                                                                                        },
+                                                                                                                      );
+                                                                                                                      logFirebaseEvent('Button_custom_action');
+                                                                                                                      await actions.facebookEventClass(
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.varient_id''',
+                                                                                                                        ).toString(),
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.product_name''',
+                                                                                                                        ).toString(),
+                                                                                                                        'subscription product',
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.price''',
+                                                                                                                        ),
+                                                                                                                        1,
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.mrp''',
+                                                                                                                        ),
+                                                                                                                        'add',
+                                                                                                                        FFAppState().emptyJson,
+                                                                                                                        'emptyjons',
+                                                                                                                        ' ',
+                                                                                                                        ' ',
+                                                                                                                        ' ',
+                                                                                                                        ' ',
+                                                                                                                      );
+                                                                                                                    } else {
+                                                                                                                      logFirebaseEvent('Button_alert_dialog');
+                                                                                                                      await showDialog(
+                                                                                                                        context: context,
+                                                                                                                        builder: (dialogContext) {
+                                                                                                                          return Dialog(
+                                                                                                                            elevation: 0,
+                                                                                                                            insetPadding: EdgeInsets.zero,
+                                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                            child: GestureDetector(
+                                                                                                                              onTap: () {
+                                                                                                                                FocusScope.of(dialogContext).unfocus();
+                                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                              },
+                                                                                                                              child: CustomAlertDailogWidget(
+                                                                                                                                des: getJsonField(
+                                                                                                                                  (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                                  r'''$.message''',
+                                                                                                                                ).toString(),
+                                                                                                                                height: 120.0,
+                                                                                                                                title: ' ',
+                                                                                                                              ),
+                                                                                                                            ),
+                                                                                                                          );
+                                                                                                                        },
+                                                                                                                      );
+                                                                                                                    }
                                                                                                                   } else {
                                                                                                                     logFirebaseEvent('Button_show_snack_bar');
                                                                                                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -4539,7 +4572,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                               ),
                                                                                               color: FFAppConstants.neutralBlack3D3D3D,
-                                                                                              fontSize: 8.0,
+                                                                                              fontSize: 10.0,
                                                                                               letterSpacing: 0.0,
                                                                                               fontWeight: FontWeight.w600,
                                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
@@ -4609,7 +4642,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                 ),
                                                                                                 color: FFAppConstants.neutralBlack3D3D3D,
-                                                                                                fontSize: 8.0,
+                                                                                                fontSize: 10.0,
                                                                                                 letterSpacing: 0.0,
                                                                                                 fontWeight: FontWeight.w600,
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
@@ -4680,7 +4713,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                 ),
                                                                                                 color: FFAppConstants.neutralBlack3D3D3D,
-                                                                                                fontSize: 8.0,
+                                                                                                fontSize: 10.0,
                                                                                                 letterSpacing: 0.0,
                                                                                                 fontWeight: FontWeight.w600,
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,

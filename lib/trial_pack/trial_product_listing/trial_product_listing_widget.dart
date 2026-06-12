@@ -139,6 +139,7 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                   flexibleSpace: FlexibleSpaceBar(
                     title: Column(
                       mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
@@ -146,67 +147,78 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              FlutterFlowIconButton(
-                                borderColor: Colors.transparent,
-                                borderRadius: 30.0,
-                                borderWidth: 1.0,
-                                buttonSize: 46.0,
-                                icon: Icon(
-                                  Icons.chevron_left,
-                                  color: FFAppConstants.appBarIconandTitleColor,
-                                  size:
-                                      FFAppConstants.appBarIconFont.toDouble(),
-                                ),
-                                onPressed: () async {
-                                  logFirebaseEvent(
-                                      'TRIAL_PRODUCT_LISTING_chevron_left_ICN_O');
-                                  logFirebaseEvent('IconButton_navigate_to');
-
-                                  context.pushNamed(
-                                      TrialPackcategoriesWidget.routeName);
-
-                                  logFirebaseEvent(
-                                      'IconButton_update_app_state');
-                                  FFAppState().isCartShow = false;
-                                  safeSetState(() {});
-                                },
-                              ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0x9B14181B),
-                                  borderRadius: BorderRadius.circular(4.0),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(24.0),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      5.0, 0.0, 5.0, 0.0),
-                                  child: Text(
-                                    FFAppState().trialPackCategoryName,
-                                    textAlign: TextAlign.start,
-                                    style: FlutterFlowTheme.of(context)
-                                        .headlineMedium
-                                        .override(
-                                          font: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w600,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .headlineMedium
-                                                    .fontStyle,
-                                          ),
-                                          color: FFAppConstants.whiteColor,
-                                          fontSize: FFAppConstants
-                                              .appBartitleFont
-                                              .toDouble(),
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMedium
-                                                  .fontStyle,
-                                        ),
+                                child: FlutterFlowIconButton(
+                                  borderColor: Colors.transparent,
+                                  borderRadius: 30.0,
+                                  borderWidth: 1.0,
+                                  buttonSize: 46.0,
+                                  icon: Icon(
+                                    Icons.chevron_left,
+                                    color:
+                                        FFAppConstants.appBarIconandTitleColor,
+                                    size: FFAppConstants.appBarIconFont
+                                        .toDouble(),
                                   ),
+                                  onPressed: () async {
+                                    logFirebaseEvent(
+                                        'TRIAL_PRODUCT_LISTING_chevron_left_ICN_O');
+                                    logFirebaseEvent('IconButton_navigate_to');
+
+                                    context.pushNamed(
+                                        TrialPackcategoriesWidget.routeName);
+
+                                    logFirebaseEvent(
+                                        'IconButton_update_app_state');
+                                    FFAppState().isCartShow = false;
+                                    safeSetState(() {});
+                                  },
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        Align(
+                          alignment: AlignmentDirectional(0.0, -1.0),
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width * 1.0,
+                            height: 40.0,
+                            decoration: BoxDecoration(
+                              color: Color(0x9B14181B),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0),
+                              ),
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: Text(
+                                FFAppState().trialPackCategoryName,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: FFAppConstants.whiteColor,
+                                      fontSize: 15.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -222,6 +234,8 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                     ),
                     centerTitle: true,
                     expandedTitleScale: 1.0,
+                    titlePadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                   ),
                   elevation: 2.0,
                 )
@@ -682,7 +696,7 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                     ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          15.0, 15.0, 15.0, 0.0),
+                                          15.0, 10.0, 15.0, 0.0),
                                       child: Material(
                                         color: Colors.transparent,
                                         elevation: 1.0,
@@ -924,7 +938,7 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                                 ''),
                                                             r'''$.message''',
                                                           ).toString(),
-                                                          height: 140.0,
+                                                          height: 200.0,
                                                         ),
                                                       ),
                                                     );
@@ -1066,7 +1080,7 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                                   ''),
                                                               r'''$.message''',
                                                             ).toString(),
-                                                            height: 130.0,
+                                                            height: 200.0,
                                                           ),
                                                         ),
                                                       );

@@ -71,6 +71,12 @@ class VarientBotttomSheetModel
   ApiCallResponse? apiResultco1;
   // Stores action output result for [Backend Call - API (updatessubcart )] action in Button widget.
   ApiCallResponse? apiResultupdateSubCart4;
+  // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
+  bool? isInternet34;
+  // Stores action output result for [Backend Call - API (addtosubcart)] action in Container widget.
+  ApiCallResponse? apiResultco33;
+  // Stores action output result for [Backend Call - API (updatessubcart )] action in Container widget.
+  ApiCallResponse? apiResultupdateSubCart22;
   // Stores action output result for [Custom Action - checkInternetConnection] action in IconButton widget.
   bool? connnectivtyC;
   // Stores action output result for [Backend Call - API (addnotifyme)] action in IconButton widget.

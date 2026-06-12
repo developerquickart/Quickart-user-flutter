@@ -137,4 +137,6 @@ abstract class FFAppConstants {
   static const String guestMsg =
       'Only registered members can share their referral links.';
   static const String orderStatusPaymentFailed = 'Payment_failed';
+  static const String cancelOrdertext =
+      'Are you sure you want to cancel this order?';
 }

@@ -2,7 +2,6 @@ import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/components/similar_pproduct/similar_pproduct_widget.dart';
-import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -1589,6 +1588,10 @@ class _ProductDetailsScreenWidgetState
                                                     productVarientsItem,
                                                     r'''$.varient_id''',
                                                   );
+                                                  _model.selectedVariantIndx =
+                                                      productVarientsIndex;
+                                                  _model.selectedVariantDataJson =
+                                                      productVarientsItem;
                                                   safeSetState(() {});
                                                   logFirebaseEvent(
                                                       'Container_refresh_database_request');
@@ -1971,7 +1974,7 @@ class _ProductDetailsScreenWidgetState
                                         return Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Builder(
                                               builder: (context) {
@@ -2003,318 +2006,6 @@ class _ProductDetailsScreenWidgetState
                                                           MainAxisAlignment
                                                               .spaceEvenly,
                                                       children: [
-                                                        if ((FFAppConstants
-                                                                    .isSubcribe ==
-                                                                getJsonField(
-                                                                  productDetailsScreenProductDetailResponse
-                                                                      .jsonBody,
-                                                                  r'''$.detail.isSubscription''',
-                                                                ).toString()) &&
-                                                            (((getJsonField(
-                                                                      QuickartGroup
-                                                                          .productDetailCall
-                                                                          .productDetailData(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                      ),
-                                                                      r'''$.varients''',
-                                                                    ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                            as Iterable<
-                                                                                ProductCountStruct?>)
-                                                                        .withoutNulls
-                                                                        ?.length ==
-                                                                    1) &&
-                                                                ((getJsonField(
-                                                                      QuickartGroup
-                                                                          .productDetailCall
-                                                                          .productDetailData(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                      ),
-                                                                      r'''$.features''',
-                                                                    ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                            as Iterable<ProductCountStruct?>)
-                                                                        .withoutNulls
-                                                                        ?.length ==
-                                                                    0)))
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        12.0,
-                                                                        10.0,
-                                                                        10.0),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                logFirebaseEvent(
-                                                                    'PRODUCT_DETAILS_SCREEN_Container_7flipkw');
-                                                                if ((getJsonField(
-                                                                      QuickartGroup
-                                                                          .productDetailCall
-                                                                          .productDetailData(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                      ),
-                                                                      r'''$.varients''',
-                                                                    ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                            as Iterable<ProductCountStruct?>)
-                                                                        .withoutNulls
-                                                                        .length >=
-                                                                    2) {
-                                                                  logFirebaseEvent(
-                                                                      'Container_bottom_sheet');
-                                                                  await showModalBottomSheet(
-                                                                    isScrollControlled:
-                                                                        true,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    useSafeArea:
-                                                                        true,
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          FocusScope.of(context)
-                                                                              .unfocus();
-                                                                          FocusManager
-                                                                              .instance
-                                                                              .primaryFocus
-                                                                              ?.unfocus();
-                                                                        },
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              MediaQuery.viewInsetsOf(context),
-                                                                          child:
-                                                                              VarientBotttomSheetWidget(
-                                                                            productModel:
-                                                                                QuickartGroup.productDetailCall.productDetailData(
-                                                                              productDetailsScreenProductDetailResponse.jsonBody,
-                                                                            ),
-                                                                            cartType:
-                                                                                'subscription',
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ).then((value) =>
-                                                                      safeSetState(
-                                                                          () {}));
-                                                                } else {
-                                                                  logFirebaseEvent(
-                                                                      'Container_update_app_state');
-                                                                  FFAppState()
-                                                                          .isSubcribeCartVisible =
-                                                                      true;
-                                                                  FFAppState()
-                                                                          .isSunSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                          .isMonSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                          .isTueSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                          .isThuSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                          .isFriSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                          .isSatSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                          .isWedSelected =
-                                                                      false;
-                                                                  FFAppState()
-                                                                      .isWeekSelected = 0;
-                                                                  FFAppState()
-                                                                          .isDeliveryTimeSlotSelected =
-                                                                      'no';
-                                                                  safeSetState(
-                                                                      () {});
-                                                                  logFirebaseEvent(
-                                                                      'Container_haptic_feedback');
-                                                                  HapticFeedback
-                                                                      .mediumImpact();
-                                                                  logFirebaseEvent(
-                                                                      'Container_backend_call');
-                                                                  _model.apiResultWeek =
-                                                                      await QuickartGroup
-                                                                          .totaldeliveriesCall
-                                                                          .call();
-
-                                                                  if (!(_model
-                                                                          .apiResultWeek
-                                                                          ?.succeeded ??
-                                                                      true)) {
-                                                                    logFirebaseEvent(
-                                                                        'Container_show_snack_bar');
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(
-                                                                      SnackBar(
-                                                                        content:
-                                                                            Text(
-                                                                          getJsonField(
-                                                                            (_model.apiResultWeek?.jsonBody ??
-                                                                                ''),
-                                                                            r'''$.message''',
-                                                                          ).toString(),
-                                                                          style:
-                                                                              GoogleFonts.montserrat(
-                                                                            color:
-                                                                                FFAppConstants.indigoColor,
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
-                                                                            fontSize:
-                                                                                14.0,
-                                                                          ),
-                                                                        ),
-                                                                        duration:
-                                                                            Duration(milliseconds: 1300),
-                                                                        backgroundColor:
-                                                                            FFAppConstants.primaryPurpleE4D8F5,
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                }
-
-                                                                safeSetState(
-                                                                    () {});
-                                                              },
-                                                              child: Container(
-                                                                width: 200.0,
-                                                                height: 36.0,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: FFAppConstants
-                                                                      .darkGreen,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .only(
-                                                                    topLeft: Radius
-                                                                        .circular(
-                                                                            8.0),
-                                                                    topRight: Radius
-                                                                        .circular(
-                                                                            8.0),
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            8.0),
-                                                                    bottomRight:
-                                                                        Radius.circular(
-                                                                            8.0),
-                                                                  ),
-                                                                  border: Border
-                                                                      .all(
-                                                                    color: FFAppConstants
-                                                                        .green86DF67,
-                                                                    width: 1.0,
-                                                                  ),
-                                                                ),
-                                                                child: Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      RichText(
-                                                                    textScaler:
-                                                                        MediaQuery.of(context)
-                                                                            .textScaler,
-                                                                    text:
-                                                                        TextSpan(
-                                                                      children: [
-                                                                        TextSpan(
-                                                                          text:
-                                                                              'SUBSCRIBE ',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodySmall
-                                                                              .override(
-                                                                                font: GoogleFonts.montserrat(
-                                                                                  fontWeight: FontWeight.w600,
-                                                                                  fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                                ),
-                                                                                color: FFAppConstants.neutralWhiteF5F5F5,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                              ),
-                                                                        ),
-                                                                        TextSpan(
-                                                                          text:
-                                                                              () {
-                                                                            if (FFAppState().nullValue ==
-                                                                                getJsonField(
-                                                                                  productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                  r'''$.detail.percentage''',
-                                                                                ).toString()) {
-                                                                              return ' ';
-                                                                            } else if (FFAppState().qtyZeroCheck ==
-                                                                                getJsonField(
-                                                                                  productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                  r'''$.detail.percentage''',
-                                                                                )) {
-                                                                              return ' ';
-                                                                            } else {
-                                                                              return '& SAVE ${getJsonField(
-                                                                                productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                r'''$.detail.percentage''',
-                                                                              ).toString()}%';
-                                                                            }
-                                                                          }(),
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodySmall
-                                                                              .override(
-                                                                                font: GoogleFonts.montserrat(
-                                                                                  fontWeight: FontWeight.w600,
-                                                                                  fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                                ),
-                                                                                color: FFAppConstants.neutralWhiteF5F5F5,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                              ),
-                                                                        )
-                                                                      ],
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium
-                                                                          .override(
-                                                                            font:
-                                                                                GoogleFonts.readexPro(
-                                                                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                            ),
-                                                                            letterSpacing:
-                                                                                0.0,
-                                                                            fontWeight:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                            fontStyle:
-                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
                                                         Builder(
                                                           builder: (context) {
                                                             if ((getJsonField(
@@ -2327,139 +2018,133 @@ class _ProductDetailsScreenWidgetState
                                                                       r'''$.varients''',
                                                                     ) !=
                                                                     null) &&
-                                                                ((getJsonField(
-                                                                      QuickartGroup
-                                                                          .productDetailCall
-                                                                          .productDetailData(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                      ),
-                                                                      r'''$.varients''',
-                                                                    ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                            as Iterable<ProductCountStruct?>)
-                                                                        .withoutNulls
-                                                                        ?.length ==
-                                                                    1)) {
-                                                              return Visibility(
-                                                                visible: (FFAppConstants
-                                                                            .isSubcribe !=
+                                                                (FFAppState()
+                                                                        .qtyZeroCheck !=
+                                                                    functions.getItemQtyByIndex(
                                                                         getJsonField(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                          r'''$.detail.isSubscription''',
-                                                                        ).toString()) &&
-                                                                    (false ==
-                                                                        getJsonField(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                          r'''$.detail.is_offer_product''',
-                                                                        )),
-                                                                child: Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          12.0,
-                                                                          10.0,
-                                                                          10.0),
-                                                                  child:
-                                                                      InkWell(
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    focusColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    hoverColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    highlightColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    onTap:
-                                                                        () async {
-                                                                      logFirebaseEvent(
-                                                                          'PRODUCT_DETAILS_SCREEN_Container_n8y2nz4');
-                                                                      logFirebaseEvent(
-                                                                          'Container_navigate_to');
-
-                                                                      context.pushNamed(
-                                                                          CartSubscriptionScreenWidget
-                                                                              .routeName);
-
-                                                                      logFirebaseEvent(
-                                                                          'Container_update_app_state');
-                                                                      FFAppState()
-                                                                              .categoryName =
-                                                                          'sub';
-                                                                      safeSetState(
-                                                                          () {});
-                                                                      logFirebaseEvent(
-                                                                          'Container_custom_action');
-                                                                      await actions
-                                                                          .facebookEventClass(
-                                                                        FFAppState()
-                                                                            .userID,
-                                                                        ' ',
-                                                                        ' ',
-                                                                        FFAppState()
-                                                                            .cartTotalPrice,
-                                                                        FFAppState()
-                                                                            .cartTotalCount,
+                                                                          QuickartGroup
+                                                                              .productDetailCall
+                                                                              .productDetailData(
+                                                                            productDetailsScreenProductDetailResponse.jsonBody,
+                                                                          ),
+                                                                          r'''$.varients''',
+                                                                        ),
+                                                                        _model.selectedVariantIndx,
+                                                                        true))) {
+                                                              return Padding(
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
                                                                         0.0,
-                                                                        'cart',
-                                                                        FFAppState()
-                                                                            .emptyJson,
-                                                                        'subscription cart',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                      );
-                                                                      logFirebaseEvent(
-                                                                          'Container_google_analytics_event');
-                                                                      logFirebaseEvent(
-                                                                        'Navigation',
-                                                                        parameters: {
-                                                                          'Screen Name':
-                                                                              'Product Detail Screen',
-                                                                          'Navigate To':
-                                                                              'Subscription Cart Screen',
-                                                                        },
-                                                                      );
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          200.0,
-                                                                      height:
-                                                                          36.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: FFAppConstants
-                                                                            .darkGreen,
-                                                                        borderRadius:
-                                                                            BorderRadius.only(
-                                                                          topLeft:
-                                                                              Radius.circular(8.0),
-                                                                          topRight:
-                                                                              Radius.circular(8.0),
-                                                                          bottomLeft:
-                                                                              Radius.circular(8.0),
-                                                                          bottomRight:
-                                                                              Radius.circular(8.0),
-                                                                        ),
-                                                                        border:
-                                                                            Border.all(
-                                                                          color:
-                                                                              FFAppConstants.green86DF67,
-                                                                          width:
-                                                                              1.0,
-                                                                        ),
+                                                                        12.0,
+                                                                        0.0,
+                                                                        10.0),
+                                                                child: InkWell(
+                                                                  splashColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  focusColor: Colors
+                                                                      .transparent,
+                                                                  hoverColor: Colors
+                                                                      .transparent,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  onTap:
+                                                                      () async {
+                                                                    logFirebaseEvent(
+                                                                        'PRODUCT_DETAILS_SCREEN_Container_n8y2nz4');
+                                                                    logFirebaseEvent(
+                                                                        'Container_navigate_to');
+
+                                                                    context.pushNamed(
+                                                                        CartSubscriptionScreenWidget
+                                                                            .routeName);
+
+                                                                    logFirebaseEvent(
+                                                                        'Container_update_app_state');
+                                                                    FFAppState()
+                                                                            .categoryName =
+                                                                        'sub';
+                                                                    safeSetState(
+                                                                        () {});
+                                                                    logFirebaseEvent(
+                                                                        'Container_custom_action');
+                                                                    await actions
+                                                                        .facebookEventClass(
+                                                                      FFAppState()
+                                                                          .userID,
+                                                                      ' ',
+                                                                      ' ',
+                                                                      FFAppState()
+                                                                          .cartTotalPrice,
+                                                                      FFAppState()
+                                                                          .cartTotalCount,
+                                                                      0.0,
+                                                                      'cart',
+                                                                      FFAppState()
+                                                                          .emptyJson,
+                                                                      'subscription cart',
+                                                                      ' ',
+                                                                      ' ',
+                                                                      ' ',
+                                                                      ' ',
+                                                                    );
+                                                                    logFirebaseEvent(
+                                                                        'Container_google_analytics_event');
+                                                                    logFirebaseEvent(
+                                                                      'Navigation',
+                                                                      parameters: {
+                                                                        'Screen Name':
+                                                                            'Product Detail Screen',
+                                                                        'Navigate To':
+                                                                            'Subscription Cart Screen',
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    width: MediaQuery.sizeOf(context).width /
+                                                                            2 -
+                                                                        30,
+                                                                    height:
+                                                                        36.0,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FFAppConstants
+                                                                          .yellowColor,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .only(
+                                                                        topLeft:
+                                                                            Radius.circular(8.0),
+                                                                        topRight:
+                                                                            Radius.circular(8.0),
+                                                                        bottomLeft:
+                                                                            Radius.circular(8.0),
+                                                                        bottomRight:
+                                                                            Radius.circular(8.0),
                                                                       ),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: FFAppConstants
+                                                                            .yellowDDC66C,
+                                                                        width:
+                                                                            1.0,
+                                                                      ),
+                                                                    ),
+                                                                    child:
+                                                                        Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
                                                                       child:
-                                                                          Align(
-                                                                        alignment: AlignmentDirectional(
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            10.0,
                                                                             0.0,
+                                                                            10.0,
                                                                             0.0),
                                                                         child:
                                                                             RichText(
@@ -2475,7 +2160,7 @@ class _ProductDetailsScreenWidgetState
                                                                                         fontWeight: FontWeight.w600,
                                                                                         fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                       ),
-                                                                                      color: FFAppConstants.neutralWhiteF5F5F5,
+                                                                                      color: FFAppConstants.blackColor0A0A0A,
                                                                                       fontSize: 12.0,
                                                                                       letterSpacing: 0.0,
                                                                                       fontWeight: FontWeight.w600,
@@ -2507,7 +2192,7 @@ class _ProductDetailsScreenWidgetState
                                                                     .fromSTEB(
                                                                         0.0,
                                                                         12.0,
-                                                                        10.0,
+                                                                        0.0,
                                                                         10.0),
                                                                 child: InkWell(
                                                                   splashColor:
@@ -2524,61 +2209,45 @@ class _ProductDetailsScreenWidgetState
                                                                       () async {
                                                                     logFirebaseEvent(
                                                                         'PRODUCT_DETAILS_SCREEN_Container_qaxkcjv');
-                                                                    if ((getJsonField(
-                                                                          QuickartGroup
-                                                                              .productDetailCall
-                                                                              .productDetailData(
-                                                                            productDetailsScreenProductDetailResponse.jsonBody,
-                                                                          ),
-                                                                          r'''$.varients''',
-                                                                        ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                                as Iterable<ProductCountStruct?>)
-                                                                            .withoutNulls
-                                                                            .length >=
-                                                                        2) {
-                                                                      logFirebaseEvent(
-                                                                          'Container_bottom_sheet');
-                                                                      await showModalBottomSheet(
-                                                                        isScrollControlled:
-                                                                            true,
-                                                                        backgroundColor:
-                                                                            Colors.transparent,
-                                                                        useSafeArea:
-                                                                            true,
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              FocusScope.of(context).unfocus();
-                                                                              FocusManager.instance.primaryFocus?.unfocus();
-                                                                            },
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: MediaQuery.viewInsetsOf(context),
-                                                                              child: VarientBotttomSheetWidget(
-                                                                                productModel: QuickartGroup.productDetailCall.productDetailData(
-                                                                                  productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                ),
-                                                                                cartType: 'subscription',
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        },
-                                                                      ).then((value) =>
-                                                                          safeSetState(
-                                                                              () {}));
+                                                                    logFirebaseEvent(
+                                                                        'Container_haptic_feedback');
+                                                                    HapticFeedback
+                                                                        .mediumImpact();
+                                                                    logFirebaseEvent(
+                                                                        'Container_update_page_state');
+                                                                    _model.isLoaderIndicator =
+                                                                        true;
+                                                                    safeSetState(
+                                                                        () {});
+                                                                    logFirebaseEvent(
+                                                                        'Container_backend_call');
+                                                                    _model.apiResultWeek1 =
+                                                                        await QuickartGroup
+                                                                            .totaldeliveriesCall
+                                                                            .call();
 
+                                                                    if ((_model
+                                                                            .apiResultWeek1
+                                                                            ?.succeeded ??
+                                                                        true)) {
                                                                       logFirebaseEvent(
-                                                                          'Container_refresh_database_request');
-                                                                      safeSetState(() =>
-                                                                          _model.apiRequestCompleter =
-                                                                              null);
-                                                                      await _model
-                                                                          .waitForApiRequestCompleted();
-                                                                    } else {
+                                                                          'Container_update_page_state');
+                                                                      _model.weekModelJson =
+                                                                          getJsonField(
+                                                                        (_model.apiResultWeek1?.jsonBody ??
+                                                                            ''),
+                                                                        r'''$.data''',
+                                                                      );
+                                                                      _model.selectedVariantDataJson = functions.getItemByIndex(
+                                                                          getJsonField(
+                                                                            productDetailsScreenProductDetailResponse.jsonBody,
+                                                                            r'''$.detail.varients''',
+                                                                          ),
+                                                                          _model.selectedVariantIndx);
+                                                                      _model.isLoaderIndicator =
+                                                                          false;
+                                                                      safeSetState(
+                                                                          () {});
                                                                       logFirebaseEvent(
                                                                           'Container_update_app_state');
                                                                       FFAppState()
@@ -2612,44 +2281,38 @@ class _ProductDetailsScreenWidgetState
                                                                           'no';
                                                                       safeSetState(
                                                                           () {});
+                                                                    } else {
                                                                       logFirebaseEvent(
-                                                                          'Container_haptic_feedback');
-                                                                      HapticFeedback
-                                                                          .mediumImpact();
-                                                                      logFirebaseEvent(
-                                                                          'Container_backend_call');
-                                                                      _model.apiResultWeek1 = await QuickartGroup
-                                                                          .totaldeliveriesCall
-                                                                          .call();
-
-                                                                      if (!(_model
-                                                                              .apiResultWeek1
-                                                                              ?.succeeded ??
-                                                                          true)) {
-                                                                        logFirebaseEvent(
-                                                                            'Container_show_snack_bar');
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(
-                                                                          SnackBar(
-                                                                            content:
-                                                                                Text(
-                                                                              getJsonField(
-                                                                                (_model.apiResultWeek1?.jsonBody ?? ''),
-                                                                                r'''$.message''',
-                                                                              ).toString(),
-                                                                              style: GoogleFonts.montserrat(
-                                                                                color: FFAppConstants.indigoColor,
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontSize: 14.0,
-                                                                              ),
+                                                                          'Container_show_snack_bar');
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                        SnackBar(
+                                                                          content:
+                                                                              Text(
+                                                                            getJsonField(
+                                                                              (_model.apiResultWeek1?.jsonBody ?? ''),
+                                                                              r'''$.message''',
+                                                                            ).toString(),
+                                                                            style:
+                                                                                GoogleFonts.montserrat(
+                                                                              color: FFAppConstants.indigoColor,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              fontSize: 14.0,
                                                                             ),
-                                                                            duration:
-                                                                                Duration(milliseconds: 1300),
-                                                                            backgroundColor:
-                                                                                FFAppConstants.primaryPurpleE4D8F5,
                                                                           ),
-                                                                        );
-                                                                      }
+                                                                          duration:
+                                                                              Duration(milliseconds: 1300),
+                                                                          backgroundColor:
+                                                                              FFAppConstants.primaryPurpleE4D8F5,
+                                                                        ),
+                                                                      );
+                                                                      logFirebaseEvent(
+                                                                          'Container_update_page_state');
+                                                                      _model.isLoaderIndicator =
+                                                                          false;
+                                                                      safeSetState(
+                                                                          () {});
                                                                     }
 
                                                                     safeSetState(
@@ -2657,14 +2320,15 @@ class _ProductDetailsScreenWidgetState
                                                                   },
                                                                   child:
                                                                       Container(
-                                                                    width:
-                                                                        200.0,
+                                                                    width: MediaQuery.sizeOf(context).width /
+                                                                            2 -
+                                                                        20,
                                                                     height:
                                                                         36.0,
                                                                     decoration:
                                                                         BoxDecoration(
                                                                       color: FFAppConstants
-                                                                          .darkGreen,
+                                                                          .yellowColor,
                                                                       borderRadius:
                                                                           BorderRadius
                                                                               .only(
@@ -2681,7 +2345,7 @@ class _ProductDetailsScreenWidgetState
                                                                           Border
                                                                               .all(
                                                                         color: FFAppConstants
-                                                                            .green86DF67,
+                                                                            .yellowDDC66C,
                                                                         width:
                                                                             1.0,
                                                                       ),
@@ -2693,69 +2357,75 @@ class _ProductDetailsScreenWidgetState
                                                                               0.0,
                                                                               0.0),
                                                                       child:
-                                                                          RichText(
-                                                                        textScaler:
-                                                                            MediaQuery.of(context).textScaler,
-                                                                        text:
-                                                                            TextSpan(
-                                                                          children: [
-                                                                            TextSpan(
-                                                                              text: 'SUBSCRIBE ',
-                                                                              style: FlutterFlowTheme.of(context).bodySmall.override(
-                                                                                    font: GoogleFonts.montserrat(
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            10.0,
+                                                                            0.0,
+                                                                            10.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            RichText(
+                                                                          textScaler:
+                                                                              MediaQuery.of(context).textScaler,
+                                                                          text:
+                                                                              TextSpan(
+                                                                            children: [
+                                                                              TextSpan(
+                                                                                text: 'SUBSCRIBE ',
+                                                                                style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                      font: GoogleFonts.montserrat(
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                                      ),
+                                                                                      color: FFAppConstants.blackColor0A0A0A,
+                                                                                      letterSpacing: 0.0,
                                                                                       fontWeight: FontWeight.w600,
                                                                                       fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                                                                     ),
-                                                                                    color: FFAppConstants.neutralWhiteF5F5F5,
-                                                                                    letterSpacing: 0.0,
-                                                                                    fontWeight: FontWeight.w600,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                                                                                  ),
-                                                                            ),
-                                                                            TextSpan(
-                                                                              text: () {
-                                                                                if (FFAppState().nullValue ==
-                                                                                    getJsonField(
+                                                                              ),
+                                                                              TextSpan(
+                                                                                text: () {
+                                                                                  if (FFAppState().nullValue ==
+                                                                                      getJsonField(
+                                                                                        productDetailsScreenProductDetailResponse.jsonBody,
+                                                                                        r'''$.detail.percentage''',
+                                                                                      ).toString()) {
+                                                                                    return ' ';
+                                                                                  } else if (FFAppState().qtyZeroCheck ==
+                                                                                      getJsonField(
+                                                                                        productDetailsScreenProductDetailResponse.jsonBody,
+                                                                                        r'''$.detail.percentage''',
+                                                                                      )) {
+                                                                                    return ' ';
+                                                                                  } else {
+                                                                                    return '& SAVE ${getJsonField(
                                                                                       productDetailsScreenProductDetailResponse.jsonBody,
                                                                                       r'''$.detail.percentage''',
-                                                                                    ).toString()) {
-                                                                                  return ' ';
-                                                                                } else if (FFAppState().qtyZeroCheck ==
-                                                                                    getJsonField(
-                                                                                      productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                      r'''$.detail.percentage''',
-                                                                                    )) {
-                                                                                  return ' ';
-                                                                                } else {
-                                                                                  return '& SAVE ${getJsonField(
-                                                                                    productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                    r'''$.detail.percentage''',
-                                                                                  ).toString()}%';
-                                                                                }
-                                                                              }(),
-                                                                              style: FlutterFlowTheme.of(context).bodySmall.override(
-                                                                                    font: GoogleFonts.montserrat(
+                                                                                    ).toString()}%';
+                                                                                  }
+                                                                                }(),
+                                                                                style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                      font: GoogleFonts.montserrat(
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                                      ),
+                                                                                      color: FFAppConstants.blackColor0A0A0A,
+                                                                                      letterSpacing: 0.0,
                                                                                       fontWeight: FontWeight.w600,
                                                                                       fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
                                                                                     ),
-                                                                                    color: FFAppConstants.neutralWhiteF5F5F5,
-                                                                                    letterSpacing: 0.0,
-                                                                                    fontWeight: FontWeight.w600,
-                                                                                    fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                                                                              )
+                                                                            ],
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  font: GoogleFonts.montserrat(
+                                                                                    fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                   ),
-                                                                            )
-                                                                          ],
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                                font: GoogleFonts.readexPro(
+                                                                                  letterSpacing: 0.0,
                                                                                   fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                 ),
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                              ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2770,7 +2440,7 @@ class _ProductDetailsScreenWidgetState
                                                   );
                                                 } else {
                                                   return Text(
-                                                    '',
+                                                    'j',
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -2837,13 +2507,26 @@ class _ProductDetailsScreenWidgetState
                                                             ).toString()),
                                                     child: Builder(
                                                       builder: (context) {
-                                                        if (FFAppState()
-                                                                .qtyZeroCheck ==
-                                                            getJsonField(
-                                                              productDetailsScreenProductDetailResponse
-                                                                  .jsonBody,
-                                                              r'''$.detail.cartQty''',
-                                                            )) {
+                                                        if ((getJsonField(
+                                                                  QuickartGroup
+                                                                      .productDetailCall
+                                                                      .productDetailData(
+                                                                    productDetailsScreenProductDetailResponse
+                                                                        .jsonBody,
+                                                                  ),
+                                                                  r'''$.varients''',
+                                                                ) !=
+                                                                null) &&
+                                                            (FFAppState()
+                                                                    .qtyZeroCheck ==
+                                                                functions.getItemQtyByIndex(
+                                                                    getJsonField(
+                                                                      productDetailsScreenProductDetailResponse
+                                                                          .jsonBody,
+                                                                      r'''$.detail.varients''',
+                                                                    ),
+                                                                    _model.selectedVariantIndx,
+                                                                    false))) {
                                                           return Padding(
                                                             padding:
                                                                 EdgeInsetsDirectional
@@ -2865,252 +2548,173 @@ class _ProductDetailsScreenWidgetState
                                                               onTap: () async {
                                                                 logFirebaseEvent(
                                                                     'PRODUCT_DETAILS_SCREEN_Container_gcigfyn');
-                                                                if (((getJsonField(
-                                                                          QuickartGroup
-                                                                              .productDetailCall
-                                                                              .productDetailData(
+                                                                logFirebaseEvent(
+                                                                    'Container_custom_action');
+                                                                _model.connectivtyResultC1 =
+                                                                    await actions
+                                                                        .checkInternetConnection();
+                                                                if (_model
+                                                                        .connectivtyResultC1 ==
+                                                                    true) {
+                                                                  logFirebaseEvent(
+                                                                      'Container_haptic_feedback');
+                                                                  HapticFeedback
+                                                                      .mediumImpact();
+                                                                  logFirebaseEvent(
+                                                                      'Container_update_page_state');
+                                                                  _model.selectedVariantDataJson = functions
+                                                                      .getItemByIndex(
+                                                                          getJsonField(
                                                                             productDetailsScreenProductDetailResponse.jsonBody,
+                                                                            r'''$.detail.varients''',
                                                                           ),
-                                                                          r'''$.varients''',
-                                                                        ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                                as Iterable<ProductCountStruct?>)
-                                                                            .withoutNulls
-                                                                            .length >=
-                                                                        2) ||
-                                                                    ((getJsonField(
-                                                                          QuickartGroup
-                                                                              .productDetailCall
-                                                                              .productDetailData(
-                                                                            productDetailsScreenProductDetailResponse.jsonBody,
-                                                                          ),
-                                                                          r'''$.features''',
-                                                                        ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
-                                                                            .withoutNulls
-                                                                            .length >
-                                                                        0)) {
+                                                                          _model
+                                                                              .selectedVariantIndx);
+                                                                  _model.isLoaderIndicator =
+                                                                      true;
+                                                                  safeSetState(
+                                                                      () {});
                                                                   logFirebaseEvent(
-                                                                      'Container_bottom_sheet');
-                                                                  await showModalBottomSheet(
-                                                                    isScrollControlled:
-                                                                        true,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    useSafeArea:
-                                                                        true,
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          FocusScope.of(context)
-                                                                              .unfocus();
-                                                                          FocusManager
-                                                                              .instance
-                                                                              .primaryFocus
-                                                                              ?.unfocus();
-                                                                        },
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              MediaQuery.viewInsetsOf(context),
-                                                                          child:
-                                                                              VarientBotttomSheetWidget(
-                                                                            productModel:
-                                                                                QuickartGroup.productDetailCall.productDetailData(
-                                                                              productDetailsScreenProductDetailResponse.jsonBody,
-                                                                            ),
-                                                                            cartType:
-                                                                                'daily',
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ).then((value) =>
-                                                                      safeSetState(
-                                                                          () {}));
-
-                                                                  logFirebaseEvent(
-                                                                      'Container_refresh_database_request');
-                                                                  safeSetState(() =>
-                                                                      _model.apiRequestCompleter =
-                                                                          null);
-                                                                  await _model
-                                                                      .waitForApiRequestCompleted();
-                                                                } else {
-                                                                  logFirebaseEvent(
-                                                                      'Container_custom_action');
-                                                                  _model.connectivtyResultC1 =
-                                                                      await actions
-                                                                          .checkInternetConnection();
-                                                                  if (_model
-                                                                          .connectivtyResultC1 ==
-                                                                      true) {
-                                                                    logFirebaseEvent(
-                                                                        'Container_haptic_feedback');
-                                                                    HapticFeedback
-                                                                        .mediumImpact();
-                                                                    logFirebaseEvent(
-                                                                        'Container_backend_call');
-                                                                    _model.apiResultAddCart =
-                                                                        await QuickartGroup
-                                                                            .addToCartCall
-                                                                            .call(
-                                                                      userid: FFAppState()
-                                                                          .userID,
-                                                                      storeid:
-                                                                          FFAppState()
-                                                                              .storeID,
-                                                                      varientid:
-                                                                          getJsonField(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                        r'''$.detail.varient_id''',
-                                                                      ).toString(),
-                                                                      deviceid:
-                                                                          FFAppState()
-                                                                              .deviceID,
-                                                                      qty: '1',
-                                                                      itemPrice:
-                                                                          getJsonField(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                        r'''$.detail.price''',
-                                                                      ).toString(),
-                                                                      itemName:
-                                                                          getJsonField(
-                                                                        productDetailsScreenProductDetailResponse
-                                                                            .jsonBody,
-                                                                        r'''$.detail.product_name''',
-                                                                      ).toString(),
-                                                                      platform: isiOS
-                                                                          ? 'ios'
-                                                                          : 'android',
-                                                                    );
-
-                                                                    if ((_model
-                                                                            .apiResultAddCart
-                                                                            ?.succeeded ??
-                                                                        true)) {
-                                                                      logFirebaseEvent(
-                                                                          'Container_update_app_state');
-                                                                      FFAppState()
-                                                                              .isCartShow =
-                                                                          false;
-                                                                      FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup
+                                                                      'Container_backend_call');
+                                                                  _model.apiResultAddCart =
+                                                                      await QuickartGroup
                                                                           .addToCartCall
-                                                                          .savingPrice(
-                                                                            (_model.apiResultAddCart?.jsonBody ??
-                                                                                ''),
-                                                                          )!
-                                                                          .toString());
-                                                                      FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup
-                                                                          .addToCartCall
-                                                                          .totalPrice(
-                                                                            (_model.apiResultAddCart?.jsonBody ??
-                                                                                ''),
-                                                                          )!
-                                                                          .toString());
-                                                                      FFAppState()
-                                                                              .cartTotalCount =
-                                                                          QuickartGroup
-                                                                              .addToCartCall
-                                                                              .totalItems(
-                                                                        (_model.apiResultAddCart?.jsonBody ??
-                                                                            ''),
-                                                                      )!;
-                                                                      FFAppState()
-                                                                              .refreshTrigger =
-                                                                          true;
-                                                                      safeSetState(
-                                                                          () {});
-                                                                      logFirebaseEvent(
-                                                                          'Container_refresh_database_request');
-                                                                      safeSetState(() =>
-                                                                          _model.apiRequestCompleter =
-                                                                              null);
-                                                                      await _model.waitForApiRequestCompleted(
-                                                                          maxWait:
-                                                                              2000);
-                                                                      logFirebaseEvent(
-                                                                          'Container_custom_action');
-                                                                      await actions
-                                                                          .facebookEventClass(
-                                                                        getJsonField(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                          r'''$.detail.varient_id''',
-                                                                        ).toString(),
-                                                                        getJsonField(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                          r'''$.product_name''',
-                                                                        ).toString(),
-                                                                        'product',
-                                                                        getJsonField(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                          r'''$.detail.price''',
-                                                                        ),
-                                                                        getJsonField(
-                                                                              productDetailsScreenProductDetailResponse.jsonBody,
-                                                                              r'''$.detail.cart_qty''',
-                                                                            ) +
-                                                                            1,
-                                                                        getJsonField(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                          r'''$.detail.mrp''',
-                                                                        ),
-                                                                        'add',
+                                                                          .call(
+                                                                    userid: FFAppState()
+                                                                        .userID,
+                                                                    storeid:
                                                                         FFAppState()
-                                                                            .emptyJson,
-                                                                        'emptyjson',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                      );
-                                                                      logFirebaseEvent(
-                                                                          'Container_google_analytics_event');
-                                                                      logFirebaseEvent(
-                                                                        'Add To Cart',
-                                                                        parameters: {
-                                                                          'API Name':
-                                                                              'Add To Cart',
-                                                                          'Screen Name':
-                                                                              'Product Detail Screen',
-                                                                        },
-                                                                      );
-                                                                    } else {
-                                                                      logFirebaseEvent(
-                                                                          'Container_show_snack_bar');
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                        SnackBar(
-                                                                          content:
-                                                                              Text(
-                                                                            getJsonField(
+                                                                            .storeID,
+                                                                    varientid:
+                                                                        getJsonField(
+                                                                      _model
+                                                                          .selectedVariantDataJson,
+                                                                      r'''$.varient_id''',
+                                                                    ).toString(),
+                                                                    deviceid:
+                                                                        FFAppState()
+                                                                            .deviceID,
+                                                                    qty: '1',
+                                                                    itemPrice:
+                                                                        getJsonField(
+                                                                      _model
+                                                                          .selectedVariantDataJson,
+                                                                      r'''$.price''',
+                                                                    ).toString(),
+                                                                    itemName:
+                                                                        getJsonField(
+                                                                      productDetailsScreenProductDetailResponse
+                                                                          .jsonBody,
+                                                                      r'''$.detail.product_name''',
+                                                                    ).toString(),
+                                                                    platform: isiOS
+                                                                        ? 'ios'
+                                                                        : 'android',
+                                                                  );
+
+                                                                  if ((_model
+                                                                          .apiResultAddCart
+                                                                          ?.succeeded ??
+                                                                      true)) {
+                                                                    logFirebaseEvent(
+                                                                        'Container_update_app_state');
+                                                                    FFAppState()
+                                                                            .isCartShow =
+                                                                        false;
+                                                                    FFAppState()
+                                                                            .cartSavingPrice =
+                                                                        functions.stringToDouble(QuickartGroup
+                                                                            .addToCartCall
+                                                                            .savingPrice(
                                                                               (_model.apiResultAddCart?.jsonBody ?? ''),
-                                                                              r'''$.message''',
-                                                                            ).toString(),
-                                                                            style:
-                                                                                GoogleFonts.montserrat(
-                                                                              color: FFAppConstants.indigoColor,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              fontSize: 12.0,
-                                                                            ),
-                                                                          ),
-                                                                          duration:
-                                                                              Duration(milliseconds: 2000),
-                                                                          backgroundColor:
-                                                                              FFAppConstants.primaryPurpleE4D8F5,
-                                                                        ),
-                                                                      );
-                                                                    }
+                                                                            )!
+                                                                            .toString());
+                                                                    FFAppState()
+                                                                            .cartTotalPrice =
+                                                                        functions.stringToDouble(QuickartGroup
+                                                                            .addToCartCall
+                                                                            .totalPrice(
+                                                                              (_model.apiResultAddCart?.jsonBody ?? ''),
+                                                                            )!
+                                                                            .toString());
+                                                                    FFAppState()
+                                                                            .cartTotalCount =
+                                                                        QuickartGroup
+                                                                            .addToCartCall
+                                                                            .totalItems(
+                                                                      (_model.apiResultAddCart
+                                                                              ?.jsonBody ??
+                                                                          ''),
+                                                                    )!;
+                                                                    FFAppState()
+                                                                            .refreshTrigger =
+                                                                        true;
+                                                                    safeSetState(
+                                                                        () {});
+                                                                    logFirebaseEvent(
+                                                                        'Container_refresh_database_request');
+                                                                    safeSetState(() =>
+                                                                        _model.apiRequestCompleter =
+                                                                            null);
+                                                                    await _model.waitForApiRequestCompleted(
+                                                                        maxWait:
+                                                                            2000);
+                                                                    logFirebaseEvent(
+                                                                        'Container_update_page_state');
+                                                                    _model.isLoaderIndicator =
+                                                                        false;
+                                                                    safeSetState(
+                                                                        () {});
+                                                                    logFirebaseEvent(
+                                                                        'Container_google_analytics_event');
+                                                                    logFirebaseEvent(
+                                                                      'Add To Cart',
+                                                                      parameters: {
+                                                                        'API Name':
+                                                                            'Add To Cart',
+                                                                        'Screen Name':
+                                                                            'Product Detail Screen',
+                                                                      },
+                                                                    );
+                                                                    logFirebaseEvent(
+                                                                        'Container_custom_action');
+                                                                    await actions
+                                                                        .facebookEventClass(
+                                                                      getJsonField(
+                                                                        _model
+                                                                            .selectedVariantDataJson,
+                                                                        r'''$.varient_id''',
+                                                                      ).toString(),
+                                                                      getJsonField(
+                                                                        productDetailsScreenProductDetailResponse
+                                                                            .jsonBody,
+                                                                        r'''$.product_name''',
+                                                                      ).toString(),
+                                                                      'product',
+                                                                      getJsonField(
+                                                                        _model
+                                                                            .selectedVariantDataJson,
+                                                                        r'''$.price''',
+                                                                      ),
+                                                                      getJsonField(
+                                                                            _model.selectedVariantDataJson,
+                                                                            r'''$.cart_qty''',
+                                                                          ) +
+                                                                          1,
+                                                                      getJsonField(
+                                                                        _model
+                                                                            .selectedVariantDataJson,
+                                                                        r'''$.mrp''',
+                                                                      ),
+                                                                      'add',
+                                                                      FFAppState()
+                                                                          .emptyJson,
+                                                                      'emptyjson',
+                                                                      ' ',
+                                                                      ' ',
+                                                                      ' ',
+                                                                      ' ',
+                                                                    );
                                                                   } else {
                                                                     logFirebaseEvent(
                                                                         'Container_show_snack_bar');
@@ -3120,12 +2724,15 @@ class _ProductDetailsScreenWidgetState
                                                                       SnackBar(
                                                                         content:
                                                                             Text(
-                                                                          FFAppConstants
-                                                                              .internetString,
+                                                                          getJsonField(
+                                                                            (_model.apiResultAddCart?.jsonBody ??
+                                                                                ''),
+                                                                            r'''$.message''',
+                                                                          ).toString(),
                                                                           style:
-                                                                              TextStyle(
+                                                                              GoogleFonts.montserrat(
                                                                             color:
-                                                                                FFAppConstants.blackColor0A0A0A,
+                                                                                FFAppConstants.indigoColor,
                                                                             fontWeight:
                                                                                 FontWeight.w500,
                                                                             fontSize:
@@ -3133,19 +2740,57 @@ class _ProductDetailsScreenWidgetState
                                                                           ),
                                                                         ),
                                                                         duration:
-                                                                            Duration(milliseconds: 4000),
+                                                                            Duration(milliseconds: 2000),
                                                                         backgroundColor:
-                                                                            FFAppConstants.NeutralBlack50Color,
+                                                                            FFAppConstants.primaryPurpleE4D8F5,
                                                                       ),
                                                                     );
+                                                                    logFirebaseEvent(
+                                                                        'Container_update_page_state');
+                                                                    _model.isLoaderIndicator =
+                                                                        false;
+                                                                    safeSetState(
+                                                                        () {});
                                                                   }
+                                                                } else {
+                                                                  logFirebaseEvent(
+                                                                      'Container_show_snack_bar');
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Text(
+                                                                        FFAppConstants
+                                                                            .internetString,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              FFAppConstants.blackColor0A0A0A,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontSize:
+                                                                              12.0,
+                                                                        ),
+                                                                      ),
+                                                                      duration: Duration(
+                                                                          milliseconds:
+                                                                              4000),
+                                                                      backgroundColor:
+                                                                          FFAppConstants
+                                                                              .NeutralBlack50Color,
+                                                                    ),
+                                                                  );
                                                                 }
 
                                                                 safeSetState(
                                                                     () {});
                                                               },
                                                               child: Container(
-                                                                width: 100.0,
+                                                                width: MediaQuery.sizeOf(context)
+                                                                            .width /
+                                                                        2 -
+                                                                    30,
                                                                 height: 36.0,
                                                                 decoration:
                                                                     BoxDecoration(
@@ -3179,480 +2824,178 @@ class _ProductDetailsScreenWidgetState
                                                                       AlignmentDirectional(
                                                                           0.0,
                                                                           0.0),
-                                                                  child: Text(
-                                                                    'ADD TO CART ',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyMedium
-                                                                        .override(
-                                                                          font:
-                                                                              GoogleFonts.montserrat(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            10.0,
+                                                                            0.0,
+                                                                            10.0,
+                                                                            0.0),
+                                                                    child: Text(
+                                                                      'ADD TO CART ',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            font:
+                                                                                GoogleFonts.montserrat(
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                            ),
+                                                                            color:
+                                                                                FFAppConstants.whiteColor,
+                                                                            fontSize:
+                                                                                12.0,
+                                                                            letterSpacing:
+                                                                                0.0,
                                                                             fontWeight:
                                                                                 FontWeight.w600,
                                                                             fontStyle:
                                                                                 FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                           ),
-                                                                          color:
-                                                                              FFAppConstants.whiteColor,
-                                                                          fontSize:
-                                                                              12.0,
-                                                                          letterSpacing:
-                                                                              0.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                          fontStyle: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .fontStyle,
-                                                                        ),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
                                                             ),
                                                           );
                                                         } else {
-                                                          return Builder(
-                                                            builder: (context) {
-                                                              if (((getJsonField(
-                                                                        QuickartGroup
-                                                                            .productDetailCall
-                                                                            .productDetailData(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                        ),
-                                                                        r'''$.varients''',
-                                                                      ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<
-                                                                              ProductCountStruct?>)
-                                                                          .withoutNulls
-                                                                          .length >
-                                                                      1) ||
-                                                                  ((getJsonField(
-                                                                        QuickartGroup
-                                                                            .productDetailCall
-                                                                            .productDetailData(
-                                                                          productDetailsScreenProductDetailResponse
-                                                                              .jsonBody,
-                                                                        ),
-                                                                        r'''$.features''',
-                                                                      ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList()
-                                                                              as Iterable<ProductCountStruct?>)
-                                                                          .withoutNulls
-                                                                          .length >
-                                                                      1)) {
-                                                                return Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          12.0,
-                                                                          0.0,
-                                                                          10.0),
-                                                                  child:
-                                                                      InkWell(
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    focusColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    hoverColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    highlightColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    onTap:
-                                                                        () async {
-                                                                      logFirebaseEvent(
-                                                                          'PRODUCT_DETAILS_SCREEN_Container_cf7pvx4');
-                                                                      if (((getJsonField(
-                                                                                QuickartGroup.productDetailCall.productDetailData(
-                                                                                  productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                ),
-                                                                                r'''$.varients''',
-                                                                              ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
-                                                                                  .withoutNulls
-                                                                                  .length >
-                                                                              0) ||
-                                                                          ((getJsonField(
-                                                                                QuickartGroup.productDetailCall.productDetailData(
-                                                                                  productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                ),
-                                                                                r'''$.features''',
-                                                                              ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
-                                                                                  .withoutNulls
-                                                                                  .length >
-                                                                              0)) {
-                                                                        logFirebaseEvent(
-                                                                            'Container_bottom_sheet');
-                                                                        await showModalBottomSheet(
-                                                                          isScrollControlled:
-                                                                              true,
-                                                                          backgroundColor:
-                                                                              Colors.transparent,
-                                                                          useSafeArea:
-                                                                              true,
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (context) {
-                                                                            return GestureDetector(
-                                                                              onTap: () {
-                                                                                FocusScope.of(context).unfocus();
-                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                              },
-                                                                              child: Padding(
-                                                                                padding: MediaQuery.viewInsetsOf(context),
-                                                                                child: VarientBotttomSheetWidget(
-                                                                                  productModel: QuickartGroup.productDetailCall.productDetailData(
-                                                                                    productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                  ),
-                                                                                  cartType: 'daily',
-                                                                                ),
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        ).then((value) =>
-                                                                            safeSetState(() {}));
-
-                                                                        logFirebaseEvent(
-                                                                            'Container_refresh_database_request');
-                                                                        safeSetState(() =>
-                                                                            _model.apiRequestCompleter =
-                                                                                null);
-                                                                        await _model
-                                                                            .waitForApiRequestCompleted();
-                                                                      } else {
-                                                                        logFirebaseEvent(
-                                                                            'Container_custom_action');
-                                                                        _model.connectivtyResultC11 =
-                                                                            await actions.checkInternetConnection();
-                                                                        if (_model.connectivtyResultC11 ==
-                                                                            true) {
-                                                                          logFirebaseEvent(
-                                                                              'Container_haptic_feedback');
-                                                                          HapticFeedback
-                                                                              .mediumImpact();
-                                                                          logFirebaseEvent(
-                                                                              'Container_backend_call');
-                                                                          _model.apiResultAddCart1 = await QuickartGroup
-                                                                              .addToCartCall
-                                                                              .call(
-                                                                            userid:
-                                                                                FFAppState().userID,
-                                                                            storeid:
-                                                                                FFAppState().storeID,
-                                                                            varientid:
-                                                                                getJsonField(
-                                                                              productDetailsScreenProductDetailResponse.jsonBody,
-                                                                              r'''$.detail.varient_id''',
-                                                                            ).toString(),
-                                                                            deviceid:
-                                                                                FFAppState().deviceID,
-                                                                            qty:
-                                                                                '1',
-                                                                            itemPrice:
-                                                                                getJsonField(
-                                                                              productDetailsScreenProductDetailResponse.jsonBody,
-                                                                              r'''$.detail.price''',
-                                                                            ).toString(),
-                                                                            itemName:
-                                                                                getJsonField(
-                                                                              productDetailsScreenProductDetailResponse.jsonBody,
-                                                                              r'''$.detail.product_name''',
-                                                                            ).toString(),
-                                                                            platform: isiOS
-                                                                                ? 'ios'
-                                                                                : 'android',
-                                                                          );
-
-                                                                          if ((_model.apiResultAddCart1?.succeeded ??
-                                                                              true)) {
-                                                                            logFirebaseEvent('Container_update_app_state');
-                                                                            FFAppState().isCartShow =
-                                                                                false;
-                                                                            FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                .savingPrice(
-                                                                                  (_model.apiResultAddCart1?.jsonBody ?? ''),
-                                                                                )!
-                                                                                .toString());
-                                                                            FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                .totalPrice(
-                                                                                  (_model.apiResultAddCart1?.jsonBody ?? ''),
-                                                                                )!
-                                                                                .toString());
-                                                                            FFAppState().cartTotalCount =
-                                                                                QuickartGroup.addToCartCall.totalItems(
-                                                                              (_model.apiResultAddCart1?.jsonBody ?? ''),
-                                                                            )!;
-                                                                            FFAppState().refreshTrigger =
-                                                                                true;
-                                                                            safeSetState(() {});
-                                                                            logFirebaseEvent('Container_refresh_database_request');
-                                                                            safeSetState(() =>
-                                                                                _model.apiRequestCompleter = null);
-                                                                            await _model.waitForApiRequestCompleted(maxWait: 2000);
-                                                                            logFirebaseEvent('Container_custom_action');
-                                                                            await actions.facebookEventClass(
-                                                                              getJsonField(
-                                                                                productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                r'''$.detail.varient_id''',
-                                                                              ).toString(),
-                                                                              getJsonField(
-                                                                                productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                r'''$.product_name''',
-                                                                              ).toString(),
-                                                                              'product',
-                                                                              getJsonField(
-                                                                                productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                r'''$.detail.price''',
-                                                                              ),
-                                                                              getJsonField(
-                                                                                    productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                    r'''$.detail.cart_qty''',
-                                                                                  ) +
-                                                                                  1,
-                                                                              getJsonField(
-                                                                                productDetailsScreenProductDetailResponse.jsonBody,
-                                                                                r'''$.detail.mrp''',
-                                                                              ),
-                                                                              'add',
-                                                                              FFAppState().emptyJson,
-                                                                              'emptyjson',
-                                                                              ' ',
-                                                                              ' ',
-                                                                              ' ',
-                                                                              ' ',
-                                                                            );
-                                                                            logFirebaseEvent('Container_google_analytics_event');
-                                                                            logFirebaseEvent(
-                                                                              'Add To Cart',
-                                                                              parameters: {
-                                                                                'API Name': 'Add To Cart',
-                                                                                'Screen Name': 'Product Detail Screen',
-                                                                              },
-                                                                            );
-                                                                          } else {
-                                                                            logFirebaseEvent('Container_show_snack_bar');
-                                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                              SnackBar(
-                                                                                content: Text(
-                                                                                  getJsonField(
-                                                                                    (_model.apiResultAddCart1?.jsonBody ?? ''),
-                                                                                    r'''$.message''',
-                                                                                  ).toString(),
-                                                                                  style: GoogleFonts.montserrat(
-                                                                                    color: FFAppConstants.indigoColor,
-                                                                                    fontWeight: FontWeight.w500,
-                                                                                    fontSize: 12.0,
-                                                                                  ),
-                                                                                ),
-                                                                                duration: Duration(milliseconds: 2000),
-                                                                                backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
-                                                                              ),
-                                                                            );
-                                                                          }
-                                                                        } else {
-                                                                          logFirebaseEvent(
-                                                                              'Container_show_snack_bar');
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(
-                                                                            SnackBar(
-                                                                              content: Text(
-                                                                                FFAppConstants.internetString,
-                                                                                style: TextStyle(
-                                                                                  color: FFAppConstants.blackColor0A0A0A,
-                                                                                  fontWeight: FontWeight.w500,
-                                                                                  fontSize: 12.0,
-                                                                                ),
-                                                                              ),
-                                                                              duration: Duration(milliseconds: 4000),
-                                                                              backgroundColor: FFAppConstants.NeutralBlack50Color,
-                                                                            ),
-                                                                          );
-                                                                        }
-                                                                      }
-
-                                                                      safeSetState(
-                                                                          () {});
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          100.0,
-                                                                      height:
-                                                                          36.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: FFAppConstants
-                                                                            .calculatorColor,
-                                                                        borderRadius:
-                                                                            BorderRadius.only(
-                                                                          topLeft:
-                                                                              Radius.circular(8.0),
-                                                                          topRight:
-                                                                              Radius.circular(8.0),
-                                                                          bottomLeft:
-                                                                              Radius.circular(8.0),
-                                                                          bottomRight:
-                                                                              Radius.circular(8.0),
-                                                                        ),
-                                                                        border:
-                                                                            Border.all(
-                                                                          color:
-                                                                              FFAppConstants.calculatorColor,
-                                                                          width:
-                                                                              1.0,
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          Align(
-                                                                        alignment: AlignmentDirectional(
-                                                                            0.0,
-                                                                            0.0),
-                                                                        child:
-                                                                            Text(
-                                                                          'ADD TO CART ',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                                font: GoogleFonts.montserrat(
-                                                                                  fontWeight: FontWeight.w600,
-                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                ),
-                                                                                color: FFAppConstants.whiteColor,
-                                                                                fontSize: 12.0,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                              ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                return Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          12.0,
-                                                                          0.0,
-                                                                          10.0),
-                                                                  child:
-                                                                      InkWell(
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    focusColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    hoverColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    highlightColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    onTap:
-                                                                        () async {
-                                                                      logFirebaseEvent(
-                                                                          'PRODUCT_DETAILS_SCREEN_Container_ao70mc4');
-                                                                      logFirebaseEvent(
-                                                                          'Container_navigate_to');
-
-                                                                      context.pushNamed(
-                                                                          DailyCartScreenWidget
-                                                                              .routeName);
-
-                                                                      logFirebaseEvent(
-                                                                          'Container_google_analytics_event');
-                                                                      logFirebaseEvent(
-                                                                        'Navigation',
-                                                                        parameters: {
-                                                                          'Screen Name':
-                                                                              'Product Detail Screen',
-                                                                          'Navigate To':
-                                                                              'Daily Cart Screen',
-                                                                        },
-                                                                      );
-                                                                      logFirebaseEvent(
-                                                                          'Container_custom_action');
-                                                                      await actions
-                                                                          .facebookEventClass(
-                                                                        FFAppState()
-                                                                            .userID,
-                                                                        ' ',
-                                                                        ' ',
-                                                                        FFAppState()
-                                                                            .cartTotalPrice,
-                                                                        FFAppState()
-                                                                            .cartTotalCount,
+                                                          return Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
                                                                         0.0,
-                                                                        'cart',
-                                                                        FFAppState()
-                                                                            .emptyJson,
-                                                                        'daily cart',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                      );
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      width:
-                                                                          100.0,
-                                                                      height:
-                                                                          36.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: FFAppConstants
-                                                                            .calculatorColor,
-                                                                        borderRadius:
-                                                                            BorderRadius.only(
-                                                                          topLeft:
-                                                                              Radius.circular(8.0),
-                                                                          topRight:
-                                                                              Radius.circular(8.0),
-                                                                          bottomLeft:
-                                                                              Radius.circular(8.0),
-                                                                          bottomRight:
-                                                                              Radius.circular(8.0),
-                                                                        ),
-                                                                        border:
-                                                                            Border.all(
-                                                                          color:
-                                                                              FFAppConstants.calculatorColor,
-                                                                          width:
-                                                                              1.0,
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          Align(
-                                                                        alignment: AlignmentDirectional(
+                                                                        12.0,
+                                                                        0.0,
+                                                                        10.0),
+                                                            child: InkWell(
+                                                              splashColor: Colors
+                                                                  .transparent,
+                                                              focusColor: Colors
+                                                                  .transparent,
+                                                              hoverColor: Colors
+                                                                  .transparent,
+                                                              highlightColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              onTap: () async {
+                                                                logFirebaseEvent(
+                                                                    'PRODUCT_DETAILS_SCREEN_Container_fxqbckz');
+                                                                logFirebaseEvent(
+                                                                    'Container_navigate_to');
+
+                                                                context.pushNamed(
+                                                                    DailyCartScreenWidget
+                                                                        .routeName);
+
+                                                                logFirebaseEvent(
+                                                                    'Container_google_analytics_event');
+                                                                logFirebaseEvent(
+                                                                  'Navigation',
+                                                                  parameters: {
+                                                                    'Screen Name':
+                                                                        'Product Detail Screen',
+                                                                    'Navigate To':
+                                                                        'Daily Cart Screen',
+                                                                  },
+                                                                );
+                                                                logFirebaseEvent(
+                                                                    'Container_custom_action');
+                                                                await actions
+                                                                    .facebookEventClass(
+                                                                  FFAppState()
+                                                                      .userID,
+                                                                  ' ',
+                                                                  ' ',
+                                                                  FFAppState()
+                                                                      .cartTotalPrice,
+                                                                  FFAppState()
+                                                                      .cartTotalCount,
+                                                                  0.0,
+                                                                  'cart',
+                                                                  FFAppState()
+                                                                      .emptyJson,
+                                                                  'daily cart',
+                                                                  ' ',
+                                                                  ' ',
+                                                                  ' ',
+                                                                  ' ',
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                width: MediaQuery.sizeOf(context)
+                                                                            .width /
+                                                                        2 -
+                                                                    30,
+                                                                height: 36.0,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: FFAppConstants
+                                                                      .calculatorColor,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .only(
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            8.0),
+                                                                    topRight: Radius
+                                                                        .circular(
+                                                                            8.0),
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                            8.0),
+                                                                    bottomRight:
+                                                                        Radius.circular(
+                                                                            8.0),
+                                                                  ),
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: FFAppConstants
+                                                                        .calculatorColor,
+                                                                    width: 1.0,
+                                                                  ),
+                                                                ),
+                                                                child: Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            10.0,
                                                                             0.0,
+                                                                            10.0,
                                                                             0.0),
-                                                                        child:
-                                                                            Text(
-                                                                          'GO TO CART',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                                font: GoogleFonts.montserrat(
-                                                                                  fontWeight: FontWeight.w600,
-                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                ),
-                                                                                color: FFAppConstants.whiteColor,
-                                                                                fontSize: 12.0,
-                                                                                letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w600,
-                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                              ),
-                                                                        ),
-                                                                      ),
+                                                                    child: Text(
+                                                                      'GO TO CART',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            font:
+                                                                                GoogleFonts.montserrat(
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                            ),
+                                                                            color:
+                                                                                FFAppConstants.whiteColor,
+                                                                            fontSize:
+                                                                                12.0,
+                                                                            letterSpacing:
+                                                                                0.0,
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
                                                                     ),
                                                                   ),
-                                                                );
-                                                              }
-                                                            },
+                                                                ),
+                                                              ),
+                                                            ),
                                                           );
                                                         }
                                                       },
@@ -3694,7 +3037,7 @@ class _ProductDetailsScreenWidgetState
                                                 }
                                               },
                                             ),
-                                          ],
+                                          ].divide(SizedBox(width: 10.0)),
                                         );
                                       } else {
                                         return Padding(
@@ -5673,7 +5016,7 @@ class _ProductDetailsScreenWidgetState
                                                                 .fontStyle,
                                                       ),
                                                 ),
-                                                if (_model.apiResultWeek !=
+                                                if (_model.weekModelJson !=
                                                     null)
                                                   Container(
                                                     width: MediaQuery.sizeOf(
@@ -5692,13 +5035,10 @@ class _ProductDetailsScreenWidgetState
                                                                   0.0),
                                                       child: Builder(
                                                         builder: (context) {
-                                                          final weekModel =
-                                                              getJsonField(
-                                                            (_model.apiResultWeek
-                                                                    ?.jsonBody ??
-                                                                ''),
-                                                            r'''$.data''',
-                                                          ).toList();
+                                                          final weekModel = _model
+                                                                  .weekModelJson
+                                                                  ?.toList() ??
+                                                              [];
 
                                                           return ListView
                                                               .builder(
@@ -6829,9 +6169,9 @@ class _ProductDetailsScreenWidgetState
                                                               .storeID,
                                                           varientid:
                                                               getJsonField(
-                                                            productDetailsScreenProductDetailResponse
-                                                                .jsonBody,
-                                                            r'''$.detail.varient_id''',
+                                                            _model
+                                                                .selectedVariantDataJson,
+                                                            r'''$.varient_id''',
                                                           ).toString(),
                                                           deviceid: FFAppState()
                                                               .deviceID,
@@ -6868,9 +6208,9 @@ class _ProductDetailsScreenWidgetState
                                                           itemPrice: functions
                                                               .setDecimalValue(
                                                                   getJsonField(
-                                                            productDetailsScreenProductDetailResponse
-                                                                .jsonBody,
-                                                            r'''$.detail.price''',
+                                                            _model
+                                                                .selectedVariantDataJson,
+                                                            r'''$.price''',
                                                           ).toString()),
                                                           autoRenew: _model
                                                               .isAutoRenew,
@@ -6991,9 +6331,9 @@ class _ProductDetailsScreenWidgetState
                                                           await actions
                                                               .facebookEventClass(
                                                             getJsonField(
-                                                              productDetailsScreenProductDetailResponse
-                                                                  .jsonBody,
-                                                              r'''$.detail.varient_id''',
+                                                              _model
+                                                                  .selectedVariantDataJson,
+                                                              r'''$.varient_id''',
                                                             ).toString(),
                                                             getJsonField(
                                                               productDetailsScreenProductDetailResponse
@@ -7002,20 +6342,20 @@ class _ProductDetailsScreenWidgetState
                                                             ).toString(),
                                                             'subscription product',
                                                             getJsonField(
-                                                              productDetailsScreenProductDetailResponse
-                                                                  .jsonBody,
-                                                              r'''$.detail.price''',
+                                                              _model
+                                                                  .selectedVariantDataJson,
+                                                              r'''$.price''',
                                                             ),
                                                             getJsonField(
-                                                                  productDetailsScreenProductDetailResponse
-                                                                      .jsonBody,
-                                                                  r'''$.detail.cart_qty''',
+                                                                  _model
+                                                                      .selectedVariantDataJson,
+                                                                  r'''$.subcartQty''',
                                                                 ) +
                                                                 1,
                                                             getJsonField(
-                                                              productDetailsScreenProductDetailResponse
-                                                                  .jsonBody,
-                                                              r'''$.detail.mrp''',
+                                                              _model
+                                                                  .selectedVariantDataJson,
+                                                              r'''$.mrp''',
                                                             ),
                                                             'add',
                                                             FFAppState()
@@ -7275,655 +6615,26 @@ class _ProductDetailsScreenWidgetState
                         ),
                       ),
                     ),
-                  if ((FFAppState().cartTotalCount > 0) ||
-                      (FFAppState().subCartTotalItem > 0))
-                    Align(
-                      alignment: AlignmentDirectional(1.0, 1.0),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 0.0, 15.0, 130.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            logFirebaseEvent(
-                                'PRODUCT_DETAILS_SCREEN_cartbtnContainer_');
-                            logFirebaseEvent(
-                                'cartbtnContainer_update_app_state');
-                            FFAppState().isCartShow =
-                                !(FFAppState().isCartShow ?? true);
-                            safeSetState(() {});
-                          },
-                          child: Container(
-                            width: 55.0,
-                            height: 55.0,
-                            decoration: BoxDecoration(
-                              color: FFAppConstants.indigoColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
-                                    child: Icon(
-                                      Icons.shopping_cart_sharp,
-                                      color: Color(0xFFFEDF31),
-                                      size: 24.0,
-                                    ),
-                                  ),
-                                  if (functions
-                                          .setIngeterValue(functions
-                                              .additionFunctionInt(
-                                                  FFAppState().cartTotalCount,
-                                                  FFAppState().subCartTotalItem)
-                                              .toString())
-                                          .toString() !=
-                                      '0')
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 20.0,
-                                        height: 20.0,
-                                        decoration: BoxDecoration(
-                                          color: FFAppConstants
-                                              .NeutralBlack50Color,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            functions
-                                                .additionFunctionInt(
-                                                    FFAppState().cartTotalCount,
-                                                    FFAppState()
-                                                        .subCartTotalItem)
-                                                .toString(),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.montserrat(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: FFAppConstants
-                                                      .blackColor0A0A0A,
-                                                  fontSize: 10.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                  if (_model.isLoaderIndicator == true)
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Color(0x5114181B),
                       ),
-                    ),
-                  if (FFAppState().isCartShow == true)
-                    Align(
-                      alignment: AlignmentDirectional(0.0, 1.0),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            30.0, 0.0, 30.0, 20.0),
+                      child: Align(
+                        alignment: AlignmentDirectional(0.0, 0.0),
                         child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: FFAppConstants.indigoColor,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              topRight: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0),
-                              bottomRight: Radius.circular(10.0),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                10.0, 10.0, 8.0, 10.0),
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                logFirebaseEvent(
-                                    'PRODUCT_DETAILS_SCREEN_Row_fqplw31w_ON_T');
-                                if (FFAppState().cartTotalCount < 1) {
-                                  logFirebaseEvent('Row_navigate_to');
-
-                                  context.pushNamed(
-                                      CartSubscriptionScreenWidget.routeName);
-
-                                  logFirebaseEvent('Row_update_app_state');
-                                  FFAppState().isCartShow = false;
-                                  FFAppState().screenName = 'subscriptionCart';
-                                  safeSetState(() {});
-                                  logFirebaseEvent('Row_custom_action');
-                                  await actions.facebookEventClass(
-                                    FFAppState().userID,
-                                    ' ',
-                                    ' ',
-                                    FFAppState().cartTotalPrice,
-                                    FFAppState().cartTotalCount,
-                                    0.0,
-                                    'cart',
-                                    FFAppState().emptyJson,
-                                    'subscription cart',
-                                    ' ',
-                                    ' ',
-                                    ' ',
-                                    ' ',
-                                  );
-                                  logFirebaseEvent(
-                                      'Row_google_analytics_event');
-                                  logFirebaseEvent(
-                                    'Navigation',
-                                    parameters: {
-                                      'Screen Name': 'Search Result Screen',
-                                      'Navigate To': 'Subscription Cart Screen',
-                                    },
-                                  );
-                                } else {
-                                  logFirebaseEvent('Row_navigate_to');
-
-                                  context.pushNamed(
-                                      DailyCartScreenWidget.routeName);
-
-                                  logFirebaseEvent('Row_update_app_state');
-                                  FFAppState().isCartShow = false;
-                                  FFAppState().screenName = 'dailyCart';
-                                  safeSetState(() {});
-                                  logFirebaseEvent('Row_custom_action');
-                                  await actions.facebookEventClass(
-                                    FFAppState().userID,
-                                    ' ',
-                                    ' ',
-                                    FFAppState().cartTotalPrice,
-                                    FFAppState().cartTotalCount,
-                                    0.0,
-                                    'cart',
-                                    FFAppState().emptyJson,
-                                    'daily cart',
-                                    ' ',
-                                    ' ',
-                                    ' ',
-                                    ' ',
-                                  );
-                                  logFirebaseEvent(
-                                      'Row_google_analytics_event');
-                                  logFirebaseEvent(
-                                    'Navigation',
-                                    parameters: {
-                                      'Screen Name': 'Search Result Screen',
-                                      'Navigate To': 'Daily Cart Screen',
-                                    },
-                                  );
-                                }
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          RichText(
-                                            textScaler: MediaQuery.of(context)
-                                                .textScaler,
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text:
-                                                      'Congratulations !  You\'ve got ',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .montserrat(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: FFAppConstants
-                                                            .neutralWhiteF5F5F5,
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                                TextSpan(
-                                                  text: 'FREE DELIVERY.',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .montserrat(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: FFAppConstants
-                                                            .neutralWhiteF5F5F5,
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                )
-                                              ],
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FFAppConstants
-                                                        .neutralWhiteF5F5F5,
-                                                    fontSize: 8.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 5.0, 0.0, 3.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: functions
-                                                        .additionFunctionInt(
-                                                            FFAppState()
-                                                                .cartTotalCount,
-                                                            FFAppState()
-                                                                .subCartTotalItem)
-                                                        .toString(),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .yellowColor,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: ' item',
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .yellowColor,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 25.0,
-                                              child: VerticalDivider(
-                                                thickness: 1.0,
-                                                color:
-                                                    FFAppConstants.yellowColor,
-                                              ),
-                                            ),
-                                            RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'AED ',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .yellowColor,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: functions
-                                                        .setDecimalValue(functions
-                                                            .additionFunction(
-                                                                FFAppState()
-                                                                    .cartTotalPrice,
-                                                                FFAppState()
-                                                                    .subCartTotalPrice)
-                                                            .toString())!,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .yellowColor,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.readexPro(
-                                                        fontWeight:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontWeight,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Builder(
-                                        builder: (context) {
-                                          if ((FFAppState().cartSavingPrice >
-                                                  0.00) ||
-                                              (FFAppState()
-                                                      .subCartSavingAmount >
-                                                  0.00)) {
-                                            return RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'You have saved ',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .neutralWhiteF5F5F5,
-                                                          fontSize: 10.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: 'AED ',
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13.0,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: functions
-                                                        .setDecimalValue(functions
-                                                            .additionFunction(
-                                                                FFAppState()
-                                                                    .cartSavingPrice,
-                                                                FFAppState()
-                                                                    .subCartSavingAmount)
-                                                            ?.toString())!,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .whiteColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13.0,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: ' on your order',
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .neutralWhiteF5F5F5,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 10.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.readexPro(
-                                                        fontWeight:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontWeight,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      letterSpacing: 0.0,
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                              ),
-                                            );
-                                          } else {
-                                            return Text(
-                                              FFAppConstants.saveMsg,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FFAppConstants
-                                                        .whiteColor,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                          width: 100.0,
+                          height: 100.0,
+                          decoration: BoxDecoration(),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.asset(
+                              'assets/images/new_loader.gif',
+                              width: 100.0,
+                              height: 100.0,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

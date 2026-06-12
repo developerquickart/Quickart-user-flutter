@@ -331,7 +331,7 @@ class _BottomnavBarWidgetState extends State<BottomnavBarWidget> {
                       ),
                     ),
                     Text(
-                      'Fresh Picks',
+                      'Subscription',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             font: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,

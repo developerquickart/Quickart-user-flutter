@@ -2,7 +2,6 @@ import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/components/similar_pproduct/similar_pproduct_widget.dart';
-import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -54,6 +53,14 @@ class ProductDetailsScreenModel
 
   int status = 1;
 
+  int? selectedVariantIndx = 0;
+
+  dynamic weekModelJson;
+
+  dynamic selectedVariantDataJson;
+
+  bool isLoaderIndicator = false;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (seosource)] action in product_details_screen widget.
@@ -76,17 +83,11 @@ class ProductDetailsScreenModel
   // Stores action output result for [Backend Call - API (addremwishlist)] action in Icon widget.
   ApiCallResponse? apiResultj2l;
   // Stores action output result for [Backend Call - API (totaldeliveries)] action in Container widget.
-  ApiCallResponse? apiResultWeek;
-  // Stores action output result for [Backend Call - API (totaldeliveries)] action in Container widget.
   ApiCallResponse? apiResultWeek1;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? connectivtyResultC1;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Container widget.
   ApiCallResponse? apiResultAddCart;
-  // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
-  bool? connectivtyResultC11;
-  // Stores action output result for [Backend Call - API (Add to Cart)] action in Container widget.
-  ApiCallResponse? apiResultAddCart1;
   // Stores action output result for [Custom Action - checkInternetConnection] action in IconButton widget.
   bool? connnectivtyfavourites;
   // Stores action output result for [Backend Call - API (addnotifyme)] action in IconButton widget.

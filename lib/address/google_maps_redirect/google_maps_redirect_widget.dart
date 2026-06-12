@@ -37,7 +37,7 @@ class _GoogleMapsRedirectWidgetState extends State<GoogleMapsRedirectWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => GoogleMapsRedirectModel());
-
+print("G1---latLang----->${ FFAppState().latLang!}");
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'GoogleMapsRedirect'});
     // On page load action.
@@ -91,7 +91,7 @@ class _GoogleMapsRedirectWidgetState extends State<GoogleMapsRedirectWidget> {
                             controller: _model.googleMapsController,
                             onCameraIdle: (latLng) => safeSetState(
                                 () => _model.googleMapsCenter = latLng),
-                            initialLocation: _model.googleMapsCenter ??=
+                            initialLocation:FFAppState().categoryName != 'addAddress' ?  FFAppState().latLang! : _model.googleMapsCenter ??=
                                 FFAppState().latLang!,
                             markers: [
                               if (_googleMapMarker != null)

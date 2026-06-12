@@ -5,6 +5,7 @@
 .packages
 .pub-cache/
 build/
+release/
 
 # Android
 android/.gradle/
@@ -23,3 +24,6 @@ ios/Flutter/App.framework
 
 # Logs
 *.log
+
+# App bundle
+*.aab

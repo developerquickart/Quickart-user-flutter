@@ -1,5 +1,6 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
+import '/components/custom_alert_dailog_width_action/custom_alert_dailog_width_action_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -1595,106 +1596,150 @@ class _OrderTrackingPageWidgetState extends State<OrderTrackingPageWidget> {
                                               .jsonBody,
                                           r'''$.data.order_status''',
                                         ).toString())
-                                      FFButtonWidget(
-                                        onPressed: () async {
-                                          logFirebaseEvent(
-                                              'ORDER_TRACKING_CANCEL_ORDER_BTN_ON_TAP');
-                                          if (FFAppState().usserType !=
-                                              'guest') {
+                                      Builder(
+                                        builder: (context) => FFButtonWidget(
+                                          onPressed: () async {
                                             logFirebaseEvent(
-                                                'Button_update_app_state');
-                                            FFAppState().screenName = 'daily';
-                                            FFAppState().cartID = getJsonField(
-                                              orderTrackingPageOrderDetailAPIResponse
-                                                  .jsonBody,
-                                              r'''$.data.cart_id''',
-                                            ).toString();
-                                            FFAppState().afPrice =
-                                                functions.setDecimalValue(
-                                                    (double.parse(getJsonField(
-                                                              orderTrackingPageOrderDetailAPIResponse
-                                                                  .jsonBody,
-                                                              r'''$.data.total_price''',
-                                                            ).toString()) +
-                                                            double.parse(
-                                                                getJsonField(
-                                                              orderTrackingPageOrderDetailAPIResponse
-                                                                  .jsonBody,
-                                                              r'''$.data.trail_discount''',
-                                                            ).toString()))
-                                                        .toString())!;
-                                            safeSetState(() {});
-                                            logFirebaseEvent(
-                                                'Button_navigate_to');
-
-                                            context.pushNamed(
-                                                CancelOrderScreenWidget
-                                                    .routeName);
-                                          } else {
-                                            logFirebaseEvent(
-                                                'Button_alert_dialog');
-                                            var confirmDialogResponse =
-                                                await showDialog<bool>(
-                                                      context: context,
-                                                      builder:
-                                                          (alertDialogContext) {
-                                                        return AlertDialog(
-                                                          title: Text(
-                                                              FFAppState()
-                                                                  .AppName),
-                                                          content: Text(
-                                                              'Dear Customer,To process your refund, kindly register & create an account to receive the amount in your wallet.'),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      alertDialogContext,
-                                                                      false),
-                                                              child: Text(
-                                                                  'Cancel'),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      alertDialogContext,
-                                                                      true),
-                                                              child: Text(
-                                                                  'Sign Up'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    ) ??
-                                                    false;
-                                            if (confirmDialogResponse) {
+                                                'ORDER_TRACKING_CANCEL_ORDER_BTN_ON_TAP');
+                                            if (FFAppState().usserType !=
+                                                'guest') {
                                               logFirebaseEvent(
-                                                  'Button_navigate_to');
+                                                  'Button_update_app_state');
+                                              FFAppState().screenName = 'daily';
+                                              FFAppState().cartID =
+                                                  getJsonField(
+                                                orderTrackingPageOrderDetailAPIResponse
+                                                    .jsonBody,
+                                                r'''$.data.cart_id''',
+                                              ).toString();
+                                              FFAppState().afPrice =
+                                                  functions.setDecimalValue(
+                                                      (double.parse(
+                                                                  getJsonField(
+                                                                orderTrackingPageOrderDetailAPIResponse
+                                                                    .jsonBody,
+                                                                r'''$.data.total_price''',
+                                                              ).toString()) +
+                                                              double.parse(
+                                                                  getJsonField(
+                                                                orderTrackingPageOrderDetailAPIResponse
+                                                                    .jsonBody,
+                                                                r'''$.data.trail_discount''',
+                                                              ).toString()))
+                                                          .toString())!;
+                                              safeSetState(() {});
+                                              logFirebaseEvent(
+                                                  'Button_alert_dialog');
+                                              await showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Dialog(
+                                                    elevation: 0,
+                                                    insetPadding:
+                                                        EdgeInsets.zero,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                                0.0, 0.0)
+                                                            .resolve(
+                                                                Directionality.of(
+                                                                    context)),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        FocusScope.of(
+                                                                dialogContext)
+                                                            .unfocus();
+                                                        FocusManager.instance
+                                                            .primaryFocus
+                                                            ?.unfocus();
+                                                      },
+                                                      child:
+                                                          CustomAlertDailogWidthActionWidget(
+                                                        des: FFAppConstants
+                                                            .cancelOrdertext,
+                                                        height: 110.0,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              logFirebaseEvent(
+                                                  'Button_alert_dialog');
+                                              var confirmDialogResponse =
+                                                  await showDialog<bool>(
+                                                        context: context,
+                                                        builder:
+                                                            (alertDialogContext) {
+                                                          return AlertDialog(
+                                                            title: Text(
+                                                                FFAppState()
+                                                                    .AppName),
+                                                            content: Text(
+                                                                'Dear Customer,To process your refund, kindly register & create an account to receive the amount in your wallet.'),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () =>
+                                                                    Navigator.pop(
+                                                                        alertDialogContext,
+                                                                        false),
+                                                                child: Text(
+                                                                    'Cancel'),
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () =>
+                                                                    Navigator.pop(
+                                                                        alertDialogContext,
+                                                                        true),
+                                                                child: Text(
+                                                                    'Sign Up'),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      ) ??
+                                                      false;
+                                              if (confirmDialogResponse) {
+                                                logFirebaseEvent(
+                                                    'Button_navigate_to');
 
-                                              context.pushNamed(
-                                                  LoginScreenWidget.routeName);
+                                                context.pushNamed(
+                                                    LoginScreenWidget
+                                                        .routeName);
+                                              }
                                             }
-                                          }
-                                        },
-                                        text: 'Cancel Order',
-                                        icon: Icon(
-                                          Icons.cancel_outlined,
-                                          size: 24.0,
-                                        ),
-                                        options: FFButtonOptions(
-                                          height: 40.0,
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  15.0, 0.0, 15.0, 0.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          textStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .titleSmall
-                                              .override(
-                                                font: GoogleFonts.montserrat(
+                                          },
+                                          text: 'Cancel Order',
+                                          icon: Icon(
+                                            Icons.cancel_outlined,
+                                            size: 24.0,
+                                          ),
+                                          options: FFButtonOptions(
+                                            height: 40.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    15.0, 0.0, 15.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .titleSmall
+                                                .override(
+                                                  font: GoogleFonts.montserrat(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .titleSmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: FFAppConstants
+                                                      .indigoColor,
+                                                  letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
@@ -1702,22 +1747,14 @@ class _OrderTrackingPageWidgetState extends State<OrderTrackingPageWidget> {
                                                           .titleSmall
                                                           .fontStyle,
                                                 ),
-                                                color:
-                                                    FFAppConstants.indigoColor,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .fontStyle,
-                                              ),
-                                          elevation: 0.0,
-                                          borderSide: BorderSide(
-                                            color: FFAppConstants.indigoColor,
-                                            width: 1.0,
+                                            elevation: 0.0,
+                                            borderSide: BorderSide(
+                                              color: FFAppConstants.indigoColor,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(14.0),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(14.0),
                                         ),
                                       ),
                                     if (FFAppConstants.orderStatusCompleted ==
@@ -5114,131 +5151,149 @@ class _OrderTrackingPageWidgetState extends State<OrderTrackingPageWidget> {
                                                                             -1.0,
                                                                             0.0),
                                                                     child:
-                                                                        FFButtonWidget(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        logFirebaseEvent(
-                                                                            'ORDER_TRACKING_CANCEL_PRODUCT_BTN_ON_TAP');
-                                                                        if (FFAppState().usserType !=
-                                                                            'guest') {
+                                                                        Builder(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              FFButtonWidget(
+                                                                        onPressed:
+                                                                            () async {
                                                                           logFirebaseEvent(
-                                                                              'Button_update_app_state');
-                                                                          FFAppState().screenName =
-                                                                              'dailyGroup';
-                                                                          FFAppState().cartID =
-                                                                              getJsonField(
-                                                                            productModelItem,
-                                                                            r'''$.order_cart_id''',
-                                                                          ).toString();
-                                                                          FFAppState().afQty =
-                                                                              getJsonField(
-                                                                            productModelItem,
-                                                                            r'''$.qty''',
-                                                                          ).toString();
-                                                                          FFAppState().afPrice =
-                                                                              valueOrDefault<String>(
-                                                                            functions.calculateItemPrice(
+                                                                              'ORDER_TRACKING_CANCEL_PRODUCT_BTN_ON_TAP');
+                                                                          if (FFAppState().usserType !=
+                                                                              'guest') {
+                                                                            logFirebaseEvent('Button_update_app_state');
+                                                                            FFAppState().screenName =
+                                                                                'dailyGroup';
+                                                                            FFAppState().cartID =
                                                                                 getJsonField(
-                                                                                  productModelItem,
-                                                                                  r'''$.qty''',
-                                                                                ).toString(),
+                                                                              productModelItem,
+                                                                              r'''$.order_cart_id''',
+                                                                            ).toString();
+                                                                            FFAppState().afQty =
                                                                                 getJsonField(
-                                                                                  productModelItem,
-                                                                                  r'''$.price''',
-                                                                                ).toString()),
-                                                                            '0',
-                                                                          );
-                                                                          FFAppState().afProductName =
-                                                                              getJsonField(
-                                                                            productModelItem,
-                                                                            r'''$.product_name''',
-                                                                          ).toString();
-                                                                          FFAppState().groupID =
-                                                                              getJsonField(
-                                                                            orderTrackingPageOrderDetailAPIResponse.jsonBody,
-                                                                            r'''$.data.group_id''',
-                                                                          ).toString();
-                                                                          safeSetState(
-                                                                              () {});
-                                                                          logFirebaseEvent(
-                                                                              'Button_navigate_to');
+                                                                              productModelItem,
+                                                                              r'''$.qty''',
+                                                                            ).toString();
+                                                                            FFAppState().afPrice =
+                                                                                valueOrDefault<String>(
+                                                                              functions.calculateItemPrice(
+                                                                                  getJsonField(
+                                                                                    productModelItem,
+                                                                                    r'''$.qty''',
+                                                                                  ).toString(),
+                                                                                  getJsonField(
+                                                                                    productModelItem,
+                                                                                    r'''$.price''',
+                                                                                  ).toString()),
+                                                                              '0',
+                                                                            );
+                                                                            FFAppState().afProductName =
+                                                                                getJsonField(
+                                                                              productModelItem,
+                                                                              r'''$.product_name''',
+                                                                            ).toString();
+                                                                            FFAppState().groupID =
+                                                                                getJsonField(
+                                                                              orderTrackingPageOrderDetailAPIResponse.jsonBody,
+                                                                              r'''$.data.group_id''',
+                                                                            ).toString();
+                                                                            safeSetState(() {});
+                                                                            logFirebaseEvent('Button_alert_dialog');
+                                                                            await showDialog(
+                                                                              context: context,
+                                                                              builder: (dialogContext) {
+                                                                                return Dialog(
+                                                                                  elevation: 0,
+                                                                                  insetPadding: EdgeInsets.zero,
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      FocusScope.of(dialogContext).unfocus();
+                                                                                      FocusManager.instance.primaryFocus?.unfocus();
+                                                                                    },
+                                                                                    child: CustomAlertDailogWidthActionWidget(
+                                                                                      des: FFAppConstants.cancelOrdertext,
+                                                                                      height: 110.0,
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            );
+                                                                          } else {
+                                                                            logFirebaseEvent('Button_alert_dialog');
+                                                                            var confirmDialogResponse = await showDialog<bool>(
+                                                                                  context: context,
+                                                                                  builder: (alertDialogContext) {
+                                                                                    return AlertDialog(
+                                                                                      title: Text(FFAppState().AppName),
+                                                                                      content: Text('Dear Customer,To process your refund, kindly register & create an account to receive the amount in your wallet.'),
+                                                                                      actions: [
+                                                                                        TextButton(
+                                                                                          onPressed: () => Navigator.pop(alertDialogContext, false),
+                                                                                          child: Text('Cancel'),
+                                                                                        ),
+                                                                                        TextButton(
+                                                                                          onPressed: () => Navigator.pop(alertDialogContext, true),
+                                                                                          child: Text('Sign Up'),
+                                                                                        ),
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                ) ??
+                                                                                false;
+                                                                            if (confirmDialogResponse) {
+                                                                              logFirebaseEvent('Button_navigate_to');
 
-                                                                          context
-                                                                              .pushNamed(CancelOrderScreenWidget.routeName);
-                                                                        } else {
-                                                                          logFirebaseEvent(
-                                                                              'Button_alert_dialog');
-                                                                          var confirmDialogResponse = await showDialog<bool>(
-                                                                                context: context,
-                                                                                builder: (alertDialogContext) {
-                                                                                  return AlertDialog(
-                                                                                    title: Text(FFAppState().AppName),
-                                                                                    content: Text('Dear Customer,To process your refund, kindly register & create an account to receive the amount in your wallet.'),
-                                                                                    actions: [
-                                                                                      TextButton(
-                                                                                        onPressed: () => Navigator.pop(alertDialogContext, false),
-                                                                                        child: Text('Cancel'),
-                                                                                      ),
-                                                                                      TextButton(
-                                                                                        onPressed: () => Navigator.pop(alertDialogContext, true),
-                                                                                        child: Text('Sign Up'),
-                                                                                      ),
-                                                                                    ],
-                                                                                  );
-                                                                                },
-                                                                              ) ??
-                                                                              false;
-                                                                          if (confirmDialogResponse) {
-                                                                            logFirebaseEvent('Button_navigate_to');
-
-                                                                            context.goNamed(LoginScreenWidget.routeName);
+                                                                              context.goNamed(LoginScreenWidget.routeName);
+                                                                            }
                                                                           }
-                                                                        }
-                                                                      },
-                                                                      text:
-                                                                          'Cancel Product',
-                                                                      options:
-                                                                          FFButtonOptions(
-                                                                        width:
-                                                                            120.0,
-                                                                        height:
-                                                                            25.0,
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryBackground,
-                                                                        textStyle: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              font: GoogleFonts.montserrat(
+                                                                        },
+                                                                        text:
+                                                                            'Cancel Product',
+                                                                        options:
+                                                                            FFButtonOptions(
+                                                                          width:
+                                                                              120.0,
+                                                                          height:
+                                                                              25.0,
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).secondaryBackground,
+                                                                          textStyle: FlutterFlowTheme.of(context)
+                                                                              .titleSmall
+                                                                              .override(
+                                                                                font: GoogleFonts.montserrat(
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                                                                                ),
+                                                                                color: FFAppConstants.indigoColor,
+                                                                                fontSize: 12.0,
+                                                                                letterSpacing: 0.0,
                                                                                 fontWeight: FontWeight.w600,
                                                                                 fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
                                                                               ),
-                                                                              color: FFAppConstants.indigoColor,
-                                                                              fontSize: 12.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w600,
-                                                                              fontStyle: FlutterFlowTheme.of(context).titleSmall.fontStyle,
-                                                                            ),
-                                                                        elevation:
-                                                                            0.0,
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              FFAppConstants.indigoColor,
-                                                                          width:
-                                                                              1.0,
+                                                                          elevation:
+                                                                              0.0,
+                                                                          borderSide:
+                                                                              BorderSide(
+                                                                            color:
+                                                                                FFAppConstants.indigoColor,
+                                                                            width:
+                                                                                1.0,
+                                                                          ),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10.0),
                                                                         ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
                                                                       ),
                                                                     ),
                                                                   );
