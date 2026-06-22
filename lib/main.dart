@@ -133,16 +133,26 @@ Widget build(BuildContext context) {
     title: 'QuicKart',
     scrollBehavior: MyAppScrollBehavior(),
 
-    // 🔑 TEXT SCALE HANDLING (ADD THIS)
+    // // 🔑 TEXT SCALE HANDLING (ADD THIS)
+    // builder: (context, child) {
+    //   final mediaQuery = MediaQuery.of(context);
+
+    //   return MediaQuery(
+    //     data: mediaQuery.copyWith(
+    //       // iOS text size restriction
+    //       textScaleFactor: Platform.isIOS
+    //           ? mediaQuery.textScaleFactor.clamp(1.0, 1.2) // ✅ recommended
+    //           : mediaQuery.textScaleFactor,
+    //     ),
+    //     child: child!,
+    //   );
+    // },
     builder: (context, child) {
       final mediaQuery = MediaQuery.of(context);
 
       return MediaQuery(
         data: mediaQuery.copyWith(
-          // iOS text size restriction
-          textScaleFactor: Platform.isIOS
-              ? mediaQuery.textScaleFactor.clamp(1.0, 1.2) // ✅ recommended
-              : mediaQuery.textScaleFactor,
+          textScaleFactor: 1.0,
         ),
         child: child!,
       );

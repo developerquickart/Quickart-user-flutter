@@ -37,6 +37,7 @@ class _QuickartsplashScreenWidgetState
   @override
   void initState() {
     super.initState();
+    print("G1---->splash");
     _model = createModel(context, () => QuickartsplashScreenModel());
     imageVersion = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -701,7 +702,7 @@ class _QuickartsplashScreenWidgetState
                   errorBuilder: (context, error, stackTrace) {
                     return Image.network(
                       'https://quickart.b-cdn.net/images/app-home-loaderne.gif?v=$imageVersion',
-                      //  'https://quickart.b-cdn.net/images/app-home-splash-screen.gif?v=$imageVersion',
+                      //  'https://quickart.b-cdn.net/images/app-home-splash-screeneid.gif?v=$imageVersion',
                       width: MediaQuery.sizeOf(context).width,
                       height: MediaQuery.sizeOf(context).height,
                       fit: BoxFit.fill,

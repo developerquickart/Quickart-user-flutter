@@ -964,11 +964,11 @@ double getCurrentLatitudeLogitude(
 ) {
   print("G1------->$latLng");
   if (type == 'lat') {
-    // return latLng.latitude;
-    return 25.2048;
+    return latLng.latitude;
+    // return 25.2048;
   } else {
-    // return latLng.longitude;
-    return 55.2708;
+    return latLng.longitude;
+    // return 55.2708;
   }
 }
 
