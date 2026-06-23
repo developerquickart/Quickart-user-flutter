@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -140,22 +141,82 @@ class _SneakyProductListScreenWidgetState
               }
             },
           ),
-          title: Text(
-            'Neighbour\'s Choice',
-            textAlign: TextAlign.start,
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  font: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                  ),
-                  color: FFAppConstants.appBarIconandTitleColor,
-                  fontSize: FFAppConstants.appBartitleFont.toDouble(),
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  fontStyle:
-                      FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                width: MediaQuery.sizeOf(context).width * 0.66,
+                decoration: BoxDecoration(),
+                child: Text(
+                  'Neighbour\'s Choice',
+                  textAlign: TextAlign.start,
+                  style: FlutterFlowTheme.of(context).headlineMedium.override(
+                        font: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .fontStyle,
+                        ),
+                        color: FFAppConstants.appBarIconandTitleColor,
+                        fontSize: FFAppConstants.appBartitleFont.toDouble(),
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w600,
+                        fontStyle: FlutterFlowTheme.of(context)
+                            .headlineMedium
+                            .fontStyle,
+                      ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 10.0, 10.0, 0.0),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    logFirebaseEvent(
+                        'SNEAKY_PRODUCT_LIST_SCREEN_Icon_gd4jymgk');
+                    logFirebaseEvent('Icon_bottom_sheet');
+                    await showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: false,
+                      context: context,
+                      builder: (context) {
+                        return GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          child: Padding(
+                            padding: MediaQuery.viewInsetsOf(context),
+                            child: FilterBottomSheetWidget(
+                              isSelectedFilter: _model.isFilterSelected,
+                            ),
+                          ),
+                        );
+                      },
+                    ).then((value) =>
+                        safeSetState(() => _model.selectedFilter = value));
+
+                    logFirebaseEvent('Icon_update_page_state');
+                    _model.isFilterSelected = _model.selectedFilter!;
+                    safeSetState(() {});
+                    logFirebaseEvent('Icon_refresh_database_request');
+                    safeSetState(() => _model.apiRequestCompleter = null);
+                    await _model.waitForApiRequestCompleted();
+
+                    safeSetState(() {});
+                  },
+                  child: Icon(
+                    Icons.filter_alt,
+                    color: FFAppConstants.appBarIconandTitleColor,
+                    size: 26.0,
+                  ),
+                ),
+              ),
+            ],
           ),
           actions: [],
           centerTitle: false,
@@ -200,6 +261,21 @@ class _SneakyProductListScreenWidgetState
                                   deviceid: FFAppState().deviceID,
                                   userid: FFAppState().userID,
                                   platform: isiOS ? 'ios' : 'android',
+                                  minPrice: _model.isFilterSelected == 3
+                                      ? '0.0'
+                                      : FFAppState().minDiscount,
+                                  maxPrice: _model.isFilterSelected == 3
+                                      ? '99.99'
+                                      : FFAppState().maxDiscount,
+                                  sortPrice: () {
+                                    if (_model.isFilterSelected == 1) {
+                                      return 'htol';
+                                    } else if (_model.isFilterSelected == 2) {
+                                      return 'ltoh';
+                                    } else {
+                                      return FFAppState().sortPrice;
+                                    }
+                                  }(),
                                 )))
                               .future,
                           builder: (context, snapshot) {
@@ -257,7 +333,7 @@ class _SneakyProductListScreenWidgetState
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 5.0,
-                                      mainAxisSpacing: 2.0,
+                                      mainAxisSpacing: 5.0,
                                       childAspectRatio: 0.67,
                                     ),
                                     scrollDirection: Axis.vertical,
@@ -336,14 +412,14 @@ class _SneakyProductListScreenWidgetState
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(8.0),
-                                              bottomRight: Radius.circular(8.0),
                                               topLeft: Radius.circular(8.0),
                                               topRight: Radius.circular(8.0),
+                                              bottomLeft: Radius.circular(8.0),
+                                              bottomRight: Radius.circular(8.0),
                                             ),
                                             border: Border.all(
-                                              color: FFAppConstants.whiteColor,
-                                              width: 1.0,
+                                              color: FFAppConstants.borderColor,
+                                              width: 0.5,
                                             ),
                                           ),
                                           child: Stack(
@@ -377,13 +453,6 @@ class _SneakyProductListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
@@ -396,13 +465,6 @@ class _SneakyProductListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
@@ -752,13 +814,13 @@ class _SneakyProductListScreenWidgetState
                                                                             BoxDecoration(
                                                                           borderRadius:
                                                                               BorderRadius.only(
-                                                                            bottomLeft:
-                                                                                Radius.circular(5.0),
-                                                                            bottomRight:
-                                                                                Radius.circular(5.0),
                                                                             topLeft:
                                                                                 Radius.circular(5.0),
                                                                             topRight:
+                                                                                Radius.circular(5.0),
+                                                                            bottomLeft:
+                                                                                Radius.circular(5.0),
+                                                                            bottomRight:
                                                                                 Radius.circular(5.0),
                                                                           ),
                                                                           border:
@@ -964,10 +1026,8 @@ class _SneakyProductListScreenWidgetState
                                                                                       ),
                                                                                   elevation: 0.0,
                                                                                   borderRadius: BorderRadius.only(
-                                                                                    bottomLeft: Radius.circular(5.0),
-                                                                                    bottomRight: Radius.circular(0.0),
                                                                                     topLeft: Radius.circular(5.0),
-                                                                                    topRight: Radius.circular(0.0),
+                                                                                    bottomLeft: Radius.circular(5.0),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1065,7 +1125,7 @@ class _SneakyProductListScreenWidgetState
                                                                                                 child: CustomAlertDailogWidget(
                                                                                                   des: FFAppConstants.noStock,
                                                                                                   height: 150.0,
-                                                                                                  title: " ",
+                                                                                                  title: ' ',
                                                                                                 ),
                                                                                               ),
                                                                                             );
@@ -1255,10 +1315,8 @@ class _SneakyProductListScreenWidgetState
                                                                                     width: 1.0,
                                                                                   ),
                                                                                   borderRadius: BorderRadius.only(
-                                                                                    bottomLeft: Radius.circular(0.0),
-                                                                                    bottomRight: Radius.circular(5.0),
-                                                                                    topLeft: Radius.circular(0.0),
                                                                                     topRight: Radius.circular(5.0),
+                                                                                    bottomRight: Radius.circular(5.0),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1791,12 +1849,6 @@ class _SneakyProductListScreenWidgetState
                                                           bottomRight:
                                                               Radius.circular(
                                                                   8.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                         ),
                                                       ),
                                                       child: Stack(
@@ -2225,14 +2277,10 @@ class _SneakyProductListScreenWidgetState
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(0.0),
-                                                    bottomRight:
-                                                        Radius.circular(8.0),
                                                     topLeft:
                                                         Radius.circular(8.0),
-                                                    topRight:
-                                                        Radius.circular(0.0),
+                                                    bottomRight:
+                                                        Radius.circular(8.0),
                                                   ),
                                                 ),
                                                 child: Row(
@@ -2256,18 +2304,9 @@ class _SneakyProductListScreenWidgetState
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                               ),
                                                             ),
                                                             child: Align(
@@ -2417,12 +2456,6 @@ class _SneakyProductListScreenWidgetState
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    8.0),
                                                             topLeft:
                                                                 Radius.circular(
                                                                     valueOrDefault<
@@ -2437,9 +2470,9 @@ class _SneakyProductListScreenWidgetState
                                                                   : 8.0,
                                                               0.0,
                                                             )),
-                                                            topRight:
+                                                            bottomRight:
                                                                 Radius.circular(
-                                                                    0.0),
+                                                                    8.0),
                                                           ),
                                                           border: Border.all(
                                                             color: Color(
@@ -2644,16 +2677,10 @@ class _SneakyProductListScreenWidgetState
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
+                                                                topRight: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topRight: Radius
+                                                                bottomLeft: Radius
                                                                     .circular(
                                                                         8.0),
                                                               ),
@@ -2860,16 +2887,10 @@ class _SneakyProductListScreenWidgetState
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
+                                                                topRight: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topRight: Radius
+                                                                bottomLeft: Radius
                                                                     .circular(
                                                                         8.0),
                                                               ),
@@ -3199,10 +3220,10 @@ class _SneakyProductListScreenWidgetState
                               decoration: BoxDecoration(
                                 color: FFAppConstants.indigoColor,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
                                   topLeft: Radius.circular(10.0),
                                   topRight: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
                               ),
                               child: Padding(

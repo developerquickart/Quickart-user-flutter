@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -26,6 +27,8 @@ class TrendingProductsScreenModel
   ///  Local state fields for this page.
 
   dynamic productListJ;
+
+  int isFilterSelected = 0;
 
   ///  State fields for stateful widgets in this page.
 
@@ -58,6 +61,8 @@ class TrendingProductsScreenModel
   bool? connectivityResult1;
   // Stores action output result for [Backend Call - API (addremwishlist)] action in Icon2 widget.
   ApiCallResponse? addRemoveAPIResult;
+  // Stores action output result for [Bottom Sheet - FilterBottomSheet] action in Icon widget.
+  int? selectedFilter;
 
   @override
   void initState(BuildContext context) {}

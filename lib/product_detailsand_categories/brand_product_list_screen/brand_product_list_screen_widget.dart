@@ -248,10 +248,10 @@ class _BrandProductListScreenWidgetState
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0),
                               topLeft: Radius.circular(8.0),
                               topRight: Radius.circular(8.0),
+                              bottomLeft: Radius.circular(8.0),
+                              bottomRight: Radius.circular(8.0),
                             ),
                             border: Border.all(
                               color: FlutterFlowTheme.of(context).alternate,
@@ -499,17 +499,17 @@ class _BrandProductListScreenWidgetState
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(8.0),
+                                                topRight: Radius.circular(8.0),
                                                 bottomLeft:
                                                     Radius.circular(8.0),
                                                 bottomRight:
                                                     Radius.circular(8.0),
-                                                topLeft: Radius.circular(8.0),
-                                                topRight: Radius.circular(8.0),
                                               ),
                                               border: Border.all(
                                                 color:
-                                                    FFAppConstants.whiteColor,
-                                                width: 1.0,
+                                                    FFAppConstants.borderColor,
+                                                width: 0.5,
                                               ),
                                             ),
                                             child: Stack(
@@ -554,12 +554,6 @@ class _BrandProductListScreenWidgetState
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          0.0),
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           8.0),
@@ -572,12 +566,6 @@ class _BrandProductListScreenWidgetState
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          0.0),
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           8.0),
@@ -929,10 +917,10 @@ class _BrandProductListScreenWidgetState
                                                                               height: 30.0,
                                                                               decoration: BoxDecoration(
                                                                                 borderRadius: BorderRadius.only(
-                                                                                  bottomLeft: Radius.circular(5.0),
-                                                                                  bottomRight: Radius.circular(5.0),
                                                                                   topLeft: Radius.circular(5.0),
                                                                                   topRight: Radius.circular(5.0),
+                                                                                  bottomLeft: Radius.circular(5.0),
+                                                                                  bottomRight: Radius.circular(5.0),
                                                                                 ),
                                                                                 border: Border.all(
                                                                                   color: FFAppConstants.calculatorColor,
@@ -1159,10 +1147,8 @@ class _BrandProductListScreenWidgetState
                                                                                           width: 0.0,
                                                                                         ),
                                                                                         borderRadius: BorderRadius.only(
-                                                                                          bottomLeft: Radius.circular(5.0),
-                                                                                          bottomRight: Radius.circular(0.0),
                                                                                           topLeft: Radius.circular(5.0),
-                                                                                          topRight: Radius.circular(0.0),
+                                                                                          bottomLeft: Radius.circular(5.0),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -1260,7 +1246,7 @@ class _BrandProductListScreenWidgetState
                                                                                                       child: CustomAlertDailogWidget(
                                                                                                         des: FFAppConstants.noStock,
                                                                                                         height: 150.0,
-                                                                                                        title: " ",
+                                                                                                        title: ' ',
                                                                                                       ),
                                                                                                     ),
                                                                                                   );
@@ -1450,10 +1436,8 @@ class _BrandProductListScreenWidgetState
                                                                                           width: 0.0,
                                                                                         ),
                                                                                         borderRadius: BorderRadius.only(
-                                                                                          bottomLeft: Radius.circular(0.0),
-                                                                                          bottomRight: Radius.circular(5.0),
-                                                                                          topLeft: Radius.circular(0.0),
                                                                                           topRight: Radius.circular(5.0),
+                                                                                          bottomRight: Radius.circular(5.0),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -1987,12 +1971,6 @@ class _BrandProductListScreenWidgetState
                                                                   Radius
                                                                       .circular(
                                                                           8.0),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      0.0),
                                                             ),
                                                           ),
                                                           child: Stack(
@@ -2359,14 +2337,10 @@ class _BrandProductListScreenWidgetState
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(0.0),
-                                                      bottomRight:
-                                                          Radius.circular(8.0),
                                                       topLeft:
                                                           Radius.circular(8.0),
-                                                      topRight:
-                                                          Radius.circular(0.0),
+                                                      bottomRight:
+                                                          Radius.circular(8.0),
                                                     ),
                                                   ),
                                                   child: Row(
@@ -2390,18 +2364,9 @@ class _BrandProductListScreenWidgetState
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          0.0),
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           8.0),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          0.0),
                                                                 ),
                                                               ),
                                                               child: Align(
@@ -2547,13 +2512,6 @@ class _BrandProductListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          8.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       valueOrDefault<
@@ -2568,9 +2526,10 @@ class _BrandProductListScreenWidgetState
                                                                     : 8.0,
                                                                 0.0,
                                                               )),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      0.0),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          8.0),
                                                             ),
                                                             border: Border.all(
                                                               color: Color(
@@ -2771,17 +2730,10 @@ class _BrandProductListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
+                                                              topRight: Radius
                                                                   .circular(
                                                                       8.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              topRight: Radius
+                                                              bottomLeft: Radius
                                                                   .circular(
                                                                       8.0),
                                                             ),
@@ -2974,17 +2926,10 @@ class _BrandProductListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
+                                                              topRight: Radius
                                                                   .circular(
                                                                       8.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              topRight: Radius
+                                                              bottomLeft: Radius
                                                                   .circular(
                                                                       8.0),
                                                             ),
@@ -3305,10 +3250,10 @@ class _BrandProductListScreenWidgetState
                               decoration: BoxDecoration(
                                 color: FFAppConstants.indigoColor,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
                                   topLeft: Radius.circular(10.0),
                                   topRight: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
                               ),
                               child: Padding(

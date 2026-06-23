@@ -1290,15 +1290,21 @@ class RepeatordersCall {
     String? storeid = '',
     String? deviceID = '',
     String? platform = '',
+    String? sortPrice = '',
+    String? minDiscount = '',
+    String? maxDiscount = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "device_id": "${deviceID}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "min_discount": "${minDiscount}",
+  "max_discount": "${maxDiscount}",
+  "sortprice": "${sortPrice}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'repeatorders',
@@ -2049,6 +2055,7 @@ class TimeslotCall {
       ));
 }
 
+
 class SneakyproductlistCall {
   Future<ApiCallResponse> call({
     String? storeid = '',
@@ -2057,6 +2064,9 @@ class SneakyproductlistCall {
     String? deviceid = '',
     String? userid = '',
     String? platform = '',
+    String? sortPrice = '',
+    String? minPrice = '',
+    String? maxPrice = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -2064,10 +2074,13 @@ class SneakyproductlistCall {
 {
   "userLat": "${lat}",
   "userLng": "${long}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "device_id": "${deviceid}",
   "user_id": "${userid}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "min_discount": "${minPrice}",
+  "max_discount": "${maxPrice}",
+  "sortprice": "${sortPrice}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'sneakyproductlist',
@@ -4235,22 +4248,25 @@ class OccasionalcatsearchCall {
     int? pageCount,
     String? byName = '',
     String? platform = '',
+    String? sortPrice = '',
+    String? minDiscount = '',
+    String? maxDiscount = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeid)}",
   "user_id": "${escapeStringForJson(userid)}",
   "byname": "${escapeStringForJson(byName)}",
   "min_price": "null",
   "max_price": "null",
   "stock": "null",
-  "min_discount": "null",
-  "max_discount": "null",
+  "min_discount": "${escapeStringForJson(minDiscount)}",
+  "max_discount": "${escapeStringForJson(maxDiscount)}",
   "sort": "null",
   "sortname": "null",
-  "sortprice": "null",
+  "sortprice": "${escapeStringForJson(sortPrice)}",
   "cat_id": "null",
   "sub_cat_id": "null",
   "cattype": "occasional",
@@ -5310,27 +5326,31 @@ class AutocompleteCall {
           .toList();
 }
 
+
 class ProductsearchCall {
   static Future<ApiCallResponse> call({
     String? userid = '',
     String? keyword = '',
     String? storeid = '',
     String? platform = '',
+    String? sortPrice = '',
+    String? minDiscount = '',
+    String? maxDiscount = '',
   }) async {
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userid)}",
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeid)}",
   "keyword": "${escapeStringForJson(keyword)}",
   "byname": "null",
   "min_price": "null",
   "max_price": "null",
   "stock": "null",
-  "min_discount": "null",
-  "max_discount": "null",
+  "min_discount": "${escapeStringForJson(minDiscount)}",
+  "max_discount": "${escapeStringForJson(maxDiscount)}",
   "sort": "null",
   "sortname": "null",
-  "sortprice": "null",
+  "sortprice": "${escapeStringForJson(sortPrice)}",
   "cat_id": "null",
   "sub_cat_id": "null",
   "device_id": "",
@@ -5343,7 +5363,7 @@ class ProductsearchCall {
     return ApiManager.instance.makeApiCall(
       callName: 'productsearch',
       apiUrl:
-          'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
+          'https://kqnbbiyijarwsoymqtup.supabase.co/functions/v1/product-search',
       callType: ApiCallType.POST,
       headers: {},
       params: {},

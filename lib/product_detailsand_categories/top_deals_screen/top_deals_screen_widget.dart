@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -172,20 +173,78 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
               }
             },
           ),
-          title: Text(
-            'Best Sellers',
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  font: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                  ),
-                  color: FFAppConstants.appBarIconandTitleColor,
-                  fontSize: FFAppConstants.appBartitleFont.toDouble(),
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                width: MediaQuery.sizeOf(context).width * 0.66,
+                decoration: BoxDecoration(),
+                child: Text(
+                  'Best Sellers',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        font: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                        ),
+                        color: FFAppConstants.appBarIconandTitleColor,
+                        fontSize: FFAppConstants.appBartitleFont.toDouble(),
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w600,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                      ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 10.0, 10.0, 0.0),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    logFirebaseEvent('TOP_DEALS_SCREEN_Icon_6ll024da_ON_TAP');
+                    logFirebaseEvent('Icon_bottom_sheet');
+                    await showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: false,
+                      context: context,
+                      builder: (context) {
+                        return GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          child: Padding(
+                            padding: MediaQuery.viewInsetsOf(context),
+                            child: FilterBottomSheetWidget(
+                              isSelectedFilter: _model.isFilterSelected,
+                            ),
+                          ),
+                        );
+                      },
+                    ).then((value) =>
+                        safeSetState(() => _model.selectedFilter = value));
+
+                    logFirebaseEvent('Icon_update_page_state');
+                    _model.isFilterSelected = _model.selectedFilter!;
+                    safeSetState(() {});
+                    logFirebaseEvent('Icon_refresh_database_request');
+                    safeSetState(() => _model.apiRequestCompleter = null);
+                    await _model.waitForApiRequestCompleted();
+
+                    safeSetState(() {});
+                  },
+                  child: Icon(
+                    Icons.filter_alt,
+                    color: FFAppConstants.appBarIconandTitleColor,
+                    size: 26.0,
+                  ),
+                ),
+              ),
+            ],
           ),
           actions: [],
           centerTitle: false,
@@ -228,11 +287,23 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
                                     minPrice: FFAppState().minPrice,
                                     maxPrice: FFAppState().maxPrice,
                                     stock: FFAppState().stock,
-                                    minDiscount: FFAppState().minDiscount,
-                                    maxDiscount: FFAppState().maxDiscount,
+                                    minDiscount: _model.isFilterSelected == 3
+                                        ? '0.0'
+                                        : FFAppState().minDiscount,
+                                    maxDiscount: _model.isFilterSelected == 3
+                                        ? '99.99'
+                                        : FFAppState().minDiscount,
                                     sort: FFAppState().sort,
                                     sortName: FFAppState().sortName,
-                                    sortPrice: FFAppState().sortPrice,
+                                    sortPrice: () {
+                                      if (_model.isFilterSelected == 1) {
+                                        return 'htol';
+                                      } else if (_model.isFilterSelected == 2) {
+                                        return 'ltoh';
+                                      } else {
+                                        return FFAppState().sortPrice;
+                                      }
+                                    }(),
                                     catId: 'null',
                                     subCatId: 'null',
                                     page: FFAppState().page,
@@ -384,7 +455,8 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
                                               ),
                                               border: Border.all(
                                                 color:
-                                                    FFAppConstants.whiteColor,
+                                                    FFAppConstants.borderColor,
+                                                width: 0.5,
                                               ),
                                             ),
                                             child: Stack(
@@ -1106,7 +1178,7 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
                                                                                                   child: CustomAlertDailogWidget(
                                                                                                     des: FFAppConstants.noStock,
                                                                                                     height: 150.0,
-                                                                                                    title: "",
+                                                                                                    title: ' ',
                                                                                                   ),
                                                                                                 ),
                                                                                               );
@@ -2264,7 +2336,7 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
                                                                 child: Padding(
                                                                   padding: EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0.0,
+                                                                          3.0,
                                                                           0.0,
                                                                           2.0,
                                                                           0.0),

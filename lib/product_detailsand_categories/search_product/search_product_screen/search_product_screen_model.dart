@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -26,14 +27,20 @@ class SearchProductScreenModel
 
   dynamic productModel1;
 
+  int isFilterSelected = 0;
+
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  // Stores action output result for [Backend Call - API (searchbystoreproduct)] action in TextField widget.
-  ApiCallResponse? searchProductAPIResponse;
+  // Stores action output result for [Backend Call - API (productsearch)] action in TextField widget.
+  ApiCallResponse? searchProductAPIResponsefil;
+  // Stores action output result for [Bottom Sheet - FilterBottomSheet] action in Icon widget.
+  int? selectedFilterSearch;
+  // Stores action output result for [Backend Call - API (productsearch)] action in Icon widget.
+  ApiCallResponse? searchProductAPIResponsefilter;
   // Stores action output result for [Bottom Sheet - VarientBotttomSheet] action in Button widget.
   dynamic? returnJson7;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.

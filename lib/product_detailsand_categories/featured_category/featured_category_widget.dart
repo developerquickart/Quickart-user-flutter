@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -149,10 +150,22 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
               maxrating: FFAppState().maxRating,
               sort: FFAppState().sort,
               sortName: FFAppState().sortName,
-              sortPrice: FFAppState().sortPrice,
+              sortPrice: () {
+                if (_model.isFilterSelected == 1) {
+                  return 'htol';
+                } else if (_model.isFilterSelected == 2) {
+                  return 'ltoh';
+                } else {
+                  return FFAppState().sortPrice;
+                }
+              }(),
               stock: FFAppState().stock,
-              minDiscount: FFAppState().minDiscount,
-              maxDiscount: FFAppState().maxDiscount,
+              minDiscount: _model.isFilterSelected == 3
+                  ? '0.0'
+                  : FFAppState().minDiscount,
+              maxDiscount: _model.isFilterSelected == 3
+                  ? '99.99'
+                  : FFAppState().maxDiscount,
               platform: isiOS ? 'ios' : 'android',
             )))
           .future,
@@ -218,24 +231,88 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                   }
                 },
               ),
-              title: Text(
-                '${widget!.title != null && widget!.title != '' ? ((String var1) {
-                    return var1.replaceAll(RegExp('_'), ' ');
-                  }(widget!.title!)) : FFAppState().categoryName} Category',
-                style: FlutterFlowTheme.of(context).headlineMedium.override(
-                      font: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontStyle: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .fontStyle,
-                      ),
-                      color: FFAppConstants.blackColor0A0A0A,
-                      fontSize: FFAppConstants.appBartitleFont.toDouble(),
-                      letterSpacing: 0.0,
-                      fontWeight: FontWeight.w600,
-                      fontStyle:
-                          FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+              title: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    width: MediaQuery.sizeOf(context).width * 0.66,
+                    decoration: BoxDecoration(),
+                    child: Text(
+                      '${widget!.title != null && widget!.title != '' ? ((String var1) {
+                          return var1.replaceAll(RegExp('_'), ' ');
+                        }(widget!.title!)) : FFAppState().categoryName} Category',
+                      maxLines: 2,
+                      style: FlutterFlowTheme.of(context)
+                          .headlineMedium
+                          .override(
+                            font: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w600,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .headlineMedium
+                                  .fontStyle,
+                            ),
+                            color: FFAppConstants.blackColor0A0A0A,
+                            fontSize: FFAppConstants.appBartitleFont.toDouble(),
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .headlineMedium
+                                .fontStyle,
+                          ),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 10.0, 0.0),
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        logFirebaseEvent(
+                            'FEATURED_CATEGORY_Icon_jfl1lh2d_ON_TAP');
+                        logFirebaseEvent('Icon_bottom_sheet');
+                        await showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          enableDrag: false,
+                          context: context,
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
+                              child: Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: FilterBottomSheetWidget(
+                                  isSelectedFilter: _model.isFilterSelected,
+                                ),
+                              ),
+                            );
+                          },
+                        ).then((value) =>
+                            safeSetState(() => _model.selectedFilter = value));
+
+                        logFirebaseEvent('Icon_update_page_state');
+                        _model.isFilterSelected = _model.selectedFilter!;
+                        safeSetState(() {});
+                        logFirebaseEvent('Icon_refresh_database_request');
+                        safeSetState(() => _model.apiRequestCompleter2 = null);
+                        await _model.waitForApiRequestCompleted2();
+
+                        safeSetState(() {});
+                      },
+                      child: Icon(
+                        Icons.filter_alt,
+                        color: FFAppConstants.appBarIconandTitleColor,
+                        size: 26.0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               actions: [],
               centerTitle: false,
@@ -461,21 +538,15 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                             ? FFAppConstants
                                                                 .calculatorColor
                                                             : FFAppConstants
-                                                                    .whiteColor,
+                                                                .whiteColor,
                                                         borderRadius:
                                                             BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  18.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                           topLeft:
                                                               Radius.circular(
                                                                   18.0),
-                                                          topRight:
+                                                          bottomLeft:
                                                               Radius.circular(
-                                                                  0.0),
+                                                                  18.0),
                                                         ),
                                                       ),
                                                     ),
@@ -636,8 +707,8 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             border: Border.all(
-                                              color: FFAppConstants.whiteColor,
-                                              width: 1.0,
+                                              color: FFAppConstants.borderColor,
+                                              width: 0.5,
                                             ),
                                           ),
                                           child: Stack(
@@ -685,12 +756,6 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
@@ -703,12 +768,6 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
@@ -1061,10 +1120,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                                               BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(5.0),
-                                                                              bottomRight: Radius.circular(5.0),
                                                                               topLeft: Radius.circular(5.0),
                                                                               topRight: Radius.circular(5.0),
+                                                                              bottomLeft: Radius.circular(5.0),
+                                                                              bottomRight: Radius.circular(5.0),
                                                                             ),
                                                                             border:
                                                                                 Border.all(
@@ -1267,10 +1326,8 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                                                         ),
                                                                                     elevation: 0.0,
                                                                                     borderRadius: BorderRadius.only(
-                                                                                      bottomLeft: Radius.circular(5.0),
-                                                                                      bottomRight: Radius.circular(0.0),
                                                                                       topLeft: Radius.circular(5.0),
-                                                                                      topRight: Radius.circular(0.0),
+                                                                                      bottomLeft: Radius.circular(5.0),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -1368,7 +1425,7 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                                                                   child: CustomAlertDailogWidget(
                                                                                                     des: FFAppConstants.noStock,
                                                                                                     height: 150.0,
-                                                                                                    title: "",
+                                                                                                    title: ' ',
                                                                                                   ),
                                                                                                 ),
                                                                                               );
@@ -1558,10 +1615,8 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                                                       width: 0.0,
                                                                                     ),
                                                                                     borderRadius: BorderRadius.only(
-                                                                                      bottomLeft: Radius.circular(0.0),
-                                                                                      bottomRight: Radius.circular(5.0),
-                                                                                      topLeft: Radius.circular(0.0),
                                                                                       topRight: Radius.circular(5.0),
+                                                                                      bottomRight: Radius.circular(5.0),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -2093,12 +2148,6 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                           bottomRight:
                                                               Radius.circular(
                                                                   8.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                         ),
                                                       ),
                                                       child: Stack(
@@ -2523,14 +2572,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(0.0),
-                                                    bottomRight:
-                                                        Radius.circular(8.0),
                                                     topLeft:
                                                         Radius.circular(8.0),
-                                                    topRight:
-                                                        Radius.circular(0.0),
+                                                    bottomRight:
+                                                        Radius.circular(8.0),
                                                   ),
                                                 ),
                                                 child: Row(
@@ -2554,18 +2599,9 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                               ),
                                                             ),
                                                             child: Align(
@@ -2715,12 +2751,6 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    8.0),
                                                             topLeft:
                                                                 Radius.circular(
                                                                     valueOrDefault<
@@ -2735,9 +2765,9 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                                   : 8.0,
                                                               0.0,
                                                             )),
-                                                            topRight:
+                                                            bottomRight:
                                                                 Radius.circular(
-                                                                    0.0),
+                                                                    8.0),
                                                           ),
                                                           border: Border.all(
                                                             color: Color(
@@ -2937,16 +2967,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
+                                                            topRight:
                                                                 Radius.circular(
                                                                     8.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
+                                                            bottomLeft:
                                                                 Radius.circular(
                                                                     8.0),
                                                           ),
@@ -3147,16 +3171,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
+                                                            topRight:
                                                                 Radius.circular(
                                                                     8.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
+                                                            bottomLeft:
                                                                 Radius.circular(
                                                                     8.0),
                                                           ),
@@ -3375,10 +3393,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
                             decoration: BoxDecoration(
                               color: FFAppConstants.indigoColor,
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
                                 topLeft: Radius.circular(10.0),
                                 topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                                bottomRight: Radius.circular(10.0),
                               ),
                             ),
                             child: Padding(

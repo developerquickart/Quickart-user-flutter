@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -253,83 +254,67 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 20.0, 0.0),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          logFirebaseEvent(
-                              'SEARCH_RESULT_SCREEN_Container_1wz8gjmk_');
-                          logFirebaseEvent('Container_update_app_state');
-                          FFAppState().searchLoader = true;
-                          safeSetState(() {});
-                          logFirebaseEvent('Container_navigate_to');
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        logFirebaseEvent(
+                            'SEARCH_RESULT_SCREEN_Container_1wz8gjmk_');
+                        logFirebaseEvent('Container_update_app_state');
+                        FFAppState().searchLoader = true;
+                        safeSetState(() {});
+                        logFirebaseEvent('Container_navigate_to');
 
-                          context
-                              .pushNamed(SearchProductScreenWidget.routeName);
+                        context.pushNamed(SearchProductScreenWidget.routeName);
 
-                          logFirebaseEvent('Container_google_analytics_event');
-                          logFirebaseEvent('SearchBarClickAnalytics');
-                        },
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width * 0.8,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0),
-                              topLeft: Radius.circular(8.0),
-                              topRight: Radius.circular(8.0),
-                            ),
-                            border: Border.all(
-                              color: FlutterFlowTheme.of(context).alternate,
-                              width: 1.0,
-                            ),
+                        logFirebaseEvent('Container_google_analytics_event');
+                        logFirebaseEvent('SearchBarClickAnalytics');
+                      },
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width * 0.75,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8.0),
+                            topRight: Radius.circular(8.0),
+                            bottomLeft: Radius.circular(8.0),
+                            bottomRight: Radius.circular(8.0),
                           ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                10.0, 0.0, 10.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 24.0,
+                          border: Border.all(
+                            color: FlutterFlowTheme.of(context).alternate,
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              10.0, 0.0, 10.0, 0.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.search,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                size: 24.0,
+                              ),
+                              Text(
+                                valueOrDefault<String>(
+                                  widget!.keyword == null ||
+                                          widget!.keyword == ''
+                                      ? FFAppState().searchText
+                                      : ((String var1) {
+                                          return var1.replaceAll(
+                                              RegExp('_'), ' ');
+                                        }(widget!.keyword!)),
+                                  'Search here',
                                 ),
-                                Text(
-                                  valueOrDefault<String>(
-                                    widget!.keyword == null ||
-                                            widget!.keyword == ''
-                                        ? FFAppState().searchText
-                                        : ((String var1) {
-                                            return var1.replaceAll(
-                                                RegExp('_'), ' ');
-                                          }(widget!.keyword!)),
-                                    'Search here',
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.montserrat(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: FFAppConstants.blackColor0A0A0A,
-                                        fontSize: 12.0,
-                                        letterSpacing: 0.0,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.montserrat(
                                         fontWeight: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .fontWeight,
@@ -337,10 +322,69 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                             .bodyMedium
                                             .fontStyle,
                                       ),
-                                ),
-                              ],
-                            ),
+                                      color: FFAppConstants.blackColor0A0A0A,
+                                      fontSize: 12.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ],
                           ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 10.0, 0.0),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          logFirebaseEvent(
+                              'SEARCH_RESULT_SCREEN_Icon_tb431l4a_ON_TA');
+                          logFirebaseEvent('Icon_bottom_sheet');
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context).unfocus();
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                },
+                                child: Padding(
+                                  padding: MediaQuery.viewInsetsOf(context),
+                                  child: FilterBottomSheetWidget(
+                                    isSelectedFilter: _model.isFilterSelected,
+                                  ),
+                                ),
+                              );
+                            },
+                          ).then((value) => safeSetState(
+                              () => _model.selectedFilter = value));
+
+                          logFirebaseEvent('Icon_update_page_state');
+                          _model.isFilterSelected = _model.selectedFilter!;
+                          safeSetState(() {});
+                          logFirebaseEvent('Icon_refresh_database_request');
+                          safeSetState(() => _model.apiRequestCompleter = null);
+                          await _model.waitForApiRequestCompleted();
+
+                          safeSetState(() {});
+                        },
+                        child: Icon(
+                          Icons.filter_alt,
+                          color: FFAppConstants.appBarIconandTitleColor,
+                          size: 26.0,
                         ),
                       ),
                     ),
@@ -366,36 +410,36 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(
                             5.0, 10.0, 5.0, 10.0),
                         child: FutureBuilder<ApiCallResponse>(
-                          future: (_model.apiRequestCompleter ??= Completer<
-                                  ApiCallResponse>()
-                                ..complete(
-                                    QuickartGroup.searchbystoreproductCall.call(
-                                  userid: FFAppState().userID,
-                                  storeid: FFAppState().storeID,
-                                  keyword: widget!.keyword == null ||
-                                          widget!.keyword == ''
-                                      ? FFAppState().searchText
-                                      : ((String var1) {
-                                          return var1.replaceAll(
-                                              RegExp('_'), ' ');
-                                        }(widget!.keyword!)),
-                                  minPrice: FFAppState().minPrice,
-                                  maxPrice: FFAppState().maxPrice,
-                                  byName: FFAppState().byName,
-                                  stock: FFAppState().stock,
-                                  minDiscount: FFAppState().minDiscount,
-                                  maxDiscount: FFAppState().maxDiscount,
-                                  sort: FFAppState().sort,
-                                  sortPrice: FFAppState().sortPrice,
-                                  sortName: FFAppState().sortName,
-                                  subCatId: 'null',
-                                  catId: 'null',
-                                  minRating: FFAppState().minRating,
-                                  maxRating: FFAppState().maxRating,
-                                  perpage: 200,
-                                  page: 1,
-                                  platform: isiOS ? 'ios' : 'android',
-                                )))
+                          future: (_model.apiRequestCompleter ??=
+                                  Completer<ApiCallResponse>()
+                                    ..complete(ProductsearchCall.call(
+                                      userid: FFAppState().userID,
+                                      keyword: widget!.keyword == null ||
+                                              widget!.keyword == ''
+                                          ? FFAppState().searchText
+                                          : ((String var1) {
+                                              return var1.replaceAll(
+                                                  RegExp('_'), ' ');
+                                            }(widget!.keyword!)),
+                                      storeid: FFAppState().storeID,
+                                      platform: FFAppState().platform,
+                                      sortPrice: () {
+                                        if (_model.isFilterSelected == 1) {
+                                          return 'htol';
+                                        } else if (_model.isFilterSelected ==
+                                            2) {
+                                          return 'ltoh';
+                                        } else {
+                                          return FFAppState().sortPrice;
+                                        }
+                                      }(),
+                                      minDiscount: _model.isFilterSelected == 3
+                                          ? '0.0'
+                                          : FFAppState().minDiscount,
+                                      maxDiscount: _model.isFilterSelected == 3
+                                          ? '99.99'
+                                          : FFAppState().maxDiscount,
+                                    )))
                               .future,
                           builder: (context, snapshot) {
                             // Customize what your widget looks like when it's loading.
@@ -410,13 +454,13 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                 ),
                               );
                             }
-                            final gridViewSearchbystoreproductResponse =
+                            final gridViewProductsearchResponse =
                                 snapshot.data!;
 
                             return Builder(
                               builder: (context) {
                                 final searchProductList = getJsonField(
-                                  gridViewSearchbystoreproductResponse.jsonBody,
+                                  gridViewProductsearchResponse.jsonBody,
                                   r'''$.data''',
                                 ).toList();
                                 if (searchProductList.isEmpty) {
@@ -530,15 +574,14 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(8.0),
-                                              bottomRight: Radius.circular(8.0),
                                               topLeft: Radius.circular(8.0),
                                               topRight: Radius.circular(8.0),
+                                              bottomLeft: Radius.circular(8.0),
+                                              bottomRight: Radius.circular(8.0),
                                             ),
                                             border: Border.all(
-                                              color: FFAppConstants
-                                                  .neutralWhiteF5F5F5,
-                                              width: 1.0,
+                                              color: FFAppConstants.borderColor,
+                                              width: 0.5,
                                             ),
                                           ),
                                           child: Stack(
@@ -577,13 +620,6 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
@@ -596,13 +632,6 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
@@ -947,10 +976,10 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                                               BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(5.0),
-                                                                              bottomRight: Radius.circular(5.0),
                                                                               topLeft: Radius.circular(5.0),
                                                                               topRight: Radius.circular(5.0),
+                                                                              bottomLeft: Radius.circular(5.0),
+                                                                              bottomRight: Radius.circular(5.0),
                                                                             ),
                                                                             border:
                                                                                 Border.all(
@@ -1154,10 +1183,8 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                                                         ),
                                                                                     elevation: 0.0,
                                                                                     borderRadius: BorderRadius.only(
-                                                                                      bottomLeft: Radius.circular(5.0),
-                                                                                      bottomRight: Radius.circular(0.0),
                                                                                       topLeft: Radius.circular(5.0),
-                                                                                      topRight: Radius.circular(0.0),
+                                                                                      bottomLeft: Radius.circular(5.0),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -1255,7 +1282,7 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                                                                   child: CustomAlertDailogWidget(
                                                                                                     des: FFAppConstants.noStock,
                                                                                                     height: 150.0,
-                                                                                                    title: " ",
+                                                                                                    title: ' ',
                                                                                                   ),
                                                                                                 ),
                                                                                               );
@@ -1420,10 +1447,8 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                                                       width: 1.0,
                                                                                     ),
                                                                                     borderRadius: BorderRadius.only(
-                                                                                      bottomLeft: Radius.circular(0.0),
-                                                                                      bottomRight: Radius.circular(5.0),
-                                                                                      topLeft: Radius.circular(0.0),
                                                                                       topRight: Radius.circular(5.0),
+                                                                                      bottomRight: Radius.circular(5.0),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -1469,13 +1494,6 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
@@ -2005,12 +2023,6 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                           bottomRight:
                                                               Radius.circular(
                                                                   8.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                         ),
                                                       ),
                                                       child: Stack(
@@ -2439,14 +2451,10 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(0.0),
-                                                    bottomRight:
-                                                        Radius.circular(8.0),
                                                     topLeft:
                                                         Radius.circular(8.0),
-                                                    topRight:
-                                                        Radius.circular(0.0),
+                                                    bottomRight:
+                                                        Radius.circular(8.0),
                                                   ),
                                                 ),
                                                 child: Row(
@@ -2470,18 +2478,9 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                               ),
                                                             ),
                                                             child: Align(
@@ -2631,12 +2630,6 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    8.0),
                                                             topLeft:
                                                                 Radius.circular(
                                                                     valueOrDefault<
@@ -2651,9 +2644,9 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                                   : 8.0,
                                                               0.0,
                                                             )),
-                                                            topRight:
+                                                            bottomRight:
                                                                 Radius.circular(
-                                                                    0.0),
+                                                                    8.0),
                                                           ),
                                                           border: Border.all(
                                                             color: Color(
@@ -2853,16 +2846,10 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
+                                                            topRight:
                                                                 Radius.circular(
                                                                     8.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
+                                                            bottomLeft:
                                                                 Radius.circular(
                                                                     8.0),
                                                           ),
@@ -3051,16 +3038,10 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                                                               Color(0xFFF4F6F4),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
+                                                            topRight:
                                                                 Radius.circular(
                                                                     8.0),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
+                                                            bottomLeft:
                                                                 Radius.circular(
                                                                     8.0),
                                                           ),
@@ -3388,10 +3369,10 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
                               decoration: BoxDecoration(
                                 color: FFAppConstants.indigoColor,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
                                   topLeft: Radius.circular(10.0),
                                   topRight: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
                               ),
                               child: Padding(

@@ -146,10 +146,14 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
                     topLeft: Radius.circular(8.0),
                     topRight: Radius.circular(8.0),
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
+                  ),
+                  border: Border.all(
+                    color: FFAppConstants.borderColor,
+                    width: 0.5,
                   ),
                 ),
                 child: Stack(
@@ -169,16 +173,12 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                 decoration: BoxDecoration(
                                   color: FFAppConstants.productBgClr,
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(0.0),
-                                    bottomRight: Radius.circular(0.0),
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0),
                                   ),
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(0.0),
-                                    bottomRight: Radius.circular(0.0),
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0),
                                   ),
@@ -616,12 +616,12 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                               height: 30.0,
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5.0),
+                                                  topRight:
+                                                      Radius.circular(5.0),
                                                   bottomLeft:
                                                       Radius.circular(5.0),
                                                   bottomRight:
-                                                      Radius.circular(5.0),
-                                                  topLeft: Radius.circular(5.0),
-                                                  topRight:
                                                       Radius.circular(5.0),
                                                 ),
                                                 border: Border.all(
@@ -962,18 +962,12 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                                         elevation: 0.0,
                                                         borderRadius:
                                                             BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  5.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                           topLeft:
                                                               Radius.circular(
                                                                   5.0),
-                                                          topRight:
+                                                          bottomLeft:
                                                               Radius.circular(
-                                                                  0.0),
+                                                                  5.0),
                                                         ),
                                                       ),
                                                     ),
@@ -1126,7 +1120,8 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                                                           .noStock,
                                                                       height:
                                                                           150.0,
-                                                                      title: "",
+                                                                      title:
+                                                                          ' ',
                                                                     ),
                                                                   );
                                                                 },
@@ -1453,16 +1448,10 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                                           ),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            bottomRight:
+                                                            topRight:
                                                                 Radius.circular(
                                                                     5.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
+                                                            bottomRight:
                                                                 Radius.circular(
                                                                     5.0),
                                                           ),
@@ -2041,8 +2030,6 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(8.0),
                                 bottomRight: Radius.circular(8.0),
-                                topLeft: Radius.circular(0.0),
-                                topRight: Radius.circular(0.0),
                               ),
                             ),
                             child: Stack(
@@ -2445,10 +2432,8 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                       height: 20.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(0.0),
-                          bottomRight: Radius.circular(8.0),
                           topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(0.0),
+                          bottomRight: Radius.circular(8.0),
                         ),
                       ),
                       child: Row(
@@ -2466,10 +2451,7 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                   decoration: BoxDecoration(
                                     color: FFAppConstants.green44AC20,
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(0.0),
-                                      bottomRight: Radius.circular(0.0),
                                       topLeft: Radius.circular(8.0),
-                                      topRight: Radius.circular(0.0),
                                     ),
                                   ),
                                   child: Align(
@@ -2615,8 +2597,6 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF4F6F4),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(0.0),
-                                  bottomRight: Radius.circular(8.0),
                                   topLeft:
                                       Radius.circular(valueOrDefault<double>(
                                     FFAppConstants.percentageCheck <
@@ -2628,7 +2608,7 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                                         : 8.0,
                                     0.0,
                                   )),
-                                  topRight: Radius.circular(0.0),
+                                  bottomRight: Radius.circular(8.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFDCE9D8),
@@ -2773,10 +2753,8 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF4F6F4),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(0.0),
-                                  topLeft: Radius.circular(0.0),
                                   topRight: Radius.circular(8.0),
+                                  bottomLeft: Radius.circular(8.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFDCE9D8),
@@ -2921,10 +2899,8 @@ class _ProductGVWidgetState extends State<ProductGVWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF4F6F4),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(0.0),
-                                  topLeft: Radius.circular(0.0),
                                   topRight: Radius.circular(8.0),
+                                  bottomLeft: Radius.circular(8.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFDCE9D8),

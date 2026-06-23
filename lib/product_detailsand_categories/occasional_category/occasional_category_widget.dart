@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -187,27 +188,87 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
               }
             },
           ),
-          title: Text(
-            widget!.name != null && widget!.name != ''
-                ? ((String var1) {
-                    return var1.replaceAll(RegExp('_'), ' ');
-                  }(widget!.name!))
-                : FFAppState().categoryName.maybeHandleOverflow(
-                      maxChars: 30,
-                      replacement: '…',
-                    ),
-            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                  font: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                  ),
-                  color: FFAppConstants.appBarIconandTitleColor,
-                  fontSize: FFAppConstants.appBartitleFont.toDouble(),
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                width: MediaQuery.sizeOf(context).width * 0.66,
+                decoration: BoxDecoration(),
+                child: Text(
+                  widget!.name != null && widget!.name != ''
+                      ? ((String var1) {
+                          return var1.replaceAll(RegExp('_'), ' ');
+                        }(widget!.name!))
+                      : FFAppState().categoryName.maybeHandleOverflow(
+                            maxChars: 45,
+                            replacement: '…',
+                          ),
+                  maxLines: 2,
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        font: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                        ),
+                        color: FFAppConstants.appBarIconandTitleColor,
+                        fontSize: FFAppConstants.appBartitleFont.toDouble(),
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w600,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                      ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 10.0, 10.0, 0.0),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    logFirebaseEvent(
+                        'OCCASIONAL_CATEGORY_Icon_z5e4qogb_ON_TAP');
+                    logFirebaseEvent('Icon_bottom_sheet');
+                    await showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: false,
+                      context: context,
+                      builder: (context) {
+                        return GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          child: Padding(
+                            padding: MediaQuery.viewInsetsOf(context),
+                            child: FilterBottomSheetWidget(
+                              isSelectedFilter: _model.isFilterSelected,
+                            ),
+                          ),
+                        );
+                      },
+                    ).then((value) =>
+                        safeSetState(() => _model.selectedFilter = value));
+
+                    logFirebaseEvent('Icon_update_page_state');
+                    _model.isFilterSelected = _model.selectedFilter!;
+                    safeSetState(() {});
+                    logFirebaseEvent('Icon_refresh_database_request');
+                    safeSetState(() => _model.apiRequestCompleter = null);
+                    await _model.waitForApiRequestCompleted();
+
+                    safeSetState(() {});
+                  },
+                  child: Icon(
+                    Icons.filter_alt,
+                    color: FFAppConstants.appBarIconandTitleColor,
+                    size: 26.0,
+                  ),
+                ),
+              ),
+            ],
           ),
           actions: [],
           centerTitle: false,
@@ -243,24 +304,40 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 5.0, 10.0, 5.0, 10.0),
                             child: FutureBuilder<ApiCallResponse>(
-                              future: (_model.apiRequestCompleter ??=
-                                      Completer<ApiCallResponse>()
-                                        ..complete(QuickartGroup
-                                            .occasionalcatsearchCall
-                                            .call(
-                                          userid: FFAppState().userID,
-                                          storeid: FFAppState().storeID,
-                                          page: FFAppState().page,
-                                          pageCount: FFAppState().pageCount,
-                                          byName: widget!.name != null &&
-                                                  widget!.name != ''
-                                              ? ((String var1) {
-                                                  return var1.replaceAll(
-                                                      RegExp('_'), ' ');
-                                                }(widget!.name!))
-                                              : FFAppState().categoryName,
-                                          platform: isiOS ? 'ios' : 'android',
-                                        )))
+                              future: (_model.apiRequestCompleter ??= Completer<
+                                      ApiCallResponse>()
+                                    ..complete(QuickartGroup
+                                        .occasionalcatsearchCall
+                                        .call(
+                                      userid: FFAppState().userID,
+                                      storeid: FFAppState().storeID,
+                                      page: FFAppState().page,
+                                      pageCount: FFAppState().pageCount,
+                                      byName: widget!.name != null &&
+                                              widget!.name != ''
+                                          ? ((String var1) {
+                                              return var1.replaceAll(
+                                                  RegExp('_'), ' ');
+                                            }(widget!.name!))
+                                          : FFAppState().categoryName,
+                                      platform: isiOS ? 'ios' : 'android',
+                                      sortPrice: () {
+                                        if (_model.isFilterSelected == 1) {
+                                          return 'htol';
+                                        } else if (_model.isFilterSelected ==
+                                            2) {
+                                          return 'ltoh';
+                                        } else {
+                                          return FFAppState().sortPrice;
+                                        }
+                                      }(),
+                                      minDiscount: _model.isFilterSelected == 3
+                                          ? '0.0'
+                                          : FFAppState().minDiscount,
+                                      maxDiscount: _model.isFilterSelected == 3
+                                          ? '99.00'
+                                          : FFAppState().maxDiscount,
+                                    )))
                                   .future,
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -320,8 +397,8 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           crossAxisSpacing: 5.0,
-                                          mainAxisSpacing: 0.0,
-                                          childAspectRatio: 0.67,
+                                          mainAxisSpacing: 5.0,
+                                          childAspectRatio: 0.68,
                                         ),
                                         scrollDirection: Axis.vertical,
                                         itemCount: productModel1.length,
@@ -409,9 +486,9 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
                                                       Radius.circular(8.0),
                                                 ),
                                                 border: Border.all(
-                                                  color:
-                                                      FFAppConstants.whiteColor,
-                                                  width: 1.0,
+                                                  color: FFAppConstants
+                                                      .borderColor,
+                                                  width: 0.5,
                                                 ),
                                               ),
                                               child: Stack(
@@ -1108,8 +1185,8 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
                                                                                                     },
                                                                                                     child: CustomAlertDailogWidget(
                                                                                                       des: FFAppConstants.noStock,
-                                                                                                      height: 250.0,
-                                                                                                      title: FFAppState().AppName,
+                                                                                                      height: 150.0,
+                                                                                                      title: ' ',
                                                                                                     ),
                                                                                                   ),
                                                                                                 );
@@ -2218,7 +2295,7 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
                                                                       Padding(
                                                                     padding: EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            0.0,
+                                                                            5.0,
                                                                             0.0,
                                                                             2.0,
                                                                             0.0),

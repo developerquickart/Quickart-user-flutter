@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/components/bottomnav_bar/bottomnav_bar_widget.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -51,6 +52,8 @@ class RepeatOrdersModel extends FlutterFlowModel<RepeatOrdersWidget> {
 
   String isAutoRenew = 'no';
 
+  int isFilterSelected = 0;
+
   ///  State fields for stateful widgets in this page.
 
   Completer<ApiCallResponse>? apiRequestCompleter;
@@ -83,6 +86,8 @@ class RepeatOrdersModel extends FlutterFlowModel<RepeatOrdersWidget> {
   bool? connectivityResult;
   // Stores action output result for [Backend Call - API (addtosubcart)] action in Button widget.
   ApiCallResponse? apiResultco2;
+  // Stores action output result for [Bottom Sheet - FilterBottomSheet] action in Icon widget.
+  int? selectedFilter;
 
   @override
   void initState(BuildContext context) {

@@ -1,6 +1,7 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/filter_bottom_sheet/filter_bottom_sheet_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -192,25 +193,85 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
               }
             },
           ),
-          title: Text(
-            widget!.title != null && widget!.title != ''
-                ? ((String var1) {
-                    return var1.replaceAll(RegExp('_'), ' ');
-                  }(widget!.title!))
-                : FFAppState().categoryName,
-            style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  font: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w600,
-                    fontStyle:
-                        FlutterFlowTheme.of(context).headlineMedium.fontStyle,
-                  ),
-                  color: FFAppConstants.appBarIconandTitleColor,
-                  fontSize: FFAppConstants.appBartitleFont.toDouble(),
-                  letterSpacing: 0.0,
-                  fontWeight: FontWeight.w600,
-                  fontStyle:
-                      FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                width: MediaQuery.sizeOf(context).width * 0.66,
+                decoration: BoxDecoration(),
+                child: Text(
+                  widget!.title != null && widget!.title != ''
+                      ? ((String var1) {
+                          return var1.replaceAll(RegExp('_'), ' ');
+                        }(widget!.title!))
+                      : FFAppState().categoryName,
+                  style: FlutterFlowTheme.of(context).headlineMedium.override(
+                        font: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .fontStyle,
+                        ),
+                        color: FFAppConstants.appBarIconandTitleColor,
+                        fontSize: FFAppConstants.appBartitleFont.toDouble(),
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w600,
+                        fontStyle: FlutterFlowTheme.of(context)
+                            .headlineMedium
+                            .fontStyle,
+                      ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 10.0, 10.0, 0.0),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    logFirebaseEvent(
+                        'SEARCHBY_POPUP_BANNER_Icon_h57q477z_ON_T');
+                    logFirebaseEvent('Icon_bottom_sheet');
+                    await showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: false,
+                      context: context,
+                      builder: (context) {
+                        return GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          child: Padding(
+                            padding: MediaQuery.viewInsetsOf(context),
+                            child: FilterBottomSheetWidget(
+                              isSelectedFilter: _model.isFilterSelected,
+                            ),
+                          ),
+                        );
+                      },
+                    ).then((value) =>
+                        safeSetState(() => _model.selectedFilter = value));
+
+                    logFirebaseEvent('Icon_update_page_state');
+                    _model.isFilterSelected = _model.selectedFilter!;
+                    safeSetState(() {});
+                    logFirebaseEvent('Icon_refresh_database_request');
+                    safeSetState(() => _model.apiRequestCompleter = null);
+                    await _model.waitForApiRequestCompleted();
+
+                    safeSetState(() {});
+                  },
+                  child: Icon(
+                    Icons.filter_alt,
+                    color: FFAppConstants.appBarIconandTitleColor,
+                    size: 26.0,
+                  ),
+                ),
+              ),
+            ],
           ),
           actions: [],
           centerTitle: false,
@@ -244,29 +305,42 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 5.0, 10.0, 5.0, 10.0),
                             child: FutureBuilder<ApiCallResponse>(
-                              future: (_model.apiRequestCompleter ??=
-                                      Completer<ApiCallResponse>()
-                                        ..complete(QuickartGroup
-                                            .searchbypopupbannerCall
-                                            .call(
-                                          storeid: FFAppState().storeID,
-                                          userid: FFAppState().userID,
-                                          bannerid: widget!.id == null ||
-                                                  widget!.id == ''
+                              future: (_model.apiRequestCompleter ??= Completer<
+                                      ApiCallResponse>()
+                                    ..complete(QuickartGroup
+                                        .searchbypopupbannerCall
+                                        .call(
+                                      storeid: FFAppState().storeID,
+                                      userid: FFAppState().userID,
+                                      bannerid:
+                                          widget!.id == null || widget!.id == ''
                                               ? FFAppState().catID
                                               : widget!.id,
-                                          maxPrice: FFAppState().maxPrice,
-                                          minPrice: FFAppState().minPrice,
-                                          stock: FFAppState().stock,
-                                          minDiscount: FFAppState().minDiscount,
-                                          maxDiscount: FFAppState().maxDiscount,
-                                          sort: FFAppState().sort,
-                                          sortName: FFAppState().sortName,
-                                          sortPrice: FFAppState().sortPrice,
-                                          page: FFAppState().page,
-                                          pagePer: FFAppState().pageCount,
-                                          platform: isiOS ? 'ios' : 'android',
-                                        )))
+                                      maxPrice: FFAppState().maxPrice,
+                                      minPrice: FFAppState().minPrice,
+                                      stock: FFAppState().stock,
+                                      minDiscount: _model.isFilterSelected == 3
+                                          ? '0.0'
+                                          : FFAppState().minDiscount,
+                                      maxDiscount: _model.isFilterSelected == 3
+                                          ? '99.99'
+                                          : FFAppState().maxDiscount,
+                                      sort: FFAppState().sort,
+                                      sortName: FFAppState().sortName,
+                                      sortPrice: () {
+                                        if (_model.isFilterSelected == 1) {
+                                          return 'htol';
+                                        } else if (_model.isFilterSelected ==
+                                            2) {
+                                          return 'ltoh';
+                                        } else {
+                                          return FFAppState().sortPrice;
+                                        }
+                                      }(),
+                                      page: FFAppState().page,
+                                      pagePer: FFAppState().pageCount,
+                                      platform: isiOS ? 'ios' : 'android',
+                                    )))
                                   .future,
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -404,18 +478,18 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(8.0),
+                                                  topRight:
+                                                      Radius.circular(8.0),
                                                   bottomLeft:
                                                       Radius.circular(8.0),
                                                   bottomRight:
                                                       Radius.circular(8.0),
-                                                  topLeft: Radius.circular(8.0),
-                                                  topRight:
-                                                      Radius.circular(8.0),
                                                 ),
                                                 border: Border.all(
-                                                  color:
-                                                      FFAppConstants.whiteColor,
-                                                  width: 1.0,
+                                                  color: FFAppConstants
+                                                      .borderColor,
+                                                  width: 0.5,
                                                 ),
                                               ),
                                               child: Stack(
@@ -451,12 +525,6 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          0.0),
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           8.0),
@@ -469,12 +537,6 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          0.0),
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           8.0),
@@ -793,10 +855,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                               height: 30.0,
                                                                               decoration: BoxDecoration(
                                                                                 borderRadius: BorderRadius.only(
-                                                                                  bottomLeft: Radius.circular(5.0),
-                                                                                  bottomRight: Radius.circular(5.0),
                                                                                   topLeft: Radius.circular(5.0),
                                                                                   topRight: Radius.circular(5.0),
+                                                                                  bottomLeft: Radius.circular(5.0),
+                                                                                  bottomRight: Radius.circular(5.0),
                                                                                 ),
                                                                                 border: Border.all(
                                                                                   color: FFAppConstants.calculatorColor,
@@ -997,10 +1059,8 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                                             ),
                                                                                         elevation: 0.0,
                                                                                         borderRadius: BorderRadius.only(
-                                                                                          bottomLeft: Radius.circular(5.0),
-                                                                                          bottomRight: Radius.circular(0.0),
                                                                                           topLeft: Radius.circular(5.0),
-                                                                                          topRight: Radius.circular(0.0),
+                                                                                          bottomLeft: Radius.circular(5.0),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -1098,7 +1158,7 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                                                       child: CustomAlertDailogWidget(
                                                                                                         des: FFAppConstants.noStock,
                                                                                                         height: 150.0,
-                                                                                                        title: " ",
+                                                                                                        title: ' ',
                                                                                                       ),
                                                                                                     ),
                                                                                                   );
@@ -1264,10 +1324,8 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                                           width: 1.0,
                                                                                         ),
                                                                                         borderRadius: BorderRadius.only(
-                                                                                          bottomLeft: Radius.circular(0.0),
-                                                                                          bottomRight: Radius.circular(5.0),
-                                                                                          topLeft: Radius.circular(0.0),
                                                                                           topRight: Radius.circular(5.0),
+                                                                                          bottomRight: Radius.circular(5.0),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -1773,12 +1831,6 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                   Radius
                                                                       .circular(
                                                                           8.0),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      0.0),
                                                             ),
                                                           ),
                                                           child: Stack(
@@ -2144,18 +2196,12 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.only(
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                0.0),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                8.0),
                                                         topLeft:
                                                             Radius.circular(
                                                                 8.0),
-                                                        topRight:
+                                                        bottomRight:
                                                             Radius.circular(
-                                                                0.0),
+                                                                8.0),
                                                       ),
                                                     ),
                                                     child: Row(
@@ -2179,18 +2225,9 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .only(
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            0.0),
-                                                                    bottomRight:
-                                                                        Radius.circular(
-                                                                            0.0),
                                                                     topLeft: Radius
                                                                         .circular(
                                                                             8.0),
-                                                                    topRight: Radius
-                                                                        .circular(
-                                                                            0.0),
                                                                   ),
                                                                 ),
                                                                 child: Align(
@@ -2325,12 +2362,6 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        8.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         valueOrDefault<
@@ -2345,9 +2376,9 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                                       : 8.0,
                                                                   0.0,
                                                                 )),
-                                                                topRight: Radius
+                                                                bottomRight: Radius
                                                                     .circular(
-                                                                        0.0),
+                                                                        8.0),
                                                               ),
                                                               border:
                                                                   Border.all(
@@ -2550,16 +2581,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
+                                                                topRight: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topRight: Radius
+                                                                bottomLeft: Radius
                                                                     .circular(
                                                                         8.0),
                                                               ),
@@ -2761,16 +2786,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
+                                                                topRight: Radius
                                                                     .circular(
                                                                         8.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                topRight: Radius
+                                                                bottomLeft: Radius
                                                                     .circular(
                                                                         8.0),
                                                               ),
@@ -3100,10 +3119,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
                                 decoration: BoxDecoration(
                                   color: FFAppConstants.indigoColor,
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(10.0),
-                                    bottomRight: Radius.circular(10.0),
                                     topLeft: Radius.circular(10.0),
                                     topRight: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0),
+                                    bottomRight: Radius.circular(10.0),
                                   ),
                                 ),
                                 child: Padding(

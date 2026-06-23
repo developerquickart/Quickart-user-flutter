@@ -149,10 +149,14 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                 decoration: BoxDecoration(
                   color: FFAppConstants.whiteColor,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
                     topLeft: Radius.circular(8.0),
                     topRight: Radius.circular(8.0),
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
+                  ),
+                  border: Border.all(
+                    color: FFAppConstants.borderColor,
+                    width: 0.5,
                   ),
                 ),
                 child: Stack(
@@ -171,16 +175,12 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                 decoration: BoxDecoration(
                                   color: FFAppConstants.productBgClr,
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(0.0),
-                                    bottomRight: Radius.circular(0.0),
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0),
                                   ),
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(0.0),
-                                    bottomRight: Radius.circular(0.0),
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0),
                                   ),
@@ -607,12 +607,12 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                     FlutterFlowTheme.of(context)
                                                         .secondaryBackground,
                                                 borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5.0),
+                                                  topRight:
+                                                      Radius.circular(5.0),
                                                   bottomLeft:
                                                       Radius.circular(5.0),
                                                   bottomRight:
-                                                      Radius.circular(5.0),
-                                                  topLeft: Radius.circular(5.0),
-                                                  topRight:
                                                       Radius.circular(5.0),
                                                 ),
                                                 border: Border.all(
@@ -944,18 +944,12 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                         elevation: 0.0,
                                                         borderRadius:
                                                             BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  5.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                           topLeft:
                                                               Radius.circular(
                                                                   5.0),
-                                                          topRight:
+                                                          bottomLeft:
                                                               Radius.circular(
-                                                                  0.0),
+                                                                  5.0),
                                                         ),
                                                       ),
                                                     ),
@@ -1111,7 +1105,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                                             .noStock,
                                                                         height:
                                                                             150.0,
-                                                                        title: " ",
+                                                                        title:
+                                                                            '',
                                                                       ),
                                                                     );
                                                                   },
@@ -1422,16 +1417,10 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                           ),
                                                           borderRadius:
                                                               BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            bottomRight:
+                                                            topRight:
                                                                 Radius.circular(
                                                                     5.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
+                                                            bottomRight:
                                                                 Radius.circular(
                                                                     5.0),
                                                           ),
@@ -1986,23 +1975,11 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                               ],
                             ),
                           ),
-                        if (((getJsonField(
-                                  productModelItem,
-                                  r'''$.varients''',
-                                )
-                                            .toList()
-                                            .map<ProductCountStruct?>(
-                                                ProductCountStruct.maybeFromMap)
-                                            .toList()
-                                        as Iterable<ProductCountStruct?>)
-                                    .withoutNulls
-                                    ?.length ==
-                                1) &&
-                            (FFAppConstants.stockNotify ==
-                                getJsonField(
-                                  productModelItem,
-                                  r'''$.varients[0].stock''',
-                                ).toString()))
+                        if (functions.checkVariantsWithStock(getJsonField(
+                              productModelItem,
+                              r'''$.varients''',
+                            )) ==
+                            false)
                           Align(
                             alignment: AlignmentDirectional(0.0, 1.0),
                             child: Container(
@@ -2012,8 +1989,6 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(8.0),
                                   bottomRight: Radius.circular(8.0),
-                                  topLeft: Radius.circular(0.0),
-                                  topRight: Radius.circular(0.0),
                                 ),
                               ),
                               child: Stack(
@@ -2420,10 +2395,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                       height: 20.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(0.0),
-                          bottomRight: Radius.circular(8.0),
                           topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(0.0),
+                          bottomRight: Radius.circular(8.0),
                         ),
                       ),
                       child: Row(
@@ -2441,17 +2414,14 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                   decoration: BoxDecoration(
                                     color: FFAppConstants.green44AC20,
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(0.0),
-                                      bottomRight: Radius.circular(0.0),
                                       topLeft: Radius.circular(8.0),
-                                      topRight: Radius.circular(0.0),
                                     ),
                                   ),
                                   child: Align(
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          2.0, 0.0, 2.0, 0.0),
+                                          3.0, 0.0, 2.0, 0.0),
                                       child: RichText(
                                         textScaler:
                                             MediaQuery.of(context).textScaler,
@@ -2584,8 +2554,6 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF4F6F4),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(0.0),
-                                  bottomRight: Radius.circular(8.0),
                                   topLeft:
                                       Radius.circular(valueOrDefault<double>(
                                     FFAppConstants.percentageCheck <
@@ -2597,7 +2565,7 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                         : 8.0,
                                     0.0,
                                   )),
-                                  topRight: Radius.circular(0.0),
+                                  bottomRight: Radius.circular(8.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFDCE9D8),
@@ -2742,10 +2710,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF4F6F4),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(0.0),
-                                  topLeft: Radius.circular(0.0),
                                   topRight: Radius.circular(8.0),
+                                  bottomLeft: Radius.circular(8.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFDCE9D8),
@@ -2893,10 +2859,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                   decoration: BoxDecoration(
                                     color: Color(0xFFF4F6F4),
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(8.0),
-                                      bottomRight: Radius.circular(0.0),
-                                      topLeft: Radius.circular(0.0),
                                       topRight: Radius.circular(8.0),
+                                      bottomLeft: Radius.circular(8.0),
                                     ),
                                     border: Border.all(
                                       color: Color(0xFFDCE9D8),

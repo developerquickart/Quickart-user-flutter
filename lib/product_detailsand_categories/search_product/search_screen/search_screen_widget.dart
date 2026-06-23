@@ -138,10 +138,10 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(8.0),
-                                        bottomRight: Radius.circular(8.0),
                                         topLeft: Radius.circular(8.0),
                                         topRight: Radius.circular(8.0),
+                                        bottomLeft: Radius.circular(8.0),
+                                        bottomRight: Radius.circular(8.0),
                                       ),
                                       border: Border.all(
                                         color: FFAppConstants.lightGreyColor,
@@ -795,16 +795,16 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        10.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        10.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         10.0),
                                                                 topRight: Radius
+                                                                    .circular(
+                                                                        10.0),
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        10.0),
+                                                                bottomRight: Radius
                                                                     .circular(
                                                                         10.0),
                                                               ),
@@ -819,16 +819,16 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          10.0),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          10.0),
                                                                   topLeft: Radius
                                                                       .circular(
                                                                           10.0),
                                                                   topRight: Radius
+                                                                      .circular(
+                                                                          10.0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          10.0),
+                                                                  bottomRight: Radius
                                                                       .circular(
                                                                           10.0),
                                                                 ),
@@ -1114,10 +1114,10 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
                             decoration: BoxDecoration(
                               color: FFAppConstants.indigoColor,
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
                                 topLeft: Radius.circular(10.0),
                                 topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                                bottomRight: Radius.circular(10.0),
                               ),
                             ),
                             child: Padding(
