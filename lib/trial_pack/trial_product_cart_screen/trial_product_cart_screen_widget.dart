@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_radio_button.dart';
@@ -4047,330 +4048,397 @@ class _TrialProductCartScreenWidgetState
                                                   if ((_model.selectedPaymentMethod ==
                                                           'Pay Now') &&
                                                       (isiOS == true))
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  valueOrDefault<
-                                                                      double>(
-                                                                    MediaQuery.sizeOf(context).width >
-                                                                            410.0
-                                                                        ? 10.0
-                                                                        : 5.0,
+                                                    Builder(
+                                                      builder: (context) =>
+                                                          Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    valueOrDefault<
+                                                                        double>(
+                                                                      MediaQuery.sizeOf(context).width >
+                                                                              410.0
+                                                                          ? 10.0
+                                                                          : 5.0,
+                                                                      0.0,
+                                                                    ),
                                                                     0.0,
-                                                                  ),
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: InkWell(
-                                                        splashColor:
-                                                            Colors.transparent,
-                                                        focusColor:
-                                                            Colors.transparent,
-                                                        hoverColor:
-                                                            Colors.transparent,
-                                                        highlightColor:
-                                                            Colors.transparent,
-                                                        onTap: () async {
-                                                          logFirebaseEvent(
-                                                              'TRIAL_PRODUCT_CART_SCREEN_ApplePayContai');
-                                                          if (_model
-                                                                  .isPaymentDone ==
-                                                              true) {
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
                                                             logFirebaseEvent(
-                                                                'ApplePayContainer_wait__delay');
-                                                            await Future
-                                                                .delayed(
-                                                              Duration(
-                                                                milliseconds:
-                                                                    200,
-                                                              ),
-                                                            );
-                                                            logFirebaseEvent(
-                                                                'ApplePayContainer_update_page_state');
-                                                            _model.isPaymentDone =
-                                                                false;
-                                                            safeSetState(() {});
-                                                            logFirebaseEvent(
-                                                                'ApplePayContainer_update_app_state');
-                                                            FFAppState()
-                                                                    .paymentMethod =
-                                                                _model.trialCartPaymentRadioButtonValue ==
-                                                                        'COD'
-                                                                    ? 'COD'
-                                                                    : 'card';
-                                                            FFAppState()
-                                                                .selectedAddresID = FFAppState()
-                                                                            .selectedAddress1 ==
-                                                                        null ||
-                                                                    FFAppState()
-                                                                            .selectedAddress1 ==
-                                                                        ''
-                                                                ? (QuickartGroup
-                                                                            .showtrailpackCall
-                                                                            .lastAddress(
-                                                                              trialProductCartScreenShowtrailpackResponse.jsonBody,
-                                                                            )!
-                                                                            .length >
-                                                                        0
-                                                                    ? (_model
-                                                                                .checkAddressExits !=
-                                                                            getJsonField(
-                                                                              trialProductCartScreenShowtrailpackResponse.jsonBody,
-                                                                              r'''$.data.lastadd[0].cityExists''',
-                                                                            )
-                                                                        ? getJsonField(
-                                                                            trialProductCartScreenShowtrailpackResponse.jsonBody,
-                                                                            r'''$.data.lastadd[0].address_id''',
-                                                                          )
-                                                                            .toString()
-                                                                        : 'null')
-                                                                    : FFAppState()
-                                                                        .selectedAddresID)
-                                                                : FFAppState()
-                                                                    .selectedAddresID;
-                                                            FFAppState()
-                                                                .selectedDeliveryDate = FFAppState()
-                                                                            .selectedDeliveryDate !=
-                                                                        null &&
-                                                                    FFAppState()
-                                                                            .selectedDeliveryDate !=
-                                                                        ''
-                                                                ? FFAppState()
-                                                                    .selectedDeliveryDate
-                                                                : getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.timeslotsdata[0].date''',
-                                                                  ).toString();
-                                                            FFAppState()
-                                                                .selectedDeliveryTimeSlot = FFAppState()
-                                                                            .selectedDeliveryTimeSlot !=
-                                                                        null &&
-                                                                    FFAppState()
-                                                                            .selectedDeliveryTimeSlot !=
-                                                                        ''
-                                                                ? FFAppState()
-                                                                    .selectedDeliveryTimeSlot
-                                                                : getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.timeslotsdata[0].timeslots[0].time_slots''',
-                                                                  ).toString();
-                                                            FFAppState()
-                                                                .selectedCardID = FFAppState()
-                                                                        .isCardChange ==
-                                                                    true
-                                                                ? FFAppState()
-                                                                    .selectedCardID
-                                                                : getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.lastcarddetails.si_sub_ref_no''',
-                                                                  ).toString();
-                                                            FFAppState()
-                                                                .selectedAddress1 = QuickartGroup
-                                                                        .showtrailpackCall
-                                                                        .lastAddress(
-                                                                          trialProductCartScreenShowtrailpackResponse
-                                                                              .jsonBody,
-                                                                        )!
-                                                                        .length >
-                                                                    0
-                                                                ? getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.lastadd[0].house_no''',
-                                                                  ).toString()
-                                                                : FFAppState()
-                                                                    .selectedAddress1;
-                                                            logFirebaseEvent(
-                                                                'ApplePayContainer_custom_action');
-                                                            _model.connectivityResult4 =
-                                                                await actions
-                                                                    .checkInternetConnection();
+                                                                'TRIAL_PRODUCT_CART_SCREEN_ApplePayContai');
                                                             if (_model
-                                                                    .connectivityResult4 ==
+                                                                    .isPaymentDone ==
                                                                 true) {
-                                                              if (FFAppState()
-                                                                          .selectedDeliveryDate !=
-                                                                      null &&
-                                                                  FFAppState()
-                                                                          .selectedDeliveryDate !=
-                                                                      '') {
-                                                                if (FFAppState()
-                                                                            .selectedDeliveryTimeSlot !=
-                                                                        null &&
-                                                                    FFAppState()
-                                                                            .selectedDeliveryTimeSlot !=
-                                                                        '') {
-                                                                  if (FFAppState()
-                                                                              .selectedAddresID !=
+                                                              logFirebaseEvent(
+                                                                  'ApplePayContainer_wait__delay');
+                                                              await Future
+                                                                  .delayed(
+                                                                Duration(
+                                                                  milliseconds:
+                                                                      200,
+                                                                ),
+                                                              );
+                                                              logFirebaseEvent(
+                                                                  'ApplePayContainer_update_page_state');
+                                                              _model.isPaymentDone =
+                                                                  false;
+                                                              safeSetState(
+                                                                  () {});
+                                                              logFirebaseEvent(
+                                                                  'ApplePayContainer_update_app_state');
+                                                              FFAppState()
+                                                                      .paymentMethod =
+                                                                  _model.trialCartPaymentRadioButtonValue ==
+                                                                          'COD'
+                                                                      ? 'COD'
+                                                                      : 'card';
+                                                              FFAppState()
+                                                                  .selectedAddresID = FFAppState()
+                                                                              .selectedAddress1 ==
+                                                                          null ||
+                                                                      FFAppState()
+                                                                              .selectedAddress1 ==
+                                                                          ''
+                                                                  ? (QuickartGroup
+                                                                              .showtrailpackCall
+                                                                              .lastAddress(
+                                                                                trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                              )!
+                                                                              .length >
+                                                                          0
+                                                                      ? (_model
+                                                                                  .checkAddressExits !=
+                                                                              getJsonField(
+                                                                                trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                                r'''$.data.lastadd[0].cityExists''',
+                                                                              )
+                                                                          ? getJsonField(
+                                                                              trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                              r'''$.data.lastadd[0].address_id''',
+                                                                            )
+                                                                              .toString()
+                                                                          : 'null')
+                                                                      : FFAppState()
+                                                                          .selectedAddresID)
+                                                                  : FFAppState()
+                                                                      .selectedAddresID;
+                                                              FFAppState()
+                                                                  .selectedDeliveryDate = FFAppState()
+                                                                              .selectedDeliveryDate !=
                                                                           null &&
                                                                       FFAppState()
-                                                                              .selectedAddresID !=
+                                                                              .selectedDeliveryDate !=
+                                                                          ''
+                                                                  ? FFAppState()
+                                                                      .selectedDeliveryDate
+                                                                  : getJsonField(
+                                                                      trialProductCartScreenShowtrailpackResponse
+                                                                          .jsonBody,
+                                                                      r'''$.data.timeslotsdata[0].date''',
+                                                                    ).toString();
+                                                              FFAppState()
+                                                                  .selectedDeliveryTimeSlot = FFAppState()
+                                                                              .selectedDeliveryTimeSlot !=
+                                                                          null &&
+                                                                      FFAppState()
+                                                                              .selectedDeliveryTimeSlot !=
+                                                                          ''
+                                                                  ? FFAppState()
+                                                                      .selectedDeliveryTimeSlot
+                                                                  : getJsonField(
+                                                                      trialProductCartScreenShowtrailpackResponse
+                                                                          .jsonBody,
+                                                                      r'''$.data.timeslotsdata[0].timeslots[0].time_slots''',
+                                                                    ).toString();
+                                                              FFAppState()
+                                                                  .selectedCardID = FFAppState()
+                                                                          .isCardChange ==
+                                                                      true
+                                                                  ? FFAppState()
+                                                                      .selectedCardID
+                                                                  : getJsonField(
+                                                                      trialProductCartScreenShowtrailpackResponse
+                                                                          .jsonBody,
+                                                                      r'''$.data.lastcarddetails.si_sub_ref_no''',
+                                                                    ).toString();
+                                                              FFAppState()
+                                                                  .selectedAddress1 = QuickartGroup
+                                                                          .showtrailpackCall
+                                                                          .lastAddress(
+                                                                            trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                          )!
+                                                                          .length >
+                                                                      0
+                                                                  ? getJsonField(
+                                                                      trialProductCartScreenShowtrailpackResponse
+                                                                          .jsonBody,
+                                                                      r'''$.data.lastadd[0].house_no''',
+                                                                    ).toString()
+                                                                  : FFAppState()
+                                                                      .selectedAddress1;
+                                                              logFirebaseEvent(
+                                                                  'ApplePayContainer_custom_action');
+                                                              _model.connectivityResult4 =
+                                                                  await actions
+                                                                      .checkInternetConnection();
+                                                              if (_model
+                                                                      .connectivityResult4 ==
+                                                                  true) {
+                                                                if (FFAppState()
+                                                                            .selectedDeliveryDate !=
+                                                                        null &&
+                                                                    FFAppState()
+                                                                            .selectedDeliveryDate !=
+                                                                        '') {
+                                                                  if (FFAppState()
+                                                                              .selectedDeliveryTimeSlot !=
+                                                                          null &&
+                                                                      FFAppState()
+                                                                              .selectedDeliveryTimeSlot !=
                                                                           '') {
-                                                                    logFirebaseEvent(
-                                                                        'ApplePayContainer_update_page_state');
-                                                                    _model.isPaymentDone =
-                                                                        false;
-                                                                    _model.isLoaderIndicator =
-                                                                        true;
-                                                                    safeSetState(
-                                                                        () {});
-                                                                    logFirebaseEvent(
-                                                                        'ApplePayContainer_backend_call');
-                                                                    _model.apiResultTrialPackPayment1 =
-                                                                        await QuickartGroup
+                                                                    if (FFAppState().selectedAddresID !=
+                                                                            null &&
+                                                                        FFAppState().selectedAddresID !=
+                                                                            '') {
+                                                                      logFirebaseEvent(
+                                                                          'ApplePayContainer_update_page_state');
+                                                                      _model.isPaymentDone =
+                                                                          false;
+                                                                      _model.isLoaderIndicator =
+                                                                          true;
+                                                                      safeSetState(
+                                                                          () {});
+                                                                      logFirebaseEvent(
+                                                                          'ApplePayContainer_custom_action');
+                                                                      _model.isVpnON =
+                                                                          await actions
+                                                                              .isVpnEnabled();
+                                                                      if (_model
+                                                                              .isVpnON ==
+                                                                          false) {
+                                                                        logFirebaseEvent(
+                                                                            'ApplePayContainer_backend_call');
+                                                                        _model.apiResultTrialPackPayment1 = await QuickartGroup
                                                                             .trailpaymentCall
                                                                             .call(
-                                                                      userid: FFAppState()
-                                                                          .userID,
-                                                                      addressid:
-                                                                          FFAppState()
-                                                                              .selectedAddresID,
-                                                                      storeid:
-                                                                          FFAppState()
-                                                                              .storeID,
-                                                                      paymentMethod:
-                                                                          'applepay',
-                                                                      deliveryDate:
-                                                                          FFAppState()
-                                                                              .selectedDeliveryDate,
-                                                                      timeSlot:
-                                                                          FFAppState()
-                                                                              .selectedDeliveryTimeSlot,
-                                                                      delPartnerTip:
-                                                                          FFAppState()
-                                                                              .isDeliveryPartnerTipSelected,
-                                                                      delPartnerInstruction: functions.combineInstructions(
-                                                                          FFAppState()
-                                                                              .deliveryPartnerInstructionAvoid,
-                                                                          FFAppState()
-                                                                              .deliveryPartnerInstructionBell,
-                                                                          FFAppState()
-                                                                              .deliveryPartnerInstructionDoor),
-                                                                      deviceid:
-                                                                          FFAppState()
-                                                                              .deviceID,
-                                                                      orderInstruction: (String
-                                                                          var1) {
-                                                                        return var1.trim() ??
-                                                                            '';
-                                                                      }(_model
-                                                                          .textController
-                                                                          .text),
-                                                                      platform: isiOS
-                                                                          ? 'ios'
-                                                                          : 'android',
-                                                                    );
+                                                                          userid:
+                                                                              FFAppState().userID,
+                                                                          addressid:
+                                                                              FFAppState().selectedAddresID,
+                                                                          storeid:
+                                                                              FFAppState().storeID,
+                                                                          paymentMethod:
+                                                                              'applepay',
+                                                                          deliveryDate:
+                                                                              FFAppState().selectedDeliveryDate,
+                                                                          timeSlot:
+                                                                              FFAppState().selectedDeliveryTimeSlot,
+                                                                          delPartnerTip:
+                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                          delPartnerInstruction: functions.combineInstructions(
+                                                                              FFAppState().deliveryPartnerInstructionAvoid,
+                                                                              FFAppState().deliveryPartnerInstructionBell,
+                                                                              FFAppState().deliveryPartnerInstructionDoor),
+                                                                          deviceid:
+                                                                              FFAppState().deviceID,
+                                                                          orderInstruction: (String
+                                                                              var1) {
+                                                                            return var1.trim() ??
+                                                                                '';
+                                                                          }(_model
+                                                                              .textController
+                                                                              .text),
+                                                                          platform: isiOS
+                                                                              ? 'ios'
+                                                                              : 'android',
+                                                                        );
 
-                                                                    if ((_model
-                                                                            .apiResultTrialPackPayment1
-                                                                            ?.succeeded ??
-                                                                        true)) {
-                                                                      logFirebaseEvent(
-                                                                          'ApplePayContainer_navigate_to');
+                                                                        if ((_model.apiResultTrialPackPayment1?.succeeded ??
+                                                                            true)) {
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_navigate_to');
 
-                                                                      context
-                                                                          .pushNamed(
-                                                                        PaymentScreenWidget
-                                                                            .routeName,
-                                                                        queryParameters:
-                                                                            {
-                                                                          'redirectURl':
-                                                                              serializeParam(
-                                                                            getJsonField(
-                                                                              (_model.apiResultTrialPackPayment1?.jsonBody ?? ''),
-                                                                              r'''$.data.redirect_url''',
-                                                                            ).toString(),
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'screenPName':
-                                                                              serializeParam(
-                                                                            'daily',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'mrp':
-                                                                              serializeParam(
+                                                                          context
+                                                                              .pushNamed(
+                                                                            PaymentScreenWidget.routeName,
+                                                                            queryParameters:
+                                                                                {
+                                                                              'redirectURl': serializeParam(
+                                                                                getJsonField(
+                                                                                  (_model.apiResultTrialPackPayment1?.jsonBody ?? ''),
+                                                                                  r'''$.data.redirect_url''',
+                                                                                ).toString(),
+                                                                                ParamType.String,
+                                                                              ),
+                                                                              'screenPName': serializeParam(
+                                                                                'daily',
+                                                                                ParamType.String,
+                                                                              ),
+                                                                              'mrp': serializeParam(
+                                                                                functions.updateTotalAmount(
+                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                    '0',
+                                                                                    getJsonField(
+                                                                                      QuickartGroup.showtrailpackCall.mainData(
+                                                                                        trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                                      ),
+                                                                                      r'''$.discount_total_price''',
+                                                                                    ).toString(),
+                                                                                    '0',
+                                                                                    FFAppState().isCardSelected,
+                                                                                    _model.trialCartPaymentRadioButtonValue,
+                                                                                    getJsonField(
+                                                                                      FFAppState().appInfo,
+                                                                                      r'''$.codcharges''',
+                                                                                    ).toString(),
+                                                                                    '',
+                                                                                    ''),
+                                                                                ParamType.double,
+                                                                              ),
+                                                                              'orderType': serializeParam(
+                                                                                'trail packk order apple pay',
+                                                                                ParamType.String,
+                                                                              ),
+                                                                            }.withoutNulls,
+                                                                          );
+
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_update_page_state');
+                                                                          _model.isPaymentDone =
+                                                                              true;
+                                                                          _model.isLoaderIndicator =
+                                                                              false;
+                                                                          safeSetState(
+                                                                              () {});
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_update_app_state');
+                                                                          FFAppState().selectedDeliveryDate =
+                                                                              '';
+                                                                          FFAppState().selectedDeliveryTimeSlot =
+                                                                              '';
+                                                                          safeSetState(
+                                                                              () {});
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_custom_action');
+                                                                          await actions
+                                                                              .facebookEventClass(
+                                                                            'User id - ${FFAppState().userID}',
+                                                                            '0',
+                                                                            'trail order',
+                                                                            0.0,
+                                                                            0,
                                                                             functions.updateTotalAmount(
                                                                                 FFAppState().isDeliveryPartnerTipSelected,
                                                                                 '0',
                                                                                 getJsonField(
-                                                                                  QuickartGroup.showtrailpackCall.mainData(
-                                                                                    trialProductCartScreenShowtrailpackResponse.jsonBody,
-                                                                                  ),
-                                                                                  r'''$.discount_total_price''',
+                                                                                  trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                                  r'''$.data.total_price''',
                                                                                 ).toString(),
                                                                                 '0',
-                                                                                FFAppState().isCardSelected,
+                                                                                'no',
                                                                                 _model.trialCartPaymentRadioButtonValue,
                                                                                 getJsonField(
                                                                                   FFAppState().appInfo,
                                                                                   r'''$.codcharges''',
                                                                                 ).toString(),
                                                                                 '',
-                                                                                ''),
-                                                                            ParamType.double,
-                                                                          ),
-                                                                          'orderType':
-                                                                              serializeParam(
-                                                                            'trail packk order apple pay',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                        }.withoutNulls,
-                                                                      );
+                                                                                '')!,
+                                                                            'checkout',
+                                                                            FFAppState().emptyJson,
+                                                                            'trail pack order apple pay',
+                                                                            ' ',
+                                                                            ' ',
+                                                                            ' ',
+                                                                            ' ',
+                                                                          );
+                                                                        } else {
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_alert_dialog');
+                                                                          await showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (alertDialogContext) {
+                                                                              return AlertDialog(
+                                                                                title: Text(FFAppState().AppName),
+                                                                                content: Text(getJsonField(
+                                                                                  (_model.apiResultTrialPackPayment1?.jsonBody ?? ''),
+                                                                                  r'''$.message''',
+                                                                                ).toString()),
+                                                                                actions: [
+                                                                                  TextButton(
+                                                                                    onPressed: () => Navigator.pop(alertDialogContext),
+                                                                                    child: Text('Ok'),
+                                                                                  ),
+                                                                                ],
+                                                                              );
+                                                                            },
+                                                                          );
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_wait__delay');
+                                                                          await Future
+                                                                              .delayed(
+                                                                            Duration(
+                                                                              milliseconds: 200,
+                                                                            ),
+                                                                          );
+                                                                          logFirebaseEvent(
+                                                                              'ApplePayContainer_update_page_state');
+                                                                          _model.isPaymentDone =
+                                                                              true;
+                                                                          _model.isLoaderIndicator =
+                                                                              false;
+                                                                          safeSetState(
+                                                                              () {});
+                                                                        }
+                                                                      } else {
+                                                                        logFirebaseEvent(
+                                                                            'ApplePayContainer_alert_dialog');
+                                                                        await showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (dialogContext) {
+                                                                            return Dialog(
+                                                                              elevation: 0,
+                                                                              insetPadding: EdgeInsets.zero,
+                                                                              backgroundColor: Colors.transparent,
+                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                              child: GestureDetector(
+                                                                                onTap: () {
+                                                                                  FocusScope.of(dialogContext).unfocus();
+                                                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                                                },
+                                                                                child: CustomAlertDailogWidget(
+                                                                                  des: FFAppConstants.vpnMSG,
+                                                                                  height: 140.0,
+                                                                                  title: ' ',
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        );
 
-                                                                      logFirebaseEvent(
-                                                                          'ApplePayContainer_update_page_state');
-                                                                      _model.isPaymentDone =
-                                                                          true;
-                                                                      _model.isLoaderIndicator =
-                                                                          false;
-                                                                      safeSetState(
-                                                                          () {});
-                                                                      logFirebaseEvent(
-                                                                          'ApplePayContainer_update_app_state');
-                                                                      FFAppState()
-                                                                          .selectedDeliveryDate = '';
-                                                                      FFAppState()
-                                                                          .selectedDeliveryTimeSlot = '';
-                                                                      safeSetState(
-                                                                          () {});
-                                                                      logFirebaseEvent(
-                                                                          'ApplePayContainer_custom_action');
-                                                                      await actions
-                                                                          .facebookEventClass(
-                                                                        'User id - ${FFAppState().userID}',
-                                                                        '0',
-                                                                        'trail order',
-                                                                        0.0,
-                                                                        0,
-                                                                        functions.updateTotalAmount(
-                                                                            FFAppState().isDeliveryPartnerTipSelected,
-                                                                            '0',
-                                                                            getJsonField(
-                                                                              trialProductCartScreenShowtrailpackResponse.jsonBody,
-                                                                              r'''$.data.total_price''',
-                                                                            ).toString(),
-                                                                            '0',
-                                                                            'no',
-                                                                            _model.trialCartPaymentRadioButtonValue,
-                                                                            getJsonField(
-                                                                              FFAppState().appInfo,
-                                                                              r'''$.codcharges''',
-                                                                            ).toString(),
-                                                                            '',
-                                                                            '')!,
-                                                                        'checkout',
-                                                                        FFAppState()
-                                                                            .emptyJson,
-                                                                        'trail pack order apple pay',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                        ' ',
-                                                                      );
+                                                                        logFirebaseEvent(
+                                                                            'ApplePayContainer_update_page_state');
+                                                                        _model.isPaymentDone =
+                                                                            true;
+                                                                        _model.isLoaderIndicator =
+                                                                            false;
+                                                                        safeSetState(
+                                                                            () {});
+                                                                      }
                                                                     } else {
                                                                       logFirebaseEvent(
                                                                           'ApplePayContainer_alert_dialog');
@@ -4383,10 +4451,7 @@ class _TrialProductCartScreenWidgetState
                                                                             title:
                                                                                 Text(FFAppState().AppName),
                                                                             content:
-                                                                                Text(getJsonField(
-                                                                              (_model.apiResultTrialPackPayment1?.jsonBody ?? ''),
-                                                                              r'''$.message''',
-                                                                            ).toString()),
+                                                                                Text('Please add delivery address'),
                                                                             actions: [
                                                                               TextButton(
                                                                                 onPressed: () => Navigator.pop(alertDialogContext),
@@ -4409,8 +4474,6 @@ class _TrialProductCartScreenWidgetState
                                                                           'ApplePayContainer_update_page_state');
                                                                       _model.isPaymentDone =
                                                                           true;
-                                                                      _model.isLoaderIndicator =
-                                                                          false;
                                                                       safeSetState(
                                                                           () {});
                                                                     }
@@ -4426,7 +4489,7 @@ class _TrialProductCartScreenWidgetState
                                                                           title:
                                                                               Text(FFAppState().AppName),
                                                                           content:
-                                                                              Text('Please add delivery address'),
+                                                                              Text('Please select delivery time slot'),
                                                                           actions: [
                                                                             TextButton(
                                                                               onPressed: () => Navigator.pop(alertDialogContext),
@@ -4464,7 +4527,7 @@ class _TrialProductCartScreenWidgetState
                                                                         title: Text(
                                                                             FFAppState().AppName),
                                                                         content:
-                                                                            Text('Please select delivery time slot'),
+                                                                            Text('Please select delivery date'),
                                                                         actions: [
                                                                           TextButton(
                                                                             onPressed: () =>
@@ -4494,28 +4557,32 @@ class _TrialProductCartScreenWidgetState
                                                                 }
                                                               } else {
                                                                 logFirebaseEvent(
-                                                                    'ApplePayContainer_alert_dialog');
-                                                                await showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (alertDialogContext) {
-                                                                    return AlertDialog(
-                                                                      title: Text(
-                                                                          FFAppState()
-                                                                              .AppName),
-                                                                      content: Text(
-                                                                          'Please select delivery date'),
-                                                                      actions: [
-                                                                        TextButton(
-                                                                          onPressed: () =>
-                                                                              Navigator.pop(alertDialogContext),
-                                                                          child:
-                                                                              Text('Ok'),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  },
+                                                                    'ApplePayContainer_show_snack_bar');
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                  SnackBar(
+                                                                    content:
+                                                                        Text(
+                                                                      FFAppConstants
+                                                                          .internetString,
+                                                                      style: GoogleFonts
+                                                                          .montserrat(
+                                                                        color: FFAppConstants
+                                                                            .blackColor0A0A0A,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        fontSize:
+                                                                            12.0,
+                                                                      ),
+                                                                    ),
+                                                                    duration: Duration(
+                                                                        milliseconds:
+                                                                            4000),
+                                                                    backgroundColor:
+                                                                        FFAppConstants
+                                                                            .NeutralBlack50Color,
+                                                                  ),
                                                                 );
                                                                 logFirebaseEvent(
                                                                     'ApplePayContainer_wait__delay');
@@ -4533,122 +4600,76 @@ class _TrialProductCartScreenWidgetState
                                                                 safeSetState(
                                                                     () {});
                                                               }
-                                                            } else {
-                                                              logFirebaseEvent(
-                                                                  'ApplePayContainer_show_snack_bar');
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                  content: Text(
-                                                                    FFAppConstants
-                                                                        .internetString,
-                                                                    style: GoogleFonts
-                                                                        .montserrat(
-                                                                      color: FFAppConstants
-                                                                          .blackColor0A0A0A,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      fontSize:
-                                                                          12.0,
-                                                                    ),
-                                                                  ),
-                                                                  duration: Duration(
-                                                                      milliseconds:
-                                                                          4000),
-                                                                  backgroundColor:
-                                                                      FFAppConstants
-                                                                          .NeutralBlack50Color,
-                                                                ),
-                                                              );
-                                                              logFirebaseEvent(
-                                                                  'ApplePayContainer_wait__delay');
-                                                              await Future
-                                                                  .delayed(
-                                                                Duration(
-                                                                  milliseconds:
-                                                                      200,
-                                                                ),
-                                                              );
-                                                              logFirebaseEvent(
-                                                                  'ApplePayContainer_update_page_state');
-                                                              _model.isPaymentDone =
-                                                                  true;
-                                                              safeSetState(
-                                                                  () {});
                                                             }
-                                                          }
 
-                                                          safeSetState(() {});
-                                                        },
-                                                        child: Container(
-                                                          width:
-                                                              MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .width *
-                                                                  0.45,
-                                                          height: 35.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FFAppConstants
-                                                                .blackColor0A0A0A,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Icon(
-                                                                Icons.apple,
-                                                                color: FFAppConstants
-                                                                    .whiteColor,
-                                                                size: 30.0,
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            5.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                child: Text(
-                                                                  'Apple Pay',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        font: GoogleFonts
-                                                                            .montserrat(
+                                                            safeSetState(() {});
+                                                          },
+                                                          child: Container(
+                                                            width: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .width *
+                                                                0.45,
+                                                            height: 35.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: FFAppConstants
+                                                                  .blackColor0A0A0A,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(
+                                                                  Icons.apple,
+                                                                  color: FFAppConstants
+                                                                      .whiteColor,
+                                                                  size: 30.0,
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child: Text(
+                                                                    'Apple Pay',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FFAppConstants.whiteColor,
+                                                                          fontSize:
+                                                                              12.0,
+                                                                          letterSpacing:
+                                                                              0.0,
                                                                           fontWeight:
                                                                               FontWeight.bold,
                                                                           fontStyle: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .fontStyle,
                                                                         ),
-                                                                        color: FFAppConstants
-                                                                            .whiteColor,
-                                                                        fontSize:
-                                                                            12.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .fontStyle,
-                                                                      ),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -5281,325 +5302,411 @@ class _TrialProductCartScreenWidgetState
                                                         ),
                                                       ),
                                                     ),
-                                                  InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      logFirebaseEvent(
-                                                          'TRIAL_PRODUCT_CART_SCREEN_Container_7bwd');
-                                                      if (_model
-                                                              .isPaymentDone ==
-                                                          true) {
+                                                  Builder(
+                                                    builder: (context) =>
+                                                        InkWell(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      focusColor:
+                                                          Colors.transparent,
+                                                      hoverColor:
+                                                          Colors.transparent,
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      onTap: () async {
                                                         logFirebaseEvent(
-                                                            'Container_wait__delay');
-                                                        await Future.delayed(
-                                                          Duration(
-                                                            milliseconds: 200,
-                                                          ),
-                                                        );
-                                                        logFirebaseEvent(
-                                                            'Container_update_page_state');
-                                                        _model.isPaymentDone =
-                                                            false;
-                                                        safeSetState(() {});
-                                                        logFirebaseEvent(
-                                                            'Container_update_app_state');
-                                                        FFAppState()
-                                                                .paymentMethod =
-                                                            _model.trialCartPaymentRadioButtonValue ==
-                                                                    'COD'
-                                                                ? 'COD'
-                                                                : 'card';
-                                                        FFAppState()
-                                                            .selectedAddresID = FFAppState()
-                                                                        .selectedAddress1 ==
-                                                                    null ||
-                                                                FFAppState()
-                                                                        .selectedAddress1 ==
-                                                                    ''
-                                                            ? (QuickartGroup
-                                                                        .showtrailpackCall
-                                                                        .lastAddress(
-                                                                          trialProductCartScreenShowtrailpackResponse
-                                                                              .jsonBody,
-                                                                        )!
-                                                                        .length >
-                                                                    0
-                                                                ? (_model
-                                                                            .checkAddressExits !=
-                                                                        getJsonField(
-                                                                          trialProductCartScreenShowtrailpackResponse
-                                                                              .jsonBody,
-                                                                          r'''$.data.lastadd[0].cityExists''',
-                                                                        )
-                                                                    ? getJsonField(
-                                                                        trialProductCartScreenShowtrailpackResponse
-                                                                            .jsonBody,
-                                                                        r'''$.data.lastadd[0].address_id''',
-                                                                      )
-                                                                        .toString()
-                                                                    : 'null')
-                                                                : FFAppState()
-                                                                    .selectedAddresID)
-                                                            : FFAppState()
-                                                                .selectedAddresID;
-                                                        FFAppState()
-                                                                .selectedDeliveryDate =
-                                                            FFAppState().selectedDeliveryDate !=
-                                                                        null &&
-                                                                    FFAppState()
-                                                                            .selectedDeliveryDate !=
-                                                                        ''
-                                                                ? FFAppState()
-                                                                    .selectedDeliveryDate
-                                                                : getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.timeslotsdata[0].date''',
-                                                                  ).toString();
-                                                        FFAppState()
-                                                                .selectedDeliveryTimeSlot =
-                                                            FFAppState().selectedDeliveryTimeSlot !=
-                                                                        null &&
-                                                                    FFAppState()
-                                                                            .selectedDeliveryTimeSlot !=
-                                                                        ''
-                                                                ? FFAppState()
-                                                                    .selectedDeliveryTimeSlot
-                                                                : getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.timeslotsdata[0].timeslots[0].time_slots''',
-                                                                  ).toString();
-                                                        FFAppState()
-                                                                .selectedCardID =
-                                                            FFAppState().isCardChange ==
-                                                                    true
-                                                                ? FFAppState()
-                                                                    .selectedCardID
-                                                                : getJsonField(
-                                                                    trialProductCartScreenShowtrailpackResponse
-                                                                        .jsonBody,
-                                                                    r'''$.data.lastcarddetails.si_sub_ref_no''',
-                                                                  ).toString();
-                                                        FFAppState()
-                                                            .selectedAddress1 = QuickartGroup
-                                                                    .showtrailpackCall
-                                                                    .lastAddress(
-                                                                      trialProductCartScreenShowtrailpackResponse
-                                                                          .jsonBody,
-                                                                    )!
-                                                                    .length >
-                                                                0
-                                                            ? getJsonField(
-                                                                trialProductCartScreenShowtrailpackResponse
-                                                                    .jsonBody,
-                                                                r'''$.data.lastadd[0].house_no''',
-                                                              ).toString()
-                                                            : FFAppState()
-                                                                .selectedAddress1;
-                                                        logFirebaseEvent(
-                                                            'Container_custom_action');
-                                                        _model.connectivityResult3 =
-                                                            await actions
-                                                                .checkInternetConnection();
+                                                            'TRIAL_PRODUCT_CART_SCREEN_Container_7bwd');
                                                         if (_model
-                                                                .connectivityResult3 ==
+                                                                .isPaymentDone ==
                                                             true) {
-                                                          if (FFAppState()
-                                                                      .selectedDeliveryDate !=
-                                                                  null &&
-                                                              FFAppState()
-                                                                      .selectedDeliveryDate !=
-                                                                  '') {
-                                                            if (FFAppState()
-                                                                        .selectedDeliveryTimeSlot !=
-                                                                    null &&
-                                                                FFAppState()
-                                                                        .selectedDeliveryTimeSlot !=
-                                                                    '') {
-                                                              if (FFAppState()
-                                                                          .selectedAddresID !=
+                                                          logFirebaseEvent(
+                                                              'Container_wait__delay');
+                                                          await Future.delayed(
+                                                            Duration(
+                                                              milliseconds: 200,
+                                                            ),
+                                                          );
+                                                          logFirebaseEvent(
+                                                              'Container_update_page_state');
+                                                          _model.isPaymentDone =
+                                                              false;
+                                                          safeSetState(() {});
+                                                          logFirebaseEvent(
+                                                              'Container_update_app_state');
+                                                          FFAppState()
+                                                                  .paymentMethod =
+                                                              _model.trialCartPaymentRadioButtonValue ==
+                                                                      'COD'
+                                                                  ? 'COD'
+                                                                  : 'card';
+                                                          FFAppState()
+                                                              .selectedAddresID = FFAppState()
+                                                                          .selectedAddress1 ==
+                                                                      null ||
+                                                                  FFAppState()
+                                                                          .selectedAddress1 ==
+                                                                      ''
+                                                              ? (QuickartGroup
+                                                                          .showtrailpackCall
+                                                                          .lastAddress(
+                                                                            trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                          )!
+                                                                          .length >
+                                                                      0
+                                                                  ? (_model
+                                                                              .checkAddressExits !=
+                                                                          getJsonField(
+                                                                            trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                            r'''$.data.lastadd[0].cityExists''',
+                                                                          )
+                                                                      ? getJsonField(
+                                                                          trialProductCartScreenShowtrailpackResponse
+                                                                              .jsonBody,
+                                                                          r'''$.data.lastadd[0].address_id''',
+                                                                        )
+                                                                          .toString()
+                                                                      : 'null')
+                                                                  : FFAppState()
+                                                                      .selectedAddresID)
+                                                              : FFAppState()
+                                                                  .selectedAddresID;
+                                                          FFAppState()
+                                                              .selectedDeliveryDate = FFAppState()
+                                                                          .selectedDeliveryDate !=
                                                                       null &&
                                                                   FFAppState()
-                                                                          .selectedAddresID !=
+                                                                          .selectedDeliveryDate !=
+                                                                      ''
+                                                              ? FFAppState()
+                                                                  .selectedDeliveryDate
+                                                              : getJsonField(
+                                                                  trialProductCartScreenShowtrailpackResponse
+                                                                      .jsonBody,
+                                                                  r'''$.data.timeslotsdata[0].date''',
+                                                                ).toString();
+                                                          FFAppState()
+                                                              .selectedDeliveryTimeSlot = FFAppState()
+                                                                          .selectedDeliveryTimeSlot !=
+                                                                      null &&
+                                                                  FFAppState()
+                                                                          .selectedDeliveryTimeSlot !=
+                                                                      ''
+                                                              ? FFAppState()
+                                                                  .selectedDeliveryTimeSlot
+                                                              : getJsonField(
+                                                                  trialProductCartScreenShowtrailpackResponse
+                                                                      .jsonBody,
+                                                                  r'''$.data.timeslotsdata[0].timeslots[0].time_slots''',
+                                                                ).toString();
+                                                          FFAppState()
+                                                              .selectedCardID = FFAppState()
+                                                                      .isCardChange ==
+                                                                  true
+                                                              ? FFAppState()
+                                                                  .selectedCardID
+                                                              : getJsonField(
+                                                                  trialProductCartScreenShowtrailpackResponse
+                                                                      .jsonBody,
+                                                                  r'''$.data.lastcarddetails.si_sub_ref_no''',
+                                                                ).toString();
+                                                          FFAppState()
+                                                              .selectedAddress1 = QuickartGroup
+                                                                      .showtrailpackCall
+                                                                      .lastAddress(
+                                                                        trialProductCartScreenShowtrailpackResponse
+                                                                            .jsonBody,
+                                                                      )!
+                                                                      .length >
+                                                                  0
+                                                              ? getJsonField(
+                                                                  trialProductCartScreenShowtrailpackResponse
+                                                                      .jsonBody,
+                                                                  r'''$.data.lastadd[0].house_no''',
+                                                                ).toString()
+                                                              : FFAppState()
+                                                                  .selectedAddress1;
+                                                          logFirebaseEvent(
+                                                              'Container_custom_action');
+                                                          _model.connectivityResult3 =
+                                                              await actions
+                                                                  .checkInternetConnection();
+                                                          if (_model
+                                                                  .connectivityResult3 ==
+                                                              true) {
+                                                            if (FFAppState()
+                                                                        .selectedDeliveryDate !=
+                                                                    null &&
+                                                                FFAppState()
+                                                                        .selectedDeliveryDate !=
+                                                                    '') {
+                                                              if (FFAppState()
+                                                                          .selectedDeliveryTimeSlot !=
+                                                                      null &&
+                                                                  FFAppState()
+                                                                          .selectedDeliveryTimeSlot !=
                                                                       '') {
-                                                                logFirebaseEvent(
-                                                                    'Container_update_page_state');
-                                                                _model.isPaymentDone =
-                                                                    false;
-                                                                _model.isLoaderIndicator =
-                                                                    true;
-                                                                safeSetState(
-                                                                    () {});
-                                                                logFirebaseEvent(
-                                                                    'Container_backend_call');
-                                                                _model.apiResultTrialPackPayment =
-                                                                    await QuickartGroup
-                                                                        .trailpaymentCall
-                                                                        .call(
-                                                                  userid:
-                                                                      FFAppState()
-                                                                          .userID,
-                                                                  addressid:
-                                                                      FFAppState()
-                                                                          .selectedAddresID,
-                                                                  storeid:
-                                                                      FFAppState()
-                                                                          .storeID,
-                                                                  paymentMethod:
-                                                                      'Card',
-                                                                  deliveryDate:
-                                                                      FFAppState()
-                                                                          .selectedDeliveryDate,
-                                                                  timeSlot:
-                                                                      FFAppState()
-                                                                          .selectedDeliveryTimeSlot,
-                                                                  delPartnerTip:
-                                                                      FFAppState()
-                                                                          .isDeliveryPartnerTipSelected,
-                                                                  delPartnerInstruction: functions.combineInstructions(
-                                                                      FFAppState()
-                                                                          .deliveryPartnerInstructionAvoid,
-                                                                      FFAppState()
-                                                                          .deliveryPartnerInstructionBell,
-                                                                      FFAppState()
-                                                                          .deliveryPartnerInstructionDoor),
-                                                                  deviceid:
-                                                                      FFAppState()
-                                                                          .deviceID,
-                                                                  orderInstruction:
-                                                                      (String
-                                                                          var1) {
-                                                                    return var1
-                                                                            .trim() ??
-                                                                        '';
-                                                                  }(_model.textController
-                                                                          .text),
-                                                                  platform: isiOS
-                                                                      ? 'ios'
-                                                                      : 'android',
-                                                                );
-
-                                                                if ((_model
-                                                                        .apiResultTrialPackPayment
-                                                                        ?.succeeded ??
-                                                                    true)) {
+                                                                if (FFAppState()
+                                                                            .selectedAddresID !=
+                                                                        null &&
+                                                                    FFAppState()
+                                                                            .selectedAddresID !=
+                                                                        '') {
                                                                   logFirebaseEvent(
-                                                                      'Container_navigate_to');
+                                                                      'Container_update_page_state');
+                                                                  _model.isPaymentDone =
+                                                                      false;
+                                                                  _model.isLoaderIndicator =
+                                                                      true;
+                                                                  safeSetState(
+                                                                      () {});
+                                                                  logFirebaseEvent(
+                                                                      'Container_custom_action');
+                                                                  _model.isVpnQP =
+                                                                      await actions
+                                                                          .isVpnEnabled();
+                                                                  if (_model
+                                                                          .isVpnQP ==
+                                                                      false) {
+                                                                    logFirebaseEvent(
+                                                                        'Container_backend_call');
+                                                                    _model.apiResultTrialPackPayment =
+                                                                        await QuickartGroup
+                                                                            .trailpaymentCall
+                                                                            .call(
+                                                                      userid: FFAppState()
+                                                                          .userID,
+                                                                      addressid:
+                                                                          FFAppState()
+                                                                              .selectedAddresID,
+                                                                      storeid:
+                                                                          FFAppState()
+                                                                              .storeID,
+                                                                      paymentMethod:
+                                                                          'Card',
+                                                                      deliveryDate:
+                                                                          FFAppState()
+                                                                              .selectedDeliveryDate,
+                                                                      timeSlot:
+                                                                          FFAppState()
+                                                                              .selectedDeliveryTimeSlot,
+                                                                      delPartnerTip:
+                                                                          FFAppState()
+                                                                              .isDeliveryPartnerTipSelected,
+                                                                      delPartnerInstruction: functions.combineInstructions(
+                                                                          FFAppState()
+                                                                              .deliveryPartnerInstructionAvoid,
+                                                                          FFAppState()
+                                                                              .deliveryPartnerInstructionBell,
+                                                                          FFAppState()
+                                                                              .deliveryPartnerInstructionDoor),
+                                                                      deviceid:
+                                                                          FFAppState()
+                                                                              .deviceID,
+                                                                      orderInstruction: (String
+                                                                          var1) {
+                                                                        return var1.trim() ??
+                                                                            '';
+                                                                      }(_model
+                                                                          .textController
+                                                                          .text),
+                                                                      platform: isiOS
+                                                                          ? 'ios'
+                                                                          : 'android',
+                                                                    );
 
-                                                                  context
-                                                                      .pushNamed(
-                                                                    PaymentScreenWidget
-                                                                        .routeName,
-                                                                    queryParameters:
-                                                                        {
-                                                                      'redirectURl':
-                                                                          serializeParam(
-                                                                        getJsonField(
-                                                                          (_model.apiResultTrialPackPayment?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.data.redirect_url''',
-                                                                        ).toString(),
-                                                                        ParamType
-                                                                            .String,
-                                                                      ),
-                                                                      'screenPName':
-                                                                          serializeParam(
-                                                                        'daily',
-                                                                        ParamType
-                                                                            .String,
-                                                                      ),
-                                                                      'mrp':
-                                                                          serializeParam(
+                                                                    if ((_model
+                                                                            .apiResultTrialPackPayment
+                                                                            ?.succeeded ??
+                                                                        true)) {
+                                                                      logFirebaseEvent(
+                                                                          'Container_navigate_to');
+
+                                                                      context
+                                                                          .pushNamed(
+                                                                        PaymentScreenWidget
+                                                                            .routeName,
+                                                                        queryParameters:
+                                                                            {
+                                                                          'redirectURl':
+                                                                              serializeParam(
+                                                                            getJsonField(
+                                                                              (_model.apiResultTrialPackPayment?.jsonBody ?? ''),
+                                                                              r'''$.data.redirect_url''',
+                                                                            ).toString(),
+                                                                            ParamType.String,
+                                                                          ),
+                                                                          'screenPName':
+                                                                              serializeParam(
+                                                                            'daily',
+                                                                            ParamType.String,
+                                                                          ),
+                                                                          'mrp':
+                                                                              serializeParam(
+                                                                            functions.updateTotalAmount(
+                                                                                FFAppState().isDeliveryPartnerTipSelected,
+                                                                                '0',
+                                                                                getJsonField(
+                                                                                  QuickartGroup.showtrailpackCall.mainData(
+                                                                                    trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                                  ),
+                                                                                  r'''$.discount_total_price''',
+                                                                                ).toString(),
+                                                                                '0',
+                                                                                FFAppState().isCardSelected,
+                                                                                _model.trialCartPaymentRadioButtonValue,
+                                                                                getJsonField(
+                                                                                  FFAppState().appInfo,
+                                                                                  r'''$.codcharges''',
+                                                                                ).toString(),
+                                                                                '',
+                                                                                ''),
+                                                                            ParamType.double,
+                                                                          ),
+                                                                          'orderType':
+                                                                              serializeParam(
+                                                                            'trail pack order card',
+                                                                            ParamType.String,
+                                                                          ),
+                                                                        }.withoutNulls,
+                                                                      );
+
+                                                                      logFirebaseEvent(
+                                                                          'Container_update_app_state');
+                                                                      FFAppState()
+                                                                          .selectedDeliveryDate = '';
+                                                                      FFAppState()
+                                                                          .selectedDeliveryTimeSlot = '';
+                                                                      safeSetState(
+                                                                          () {});
+                                                                      logFirebaseEvent(
+                                                                          'Container_update_page_state');
+                                                                      _model.isPaymentDone =
+                                                                          true;
+                                                                      _model.isLoaderIndicator =
+                                                                          false;
+                                                                      safeSetState(
+                                                                          () {});
+                                                                      logFirebaseEvent(
+                                                                          'Container_custom_action');
+                                                                      await actions
+                                                                          .facebookEventClass(
+                                                                        'User id - ${FFAppState().userID}',
+                                                                        '0',
+                                                                        'trail order',
+                                                                        0.0,
+                                                                        0,
                                                                         functions.updateTotalAmount(
                                                                             FFAppState().isDeliveryPartnerTipSelected,
                                                                             '0',
                                                                             getJsonField(
-                                                                              QuickartGroup.showtrailpackCall.mainData(
-                                                                                trialProductCartScreenShowtrailpackResponse.jsonBody,
-                                                                              ),
-                                                                              r'''$.discount_total_price''',
+                                                                              trialProductCartScreenShowtrailpackResponse.jsonBody,
+                                                                              r'''$.data.total_price''',
                                                                             ).toString(),
                                                                             '0',
-                                                                            FFAppState().isCardSelected,
+                                                                            'no',
                                                                             _model.trialCartPaymentRadioButtonValue,
                                                                             getJsonField(
                                                                               FFAppState().appInfo,
                                                                               r'''$.codcharges''',
                                                                             ).toString(),
                                                                             '',
-                                                                            ''),
-                                                                        ParamType
-                                                                            .double,
-                                                                      ),
-                                                                      'orderType':
-                                                                          serializeParam(
-                                                                        'trail pack order card',
-                                                                        ParamType
-                                                                            .String,
-                                                                      ),
-                                                                    }.withoutNulls,
-                                                                  );
+                                                                            '')!,
+                                                                        'checkout',
+                                                                        FFAppState()
+                                                                            .emptyJson,
+                                                                        'emptyjson',
+                                                                        ' ',
+                                                                        ' ',
+                                                                        ' ',
+                                                                        ' ',
+                                                                      );
+                                                                    } else {
+                                                                      logFirebaseEvent(
+                                                                          'Container_alert_dialog');
+                                                                      await showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (alertDialogContext) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text(FFAppState().AppName),
+                                                                            content:
+                                                                                Text(getJsonField(
+                                                                              (_model.apiResultTrialPackPayment?.jsonBody ?? ''),
+                                                                              r'''$.message''',
+                                                                            ).toString()),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed: () => Navigator.pop(alertDialogContext),
+                                                                                child: Text('Ok'),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                      logFirebaseEvent(
+                                                                          'Container_wait__delay');
+                                                                      await Future
+                                                                          .delayed(
+                                                                        Duration(
+                                                                          milliseconds:
+                                                                              500,
+                                                                        ),
+                                                                      );
+                                                                      logFirebaseEvent(
+                                                                          'Container_update_page_state');
+                                                                      _model.isPaymentDone =
+                                                                          true;
+                                                                      _model.isLoaderIndicator =
+                                                                          false;
+                                                                      safeSetState(
+                                                                          () {});
+                                                                    }
+                                                                  } else {
+                                                                    logFirebaseEvent(
+                                                                        'Container_alert_dialog');
+                                                                    await showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (dialogContext) {
+                                                                        return Dialog(
+                                                                          elevation:
+                                                                              0,
+                                                                          insetPadding:
+                                                                              EdgeInsets.zero,
+                                                                          backgroundColor:
+                                                                              Colors.transparent,
+                                                                          alignment:
+                                                                              AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                          child:
+                                                                              GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              FocusScope.of(dialogContext).unfocus();
+                                                                              FocusManager.instance.primaryFocus?.unfocus();
+                                                                            },
+                                                                            child:
+                                                                                CustomAlertDailogWidget(
+                                                                              des: FFAppConstants.vpnMSG,
+                                                                              height: 140.0,
+                                                                              title: ' ',
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    );
 
-                                                                  logFirebaseEvent(
-                                                                      'Container_update_app_state');
-                                                                  FFAppState()
-                                                                      .selectedDeliveryDate = '';
-                                                                  FFAppState()
-                                                                      .selectedDeliveryTimeSlot = '';
-                                                                  safeSetState(
-                                                                      () {});
-                                                                  logFirebaseEvent(
-                                                                      'Container_update_page_state');
-                                                                  _model.isPaymentDone =
-                                                                      true;
-                                                                  _model.isLoaderIndicator =
-                                                                      false;
-                                                                  safeSetState(
-                                                                      () {});
-                                                                  logFirebaseEvent(
-                                                                      'Container_custom_action');
-                                                                  await actions
-                                                                      .facebookEventClass(
-                                                                    'User id - ${FFAppState().userID}',
-                                                                    '0',
-                                                                    'trail order',
-                                                                    0.0,
-                                                                    0,
-                                                                    functions.updateTotalAmount(
-                                                                        FFAppState().isDeliveryPartnerTipSelected,
-                                                                        '0',
-                                                                        getJsonField(
-                                                                          trialProductCartScreenShowtrailpackResponse
-                                                                              .jsonBody,
-                                                                          r'''$.data.total_price''',
-                                                                        ).toString(),
-                                                                        '0',
-                                                                        'no',
-                                                                        _model.trialCartPaymentRadioButtonValue,
-                                                                        getJsonField(
-                                                                          FFAppState()
-                                                                              .appInfo,
-                                                                          r'''$.codcharges''',
-                                                                        ).toString(),
-                                                                        '',
-                                                                        '')!,
-                                                                    'checkout',
-                                                                    FFAppState()
-                                                                        .emptyJson,
-                                                                    'emptyjson',
-                                                                    ' ',
-                                                                    ' ',
-                                                                    ' ',
-                                                                    ' ',
-                                                                  );
+                                                                    logFirebaseEvent(
+                                                                        'Container_update_page_state');
+                                                                    _model.isPaymentDone =
+                                                                        true;
+                                                                    _model.isLoaderIndicator =
+                                                                        false;
+                                                                    safeSetState(
+                                                                        () {});
+                                                                  }
                                                                 } else {
                                                                   logFirebaseEvent(
                                                                       'Container_alert_dialog');
@@ -5612,11 +5719,7 @@ class _TrialProductCartScreenWidgetState
                                                                         title: Text(
                                                                             FFAppState().AppName),
                                                                         content:
-                                                                            Text(getJsonField(
-                                                                          (_model.apiResultTrialPackPayment?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.message''',
-                                                                        ).toString()),
+                                                                            Text('Please add delivery address'),
                                                                         actions: [
                                                                           TextButton(
                                                                             onPressed: () =>
@@ -5634,15 +5737,13 @@ class _TrialProductCartScreenWidgetState
                                                                       .delayed(
                                                                     Duration(
                                                                       milliseconds:
-                                                                          500,
+                                                                          200,
                                                                     ),
                                                                   );
                                                                   logFirebaseEvent(
                                                                       'Container_update_page_state');
                                                                   _model.isPaymentDone =
                                                                       true;
-                                                                  _model.isLoaderIndicator =
-                                                                      false;
                                                                   safeSetState(
                                                                       () {});
                                                                 }
@@ -5659,7 +5760,7 @@ class _TrialProductCartScreenWidgetState
                                                                           FFAppState()
                                                                               .AppName),
                                                                       content: Text(
-                                                                          'Please add delivery address'),
+                                                                          'Please select delivery time slot'),
                                                                       actions: [
                                                                         TextButton(
                                                                           onPressed: () =>
@@ -5700,7 +5801,7 @@ class _TrialProductCartScreenWidgetState
                                                                         FFAppState()
                                                                             .AppName),
                                                                     content: Text(
-                                                                        'Please select delivery time slot'),
+                                                                        'Please select delivery date'),
                                                                     actions: [
                                                                       TextButton(
                                                                         onPressed:
@@ -5731,28 +5832,32 @@ class _TrialProductCartScreenWidgetState
                                                             }
                                                           } else {
                                                             logFirebaseEvent(
-                                                                'Container_alert_dialog');
-                                                            await showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (alertDialogContext) {
-                                                                return AlertDialog(
-                                                                  title: Text(
-                                                                      FFAppState()
-                                                                          .AppName),
-                                                                  content: Text(
-                                                                      'Please select delivery date'),
-                                                                  actions: [
-                                                                    TextButton(
-                                                                      onPressed:
-                                                                          () =>
-                                                                              Navigator.pop(alertDialogContext),
-                                                                      child: Text(
-                                                                          'Ok'),
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              },
+                                                                'Container_show_snack_bar');
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  FFAppConstants
+                                                                      .internetString,
+                                                                  style: GoogleFonts
+                                                                      .montserrat(
+                                                                    color: FFAppConstants
+                                                                        .blackColor0A0A0A,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        12.0,
+                                                                  ),
+                                                                ),
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        4000),
+                                                                backgroundColor:
+                                                                    FFAppConstants
+                                                                        .NeutralBlack50Color,
+                                                              ),
                                                             );
                                                             logFirebaseEvent(
                                                                 'Container_wait__delay');
@@ -5769,145 +5874,115 @@ class _TrialProductCartScreenWidgetState
                                                                 true;
                                                             safeSetState(() {});
                                                           }
-                                                        } else {
-                                                          logFirebaseEvent(
-                                                              'Container_show_snack_bar');
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            SnackBar(
-                                                              content: Text(
-                                                                FFAppConstants
-                                                                    .internetString,
-                                                                style: GoogleFonts
-                                                                    .montserrat(
-                                                                  color: FFAppConstants
-                                                                      .blackColor0A0A0A,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      12.0,
-                                                                ),
-                                                              ),
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      4000),
-                                                              backgroundColor:
-                                                                  FFAppConstants
-                                                                      .NeutralBlack50Color,
-                                                            ),
-                                                          );
-                                                          logFirebaseEvent(
-                                                              'Container_wait__delay');
-                                                          await Future.delayed(
-                                                            Duration(
-                                                              milliseconds: 200,
-                                                            ),
-                                                          );
-                                                          logFirebaseEvent(
-                                                              'Container_update_page_state');
-                                                          _model.isPaymentDone =
-                                                              true;
-                                                          safeSetState(() {});
                                                         }
-                                                      }
 
-                                                      safeSetState(() {});
-                                                    },
-                                                    child: Container(
-                                                      width: MediaQuery.sizeOf(
-                                                                  context)
-                                                              .width *
-                                                          0.45,
-                                                      height: 35.0,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xFFF3F3F7),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                        border: Border.all(
+                                                        safeSetState(() {});
+                                                      },
+                                                      child: Container(
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.45,
+                                                        height: 35.0,
+                                                        decoration:
+                                                            BoxDecoration(
                                                           color:
-                                                              Color(0xFFDADADA),
-                                                          width: 1.0,
-                                                        ),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        5.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                            child: Icon(
-                                                              FFIcons
-                                                                  .kclipPathGroup,
-                                                              color:
-                                                                  FFAppConstants
-                                                                      .darkGreen,
-                                                              size: 26.0,
-                                                            ),
+                                                              Color(0xFFF3F3F7),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          border: Border.all(
+                                                            color: Color(
+                                                                0xFFDADADA),
+                                                            width: 1.0,
                                                           ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        9.0,
-                                                                        3.0,
-                                                                        0.0,
-                                                                        3.0),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  'Quick Pay',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        font: GoogleFonts
-                                                                            .montserrat(
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Icon(
+                                                                FFIcons
+                                                                    .kclipPathGroup,
+                                                                color: FFAppConstants
+                                                                    .darkGreen,
+                                                                size: 26.0,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          9.0,
+                                                                          3.0,
+                                                                          0.0,
+                                                                          3.0),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    'Quick Pay',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FFAppConstants.blackColor0A0A0A,
+                                                                          fontSize:
+                                                                              12.0,
+                                                                          letterSpacing:
+                                                                              0.0,
                                                                           fontWeight:
                                                                               FontWeight.w500,
                                                                           fontStyle: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .fontStyle,
                                                                         ),
-                                                                        color: FFAppConstants
-                                                                            .blackColor0A0A0A,
-                                                                        fontSize:
-                                                                            12.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .fontStyle,
-                                                                      ),
-                                                                ),
-                                                                Text(
-                                                                  '(Without saving card)',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        font: GoogleFonts
-                                                                            .montserrat(
+                                                                  ),
+                                                                  Text(
+                                                                    '(Without saving card)',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FFAppConstants.blackColor0A0A0A,
+                                                                          fontSize:
+                                                                              7.0,
+                                                                          letterSpacing:
+                                                                              0.0,
                                                                           fontWeight: FlutterFlowTheme.of(context)
                                                                               .bodyMedium
                                                                               .fontWeight,
@@ -5915,24 +5990,12 @@ class _TrialProductCartScreenWidgetState
                                                                               .bodyMedium
                                                                               .fontStyle,
                                                                         ),
-                                                                        color: FFAppConstants
-                                                                            .blackColor0A0A0A,
-                                                                        fontSize:
-                                                                            7.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .fontWeight,
-                                                                        fontStyle: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .fontStyle,
-                                                                      ),
-                                                                ),
-                                                              ],
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

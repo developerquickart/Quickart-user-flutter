@@ -30,3 +30,4 @@ export 'request_app_review.dart' show requestAppReview;
 export 'clear_focus.dart' show clearFocus;
 export 'save_login_data.dart' show saveLoginData;
 export 'clear_share_prefe_data.dart' show clearSharePrefeData;
+export 'is_vpn_enabled.dart' show isVpnEnabled;

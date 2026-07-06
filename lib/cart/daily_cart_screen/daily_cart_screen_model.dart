@@ -137,6 +137,8 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   FormFieldController<String>? dailyCartPaymentRadioButtonValueController;
   // Stores action output result for [Custom Action - checkInternetConnection] action in ApplePayContainer widget.
   bool? connectivityResult666Copy;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in ApplePayContainer widget.
+  bool? isVpnON;
   // Stores action output result for [Backend Call - API (upquickordertimeslot)] action in ApplePayContainer widget.
   ApiCallResponse? apiResultkgz;
   // Stores action output result for [Backend Call - API (payment)] action in ApplePayContainer widget.
@@ -149,6 +151,8 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   ApiCallResponse? apiResults5yy66;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? connectivityResult1Copy;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in Container widget.
+  bool? isVpnONQP;
   // Stores action output result for [Backend Call - API (upquickordertimeslot)] action in Container widget.
   ApiCallResponse? apiResultyfq;
   // Stores action output result for [Backend Call - API (payment)] action in Container widget.

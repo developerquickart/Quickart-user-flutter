@@ -2094,6 +2094,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.1"
+  vpn_detector:
+    dependency: "direct main"
+    description:
+      name: vpn_detector
+      sha256: "1080e53dc7ba3b8aa7cec5136826daac2f63dedb467e6532dfae4bf5192711df"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   wakelock_plus:
     dependency: transitive
     description:

@@ -127,8 +127,12 @@ class CartSubscriptionScreenModel
   String? Function(BuildContext, String?)? textControllerValidator;
   // State field(s) for SubPaymentRadioButton widget.
   FormFieldController<String>? subPaymentRadioButtonValueController;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in AppleContainer widget.
+  bool? isVpnONAP;
   // Stores action output result for [Backend Call - API (subpayment)] action in AppleContainer widget.
   ApiCallResponse? apiResultapplePaynew;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in QuickPayContainer widget.
+  bool? isVpnONQP;
   // Stores action output result for [Backend Call - API (subpayment)] action in QuickPayContainer widget.
   ApiCallResponse? apiResult44bquickPay;
   // Stores action output result for [Custom Action - checkInternetConnection] action in PaymentContainer widget.

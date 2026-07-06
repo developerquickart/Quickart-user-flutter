@@ -140,4 +140,6 @@ abstract class FFAppConstants {
   static const String cancelOrdertext =
       'Are you sure you want to cancel this order?';
   static const Color borderColor = Color(4292667864);
+  static const String vpnMSG =
+      'VPN Detected\nPlease turn off your VPN connection before placing your order.';
 }

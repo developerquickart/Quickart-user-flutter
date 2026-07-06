@@ -5177,7 +5177,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                         );
                                                                                       } else {
                                                                                         return Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(3.0, 0.0, 0.0, 0.0),
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(1.0, 0.0, 0.0, 0.0),
                                                                                           child: Column(
                                                                                             mainAxisSize: MainAxisSize.max,
                                                                                             children: [
@@ -5253,7 +5253,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                   return Padding(
                                                                                     padding: EdgeInsetsDirectional.fromSTEB(
                                                                                         valueOrDefault<double>(
-                                                                                          MediaQuery.sizeOf(context).width <= 395.0 ? 10.0 : 20.0,
+                                                                                          MediaQuery.sizeOf(context).width <= 395.0 ? 7.0 : 20.0,
                                                                                           0.0,
                                                                                         ),
                                                                                         0.0,
@@ -5778,263 +5778,19 @@ class _CartSubscriptionScreenWidgetState
                                                                                                             logFirebaseEvent('AppleContainer_update_page_state');
                                                                                                             _model.isPaymentDone = false;
                                                                                                             safeSetState(() {});
-                                                                                                            logFirebaseEvent('AppleContainer_backend_call');
-                                                                                                            _model.apiResultapplePaynew = await QuickartGroup.subpaymentCall.call(
-                                                                                                              userid: FFAppState().userID,
-                                                                                                              addressid: FFAppState().selectedAddresID,
-                                                                                                              storeid: FFAppState().storeID,
-                                                                                                              paymentMethod: 'applepay',
-                                                                                                              wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
-                                                                                                              deviceid: FFAppState().deviceID,
-                                                                                                              paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
-                                                                                                              orderTotal: functions.updateTotalAmount(
-                                                                                                                  '0',
-                                                                                                                  '0',
-                                                                                                                  getJsonField(
-                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                    r'''$.data.total_price''',
-                                                                                                                  ).toString(),
-                                                                                                                  functions
-                                                                                                                      .checkWalletWithAction(
-                                                                                                                          _model.isSubWalletCheckBoxSelected,
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  '0',
-                                                                                                                                  '0',
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  '',
-                                                                                                                                  '')
-                                                                                                                              .toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.wallet_deduction_percentage''',
-                                                                                                                          ).toString())
-                                                                                                                      .toString(),
-                                                                                                                  _model.isSubWalletCheckBoxSelected,
-                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                  '0',
-                                                                                                                  '',
-                                                                                                                  ''),
-                                                                                                              totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
-                                                                                                                      ? functions.calculateFinalPayableForCashPayment(
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                  FFAppState().couponDiscount.toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  'false',
-                                                                                                                                  '',
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  '',
-                                                                                                                                  '')
-                                                                                                                              .toString(),
-                                                                                                                          functions
-                                                                                                                              .checkWalletWithAction(
-                                                                                                                                  _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                                  functions
-                                                                                                                                      .updateTotalAmount(
-                                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                                                          getJsonField(
-                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                            r'''$.data.total_price''',
-                                                                                                                                          ).toString(),
-                                                                                                                                          getJsonField(
-                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                                          ).toString(),
-                                                                                                                                          'false',
-                                                                                                                                          '',
-                                                                                                                                          getJsonField(
-                                                                                                                                            FFAppState().appInfo,
-                                                                                                                                            r'''$.codcharges''',
-                                                                                                                                          ).toString(),
-                                                                                                                                          '',
-                                                                                                                                          '')
-                                                                                                                                      .toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.referral_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                                                  ).toString())
-                                                                                                                              .toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          _model.isSubWalletCheckBoxSelected)
-                                                                                                                      : 0.0)
-                                                                                                                  .toString(),
-                                                                                                              delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                                              orderInstruction: (String var1) {
-                                                                                                                return var1.trim() ?? '';
-                                                                                                              }(_model.textController.text),
-                                                                                                              platform: isiOS ? 'ios' : 'android',
-                                                                                                              totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
-                                                                                                                      ? functions.checkWalletWithAction(
-                                                                                                                          _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  '0',
-                                                                                                                                  '0',
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.referral_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  '',
-                                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  '',
-                                                                                                                                  '')
-                                                                                                                              .toString(),
-                                                                                                                          functions.setDecimalValue(getJsonField(
-                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString()),
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.wallet_deduction_percentage''',
-                                                                                                                          ).toString())
-                                                                                                                      : 0.0)
-                                                                                                                  .toString(),
-                                                                                                            );
-
-                                                                                                            if ((_model.apiResultapplePaynew?.succeeded ?? true)) {
-                                                                                                              logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                              _model.isLoadingIndicator = false;
-                                                                                                              safeSetState(() {});
-                                                                                                              logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                              _model.isPaymentDone = true;
-                                                                                                              safeSetState(() {});
-                                                                                                              logFirebaseEvent('AppleContainer_navigate_to');
-
-                                                                                                              context.pushNamed(
-                                                                                                                PaymentScreenWidget.routeName,
-                                                                                                                queryParameters: {
-                                                                                                                  'redirectURl': serializeParam(
-                                                                                                                    getJsonField(
-                                                                                                                      (_model.apiResultapplePaynew?.jsonBody ?? ''),
-                                                                                                                      r'''$.data.redirect_url''',
-                                                                                                                    ).toString(),
-                                                                                                                    ParamType.String,
-                                                                                                                  ),
-                                                                                                                  'screenPName': serializeParam(
-                                                                                                                    'subscription',
-                                                                                                                    ParamType.String,
-                                                                                                                  ),
-                                                                                                                  'mrp': serializeParam(
-                                                                                                                    functions.updateTotalAmount(
-                                                                                                                        '0',
-                                                                                                                        '0',
-                                                                                                                        getJsonField(
-                                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                                          r'''$.data.total_price''',
-                                                                                                                        ).toString(),
-                                                                                                                        functions
-                                                                                                                            .checkWalletWithAction(
-                                                                                                                                _model.isSubWalletCheckBoxSelected,
-                                                                                                                                functions
-                                                                                                                                    .updateTotalAmount(
-                                                                                                                                        '0',
-                                                                                                                                        '0',
-                                                                                                                                        getJsonField(
-                                                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                          r'''$.data.total_price''',
-                                                                                                                                        ).toString(),
-                                                                                                                                        getJsonField(
-                                                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                                        ).toString(),
-                                                                                                                                        _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                                        _model.selectedPaymentMethod,
-                                                                                                                                        getJsonField(
-                                                                                                                                          FFAppState().appInfo,
-                                                                                                                                          r'''$.codcharges''',
-                                                                                                                                        ).toString(),
-                                                                                                                                        getJsonField(
-                                                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                                        ).toString(),
-                                                                                                                                        _model.isSubWalletCheckBoxSelected)
-                                                                                                                                    .toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.wallet_balance''',
-                                                                                                                                ).toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  FFAppState().appInfo,
-                                                                                                                                  r'''$.wallet_deduction_percentage''',
-                                                                                                                                ).toString())
-                                                                                                                            .toString(),
-                                                                                                                        _model.isSubWalletCheckBoxSelected,
-                                                                                                                        _model.selectedPaymentMethod,
-                                                                                                                        '0',
-                                                                                                                        '',
-                                                                                                                        ''),
-                                                                                                                    ParamType.double,
-                                                                                                                  ),
-                                                                                                                  'orderType': serializeParam(
-                                                                                                                    'subscription order apple pay',
-                                                                                                                    ParamType.String,
-                                                                                                                  ),
-                                                                                                                }.withoutNulls,
-                                                                                                              );
-
-                                                                                                              logFirebaseEvent('AppleContainer_custom_action');
-                                                                                                              await actions.facebookEventClass(
-                                                                                                                (List<String> var1) {
-                                                                                                                  return var1.join(', ');
-                                                                                                                }(functions
-                                                                                                                    .getVarientIdsWithCartQty(
-                                                                                                                        getJsonField(
-                                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                                          r'''$.data.data''',
-                                                                                                                        ),
-                                                                                                                        'daily')
-                                                                                                                    .map((e) => e.toString())
-                                                                                                                    .toList()),
-                                                                                                                '0',
-                                                                                                                'subscription order',
-                                                                                                                0.0,
-                                                                                                                0,
-                                                                                                                functions.updateTotalAmount(
+                                                                                                            logFirebaseEvent('AppleContainer_custom_action');
+                                                                                                            _model.isVpnONAP = await actions.isVpnEnabled();
+                                                                                                            if (_model.isVpnONAP == false) {
+                                                                                                              logFirebaseEvent('AppleContainer_backend_call');
+                                                                                                              _model.apiResultapplePaynew = await QuickartGroup.subpaymentCall.call(
+                                                                                                                userid: FFAppState().userID,
+                                                                                                                addressid: FFAppState().selectedAddresID,
+                                                                                                                storeid: FFAppState().storeID,
+                                                                                                                paymentMethod: 'applepay',
+                                                                                                                wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                                                deviceid: FFAppState().deviceID,
+                                                                                                                paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
+                                                                                                                orderTotal: functions.updateTotalAmount(
                                                                                                                     '0',
                                                                                                                     '0',
                                                                                                                     getJsonField(
@@ -6052,26 +5808,23 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                                       tabBarShowsubcartResponse.jsonBody,
                                                                                                                                       r'''$.data.total_price''',
                                                                                                                                     ).toString(),
-                                                                                                                                    functions.setDecimalValue(getJsonField(
+                                                                                                                                    getJsonField(
                                                                                                                                       tabBarShowsubcartResponse.jsonBody,
                                                                                                                                       r'''$.data.wallet_balance''',
-                                                                                                                                    ).toString()),
+                                                                                                                                    ).toString(),
                                                                                                                                     _model.isRefSubWalletCheckBoxSelected,
                                                                                                                                     _model.selectedPaymentMethod,
                                                                                                                                     getJsonField(
                                                                                                                                       FFAppState().appInfo,
                                                                                                                                       r'''$.codcharges''',
                                                                                                                                     ).toString(),
-                                                                                                                                    getJsonField(
-                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                      r'''$.data.wallet_balance''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    _model.isSubWalletCheckBoxSelected)
+                                                                                                                                    '',
+                                                                                                                                    '')
                                                                                                                                 .toString(),
-                                                                                                                            functions.setDecimalValue(getJsonField(
+                                                                                                                            getJsonField(
                                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                                               r'''$.data.wallet_balance''',
-                                                                                                                            ).toString()),
+                                                                                                                            ).toString(),
                                                                                                                             getJsonField(
                                                                                                                               FFAppState().appInfo,
                                                                                                                               r'''$.wallet_deduction_percentage''',
@@ -6081,18 +5834,303 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                     _model.selectedPaymentMethod,
                                                                                                                     '0',
                                                                                                                     '',
-                                                                                                                    '')!,
-                                                                                                                'checkout',
-                                                                                                                getJsonField(
-                                                                                                                  tabBarShowsubcartResponse.jsonBody,
-                                                                                                                  r'''$.data.data''',
-                                                                                                                ),
-                                                                                                                'subscription order apple pay',
-                                                                                                                ' ',
-                                                                                                                ' ',
-                                                                                                                ' ',
-                                                                                                                ' ',
+                                                                                                                    ''),
+                                                                                                                totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
+                                                                                                                        ? functions.calculateFinalPayableForCashPayment(
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    'false',
+                                                                                                                                    '',
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    '')
+                                                                                                                                .toString(),
+                                                                                                                            functions
+                                                                                                                                .checkWalletWithAction(
+                                                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                    functions
+                                                                                                                                        .updateTotalAmount(
+                                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                                                            getJsonField(
+                                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                              r'''$.data.total_price''',
+                                                                                                                                            ).toString(),
+                                                                                                                                            getJsonField(
+                                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                                            ).toString(),
+                                                                                                                                            'false',
+                                                                                                                                            '',
+                                                                                                                                            getJsonField(
+                                                                                                                                              FFAppState().appInfo,
+                                                                                                                                              r'''$.codcharges''',
+                                                                                                                                            ).toString(),
+                                                                                                                                            '',
+                                                                                                                                            '')
+                                                                                                                                        .toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                                                    ).toString())
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            _model.isSubWalletCheckBoxSelected)
+                                                                                                                        : 0.0)
+                                                                                                                    .toString(),
+                                                                                                                delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                                                orderInstruction: (String var1) {
+                                                                                                                  return var1.trim() ?? '';
+                                                                                                                }(_model.textController.text),
+                                                                                                                platform: isiOS ? 'ios' : 'android',
+                                                                                                                totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
+                                                                                                                        ? functions.checkWalletWithAction(
+                                                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    '0',
+                                                                                                                                    '0',
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    '')
+                                                                                                                                .toString(),
+                                                                                                                            functions.setDecimalValue(getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.referral_balance''',
+                                                                                                                            ).toString()),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        : 0.0)
+                                                                                                                    .toString(),
                                                                                                               );
+
+                                                                                                              if ((_model.apiResultapplePaynew?.succeeded ?? true)) {
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isLoadingIndicator = false;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isPaymentDone = true;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('AppleContainer_navigate_to');
+
+                                                                                                                context.pushNamed(
+                                                                                                                  PaymentScreenWidget.routeName,
+                                                                                                                  queryParameters: {
+                                                                                                                    'redirectURl': serializeParam(
+                                                                                                                      getJsonField(
+                                                                                                                        (_model.apiResultapplePaynew?.jsonBody ?? ''),
+                                                                                                                        r'''$.data.redirect_url''',
+                                                                                                                      ).toString(),
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                    'screenPName': serializeParam(
+                                                                                                                      'subscription',
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                    'mrp': serializeParam(
+                                                                                                                      functions.updateTotalAmount(
+                                                                                                                          '0',
+                                                                                                                          '0',
+                                                                                                                          getJsonField(
+                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                            r'''$.data.total_price''',
+                                                                                                                          ).toString(),
+                                                                                                                          functions
+                                                                                                                              .checkWalletWithAction(
+                                                                                                                                  _model.isSubWalletCheckBoxSelected,
+                                                                                                                                  functions
+                                                                                                                                      .updateTotalAmount(
+                                                                                                                                          '0',
+                                                                                                                                          '0',
+                                                                                                                                          getJsonField(
+                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                            r'''$.data.total_price''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          getJsonField(
+                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                          _model.selectedPaymentMethod,
+                                                                                                                                          getJsonField(
+                                                                                                                                            FFAppState().appInfo,
+                                                                                                                                            r'''$.codcharges''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          getJsonField(
+                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          _model.isSubWalletCheckBoxSelected)
+                                                                                                                                      .toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                    r'''$.data.wallet_balance''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    FFAppState().appInfo,
+                                                                                                                                    r'''$.wallet_deduction_percentage''',
+                                                                                                                                  ).toString())
+                                                                                                                              .toString(),
+                                                                                                                          _model.isSubWalletCheckBoxSelected,
+                                                                                                                          _model.selectedPaymentMethod,
+                                                                                                                          '0',
+                                                                                                                          '',
+                                                                                                                          ''),
+                                                                                                                      ParamType.double,
+                                                                                                                    ),
+                                                                                                                    'orderType': serializeParam(
+                                                                                                                      'subscription order apple pay',
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                  }.withoutNulls,
+                                                                                                                );
+
+                                                                                                                logFirebaseEvent('AppleContainer_custom_action');
+                                                                                                                await actions.facebookEventClass(
+                                                                                                                  (List<String> var1) {
+                                                                                                                    return var1.join(', ');
+                                                                                                                  }(functions
+                                                                                                                      .getVarientIdsWithCartQty(
+                                                                                                                          getJsonField(
+                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                            r'''$.data.data''',
+                                                                                                                          ),
+                                                                                                                          'daily')
+                                                                                                                      .map((e) => e.toString())
+                                                                                                                      .toList()),
+                                                                                                                  '0',
+                                                                                                                  'subscription order',
+                                                                                                                  0.0,
+                                                                                                                  0,
+                                                                                                                  functions.updateTotalAmount(
+                                                                                                                      '0',
+                                                                                                                      '0',
+                                                                                                                      getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.total_price''',
+                                                                                                                      ).toString(),
+                                                                                                                      functions
+                                                                                                                          .checkWalletWithAction(
+                                                                                                                              _model.isSubWalletCheckBoxSelected,
+                                                                                                                              functions
+                                                                                                                                  .updateTotalAmount(
+                                                                                                                                      '0',
+                                                                                                                                      '0',
+                                                                                                                                      getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.total_price''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      functions.setDecimalValue(getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                                      ).toString()),
+                                                                                                                                      _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                      _model.selectedPaymentMethod,
+                                                                                                                                      getJsonField(
+                                                                                                                                        FFAppState().appInfo,
+                                                                                                                                        r'''$.codcharges''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      _model.isSubWalletCheckBoxSelected)
+                                                                                                                                  .toString(),
+                                                                                                                              functions.setDecimalValue(getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString()),
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                                                              ).toString())
+                                                                                                                          .toString(),
+                                                                                                                      _model.isSubWalletCheckBoxSelected,
+                                                                                                                      _model.selectedPaymentMethod,
+                                                                                                                      '0',
+                                                                                                                      '',
+                                                                                                                      '')!,
+                                                                                                                  'checkout',
+                                                                                                                  getJsonField(
+                                                                                                                    tabBarShowsubcartResponse.jsonBody,
+                                                                                                                    r'''$.data.data''',
+                                                                                                                  ),
+                                                                                                                  'subscription order apple pay',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                );
+                                                                                                              } else {
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isLoadingIndicator = false;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('AppleContainer_alert_dialog');
+                                                                                                                await showDialog(
+                                                                                                                  context: context,
+                                                                                                                  builder: (dialogContext) {
+                                                                                                                    return Dialog(
+                                                                                                                      elevation: 0,
+                                                                                                                      insetPadding: EdgeInsets.zero,
+                                                                                                                      backgroundColor: Colors.transparent,
+                                                                                                                      alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                      child: GestureDetector(
+                                                                                                                        onTap: () {
+                                                                                                                          FocusScope.of(dialogContext).unfocus();
+                                                                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                        },
+                                                                                                                        child: CustomAlertDailogWidget(
+                                                                                                                          des: getJsonField(
+                                                                                                                            (_model.apiResultapplePaynew?.jsonBody ?? ''),
+                                                                                                                            r'''$.message''',
+                                                                                                                          ).toString(),
+                                                                                                                          height: 150.0,
+                                                                                                                          title: ' ',
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    );
+                                                                                                                  },
+                                                                                                                );
+
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isPaymentDone = true;
+                                                                                                                safeSetState(() {});
+                                                                                                              }
                                                                                                             } else {
                                                                                                               logFirebaseEvent('AppleContainer_update_page_state');
                                                                                                               _model.isLoadingIndicator = false;
@@ -6112,10 +6150,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                         FocusManager.instance.primaryFocus?.unfocus();
                                                                                                                       },
                                                                                                                       child: CustomAlertDailogWidget(
-                                                                                                                        des: getJsonField(
-                                                                                                                          (_model.apiResultapplePaynew?.jsonBody ?? ''),
-                                                                                                                          r'''$.message''',
-                                                                                                                        ).toString(),
+                                                                                                                        des: FFAppConstants.vpnMSG,
                                                                                                                         height: 150.0,
                                                                                                                         title: ' ',
                                                                                                                       ),
@@ -6471,266 +6506,19 @@ class _CartSubscriptionScreenWidgetState
                                                                                                       logFirebaseEvent('QuickPayContainer_update_page_state');
                                                                                                       _model.isPaymentDone = false;
                                                                                                       safeSetState(() {});
-                                                                                                      logFirebaseEvent('QuickPayContainer_backend_call');
-                                                                                                      _model.apiResult44bquickPay = await QuickartGroup.subpaymentCall.call(
-                                                                                                        userid: FFAppState().userID,
-                                                                                                        addressid: FFAppState().selectedAddresID,
-                                                                                                        storeid: FFAppState().storeID,
-                                                                                                        paymentMethod: 'Card',
-                                                                                                        wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
-                                                                                                        deviceid: FFAppState().deviceID,
-                                                                                                        paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
-                                                                                                        orderTotal: functions.updateTotalAmount(
-                                                                                                            '0',
-                                                                                                            '0',
-                                                                                                            getJsonField(
-                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                              r'''$.data.total_price''',
-                                                                                                            ).toString(),
-                                                                                                            functions
-                                                                                                                .checkWalletWithAction(
-                                                                                                                    _model.isSubWalletCheckBoxSelected,
-                                                                                                                    functions
-                                                                                                                        .updateTotalAmount(
-                                                                                                                            '0',
-                                                                                                                            '0',
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.total_price''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                            _model.selectedPaymentMethod,
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.codcharges''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            _model.isSubWalletCheckBoxSelected)
-                                                                                                                        .toString(),
-                                                                                                                    getJsonField(
-                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                      r'''$.data.wallet_balance''',
-                                                                                                                    ).toString(),
-                                                                                                                    getJsonField(
-                                                                                                                      FFAppState().appInfo,
-                                                                                                                      r'''$.wallet_deduction_percentage''',
-                                                                                                                    ).toString())
-                                                                                                                .toString(),
-                                                                                                            _model.isSubWalletCheckBoxSelected,
-                                                                                                            _model.selectedPaymentMethod,
-                                                                                                            '0',
-                                                                                                            '',
-                                                                                                            ''),
-                                                                                                        totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
-                                                                                                                ? functions.calculateFinalPayableForCashPayment(
-                                                                                                                    functions
-                                                                                                                        .updateTotalAmount(
-                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                            FFAppState().couponDiscount.toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.total_price''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            'false',
-                                                                                                                            '',
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.codcharges''',
-                                                                                                                            ).toString(),
-                                                                                                                            '',
-                                                                                                                            '')
-                                                                                                                        .toString(),
-                                                                                                                    functions
-                                                                                                                        .checkWalletWithAction(
-                                                                                                                            _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                            functions
-                                                                                                                                .updateTotalAmount(
-                                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                    FFAppState().couponDiscount.toString(),
-                                                                                                                                    getJsonField(
-                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                      r'''$.data.total_price''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    getJsonField(
-                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                      r'''$.data.wallet_balance''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    'false',
-                                                                                                                                    '',
-                                                                                                                                    getJsonField(
-                                                                                                                                      FFAppState().appInfo,
-                                                                                                                                      r'''$.codcharges''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    '',
-                                                                                                                                    '')
-                                                                                                                                .toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.referral_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.wallet_deduction_percentage''',
-                                                                                                                            ).toString())
-                                                                                                                        .toString(),
-                                                                                                                    getJsonField(
-                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                      r'''$.data.wallet_balance''',
-                                                                                                                    ).toString(),
-                                                                                                                    _model.isSubWalletCheckBoxSelected)
-                                                                                                                : 0.0)
-                                                                                                            .toString(),
-                                                                                                        delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                                        orderInstruction: (String var1) {
-                                                                                                          return var1.trim() ?? '';
-                                                                                                        }(_model.textController.text),
-                                                                                                        platform: isiOS ? 'ios' : 'android',
-                                                                                                        totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
-                                                                                                                ? functions.checkWalletWithAction(
-                                                                                                                    _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                    functions
-                                                                                                                        .updateTotalAmount(
-                                                                                                                            '0',
-                                                                                                                            '0',
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.total_price''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.referral_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            '',
-                                                                                                                            _model.selectedPaymentMethod,
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.codcharges''',
-                                                                                                                            ).toString(),
-                                                                                                                            '',
-                                                                                                                            '')
-                                                                                                                        .toString(),
-                                                                                                                    functions.setDecimalValue(getJsonField(
-                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                      r'''$.data.referral_balance''',
-                                                                                                                    ).toString()),
-                                                                                                                    getJsonField(
-                                                                                                                      FFAppState().appInfo,
-                                                                                                                      r'''$.wallet_deduction_percentage''',
-                                                                                                                    ).toString())
-                                                                                                                : 0.0)
-                                                                                                            .toString(),
-                                                                                                      );
-
-                                                                                                      if ((_model.apiResult44bquickPay?.succeeded ?? true)) {
-                                                                                                        logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                        _model.isLoadingIndicator = false;
-                                                                                                        safeSetState(() {});
-                                                                                                        logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                        _model.isPaymentDone = true;
-                                                                                                        safeSetState(() {});
-                                                                                                        logFirebaseEvent('QuickPayContainer_navigate_to');
-
-                                                                                                        context.pushNamed(
-                                                                                                          PaymentScreenWidget.routeName,
-                                                                                                          queryParameters: {
-                                                                                                            'redirectURl': serializeParam(
-                                                                                                              getJsonField(
-                                                                                                                (_model.apiResult44bquickPay?.jsonBody ?? ''),
-                                                                                                                r'''$.data.redirect_url''',
-                                                                                                              ).toString(),
-                                                                                                              ParamType.String,
-                                                                                                            ),
-                                                                                                            'screenPName': serializeParam(
-                                                                                                              'subscription',
-                                                                                                              ParamType.String,
-                                                                                                            ),
-                                                                                                            'mrp': serializeParam(
-                                                                                                              functions.updateTotalAmount(
-                                                                                                                  '0',
-                                                                                                                  '0',
-                                                                                                                  getJsonField(
-                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                    r'''$.data.total_price''',
-                                                                                                                  ).toString(),
-                                                                                                                  functions
-                                                                                                                      .checkWalletWithAction(
-                                                                                                                          _model.isSubWalletCheckBoxSelected,
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  '0',
-                                                                                                                                  '0',
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  _model.isRefSubWalletCheckBoxSelected,
-                                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  _model.isSubWalletCheckBoxSelected)
-                                                                                                                              .toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.wallet_deduction_percentage''',
-                                                                                                                          ).toString())
-                                                                                                                      .toString(),
-                                                                                                                  _model.isSubWalletCheckBoxSelected,
-                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                  '0',
-                                                                                                                  '',
-                                                                                                                  ''),
-                                                                                                              ParamType.double,
-                                                                                                            ),
-                                                                                                            'orderType': serializeParam(
-                                                                                                              'subscription order card',
-                                                                                                              ParamType.String,
-                                                                                                            ),
-                                                                                                          }.withoutNulls,
-                                                                                                        );
-
-                                                                                                        logFirebaseEvent('QuickPayContainer_custom_action');
-                                                                                                        await actions.facebookEventClass(
-                                                                                                          (List<String> var1) {
-                                                                                                            return var1.join(', ');
-                                                                                                          }(functions
-                                                                                                              .getVarientIdsWithCartQty(
-                                                                                                                  getJsonField(
-                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                    r'''$.data.data''',
-                                                                                                                  ),
-                                                                                                                  'daily')
-                                                                                                              .map((e) => e.toString())
-                                                                                                              .toList()),
-                                                                                                          '0',
-                                                                                                          'subscription order',
-                                                                                                          0.0,
-                                                                                                          0,
-                                                                                                          functions.updateTotalAmount(
+                                                                                                      logFirebaseEvent('QuickPayContainer_custom_action');
+                                                                                                      _model.isVpnONQP = await actions.isVpnEnabled();
+                                                                                                      if (_model.isVpnONQP == false) {
+                                                                                                        logFirebaseEvent('QuickPayContainer_backend_call');
+                                                                                                        _model.apiResult44bquickPay = await QuickartGroup.subpaymentCall.call(
+                                                                                                          userid: FFAppState().userID,
+                                                                                                          addressid: FFAppState().selectedAddresID,
+                                                                                                          storeid: FFAppState().storeID,
+                                                                                                          paymentMethod: 'Card',
+                                                                                                          wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                                          deviceid: FFAppState().deviceID,
+                                                                                                          paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
+                                                                                                          orderTotal: functions.updateTotalAmount(
                                                                                                               '0',
                                                                                                               '0',
                                                                                                               getJsonField(
@@ -6748,10 +6536,10 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                                 tabBarShowsubcartResponse.jsonBody,
                                                                                                                                 r'''$.data.total_price''',
                                                                                                                               ).toString(),
-                                                                                                                              functions.setDecimalValue(getJsonField(
+                                                                                                                              getJsonField(
                                                                                                                                 tabBarShowsubcartResponse.jsonBody,
                                                                                                                                 r'''$.data.wallet_balance''',
-                                                                                                                              ).toString()),
+                                                                                                                              ).toString(),
                                                                                                                               _model.isRefSubWalletCheckBoxSelected,
                                                                                                                               _model.selectedPaymentMethod,
                                                                                                                               getJsonField(
@@ -6764,10 +6552,10 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                               ).toString(),
                                                                                                                               _model.isSubWalletCheckBoxSelected)
                                                                                                                           .toString(),
-                                                                                                                      functions.setDecimalValue(getJsonField(
+                                                                                                                      getJsonField(
                                                                                                                         tabBarShowsubcartResponse.jsonBody,
                                                                                                                         r'''$.data.wallet_balance''',
-                                                                                                                      ).toString()),
+                                                                                                                      ).toString(),
                                                                                                                       getJsonField(
                                                                                                                         FFAppState().appInfo,
                                                                                                                         r'''$.wallet_deduction_percentage''',
@@ -6777,18 +6565,303 @@ class _CartSubscriptionScreenWidgetState
                                                                                                               _model.selectedPaymentMethod,
                                                                                                               '0',
                                                                                                               '',
-                                                                                                              '')!,
-                                                                                                          'checkout',
-                                                                                                          getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.data''',
-                                                                                                          ),
-                                                                                                          'subscription order card',
-                                                                                                          ' ',
-                                                                                                          ' ',
-                                                                                                          ' ',
-                                                                                                          ' ',
+                                                                                                              ''),
+                                                                                                          totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
+                                                                                                                  ? functions.calculateFinalPayableForCashPayment(
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              '',
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      functions
+                                                                                                                          .checkWalletWithAction(
+                                                                                                                              _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                              functions
+                                                                                                                                  .updateTotalAmount(
+                                                                                                                                      FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                      FFAppState().couponDiscount.toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.total_price''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      'false',
+                                                                                                                                      '',
+                                                                                                                                      getJsonField(
+                                                                                                                                        FFAppState().appInfo,
+                                                                                                                                        r'''$.codcharges''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      '',
+                                                                                                                                      '')
+                                                                                                                                  .toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                                                              ).toString())
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      _model.isSubWalletCheckBoxSelected)
+                                                                                                                  : 0.0)
+                                                                                                              .toString(),
+                                                                                                          delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                                          orderInstruction: (String var1) {
+                                                                                                            return var1.trim() ?? '';
+                                                                                                          }(_model.textController.text),
+                                                                                                          platform: isiOS ? 'ios' : 'android',
+                                                                                                          totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
+                                                                                                                  ? functions.checkWalletWithAction(
+                                                                                                                      _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              '0',
+                                                                                                                              '0',
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      functions.setDecimalValue(getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                      ).toString()),
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                                      ).toString())
+                                                                                                                  : 0.0)
+                                                                                                              .toString(),
                                                                                                         );
+
+                                                                                                        if ((_model.apiResult44bquickPay?.succeeded ?? true)) {
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isLoadingIndicator = false;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isPaymentDone = true;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('QuickPayContainer_navigate_to');
+
+                                                                                                          context.pushNamed(
+                                                                                                            PaymentScreenWidget.routeName,
+                                                                                                            queryParameters: {
+                                                                                                              'redirectURl': serializeParam(
+                                                                                                                getJsonField(
+                                                                                                                  (_model.apiResult44bquickPay?.jsonBody ?? ''),
+                                                                                                                  r'''$.data.redirect_url''',
+                                                                                                                ).toString(),
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'screenPName': serializeParam(
+                                                                                                                'subscription',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'mrp': serializeParam(
+                                                                                                                functions.updateTotalAmount(
+                                                                                                                    '0',
+                                                                                                                    '0',
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    functions
+                                                                                                                        .checkWalletWithAction(
+                                                                                                                            _model.isSubWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    '0',
+                                                                                                                                    '0',
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    _model.isSubWalletCheckBoxSelected)
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        .toString(),
+                                                                                                                    _model.isSubWalletCheckBoxSelected,
+                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                    '0',
+                                                                                                                    '',
+                                                                                                                    ''),
+                                                                                                                ParamType.double,
+                                                                                                              ),
+                                                                                                              'orderType': serializeParam(
+                                                                                                                'subscription order card',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                            }.withoutNulls,
+                                                                                                          );
+
+                                                                                                          logFirebaseEvent('QuickPayContainer_custom_action');
+                                                                                                          await actions.facebookEventClass(
+                                                                                                            (List<String> var1) {
+                                                                                                              return var1.join(', ');
+                                                                                                            }(functions
+                                                                                                                .getVarientIdsWithCartQty(
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.data''',
+                                                                                                                    ),
+                                                                                                                    'daily')
+                                                                                                                .map((e) => e.toString())
+                                                                                                                .toList()),
+                                                                                                            '0',
+                                                                                                            'subscription order',
+                                                                                                            0.0,
+                                                                                                            0,
+                                                                                                            functions.updateTotalAmount(
+                                                                                                                '0',
+                                                                                                                '0',
+                                                                                                                getJsonField(
+                                                                                                                  tabBarShowsubcartResponse.jsonBody,
+                                                                                                                  r'''$.data.total_price''',
+                                                                                                                ).toString(),
+                                                                                                                functions
+                                                                                                                    .checkWalletWithAction(
+                                                                                                                        _model.isSubWalletCheckBoxSelected,
+                                                                                                                        functions
+                                                                                                                            .updateTotalAmount(
+                                                                                                                                '0',
+                                                                                                                                '0',
+                                                                                                                                getJsonField(
+                                                                                                                                  tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.total_price''',
+                                                                                                                                ).toString(),
+                                                                                                                                functions.setDecimalValue(getJsonField(
+                                                                                                                                  tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.wallet_balance''',
+                                                                                                                                ).toString()),
+                                                                                                                                _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                _model.selectedPaymentMethod,
+                                                                                                                                getJsonField(
+                                                                                                                                  FFAppState().appInfo,
+                                                                                                                                  r'''$.codcharges''',
+                                                                                                                                ).toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.wallet_balance''',
+                                                                                                                                ).toString(),
+                                                                                                                                _model.isSubWalletCheckBoxSelected)
+                                                                                                                            .toString(),
+                                                                                                                        functions.setDecimalValue(getJsonField(
+                                                                                                                          tabBarShowsubcartResponse.jsonBody,
+                                                                                                                          r'''$.data.wallet_balance''',
+                                                                                                                        ).toString()),
+                                                                                                                        getJsonField(
+                                                                                                                          FFAppState().appInfo,
+                                                                                                                          r'''$.wallet_deduction_percentage''',
+                                                                                                                        ).toString())
+                                                                                                                    .toString(),
+                                                                                                                _model.isSubWalletCheckBoxSelected,
+                                                                                                                _model.selectedPaymentMethod,
+                                                                                                                '0',
+                                                                                                                '',
+                                                                                                                '')!,
+                                                                                                            'checkout',
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.data''',
+                                                                                                            ),
+                                                                                                            'subscription order card',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                          );
+                                                                                                        } else {
+                                                                                                          logFirebaseEvent('QuickPayContainer_alert_dialog');
+                                                                                                          await showDialog(
+                                                                                                            context: context,
+                                                                                                            builder: (dialogContext) {
+                                                                                                              return Dialog(
+                                                                                                                elevation: 0,
+                                                                                                                insetPadding: EdgeInsets.zero,
+                                                                                                                backgroundColor: Colors.transparent,
+                                                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                child: GestureDetector(
+                                                                                                                  onTap: () {
+                                                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                  },
+                                                                                                                  child: CustomAlertDailogWidget(
+                                                                                                                    des: getJsonField(
+                                                                                                                      (_model.apiResult44bquickPay?.jsonBody ?? ''),
+                                                                                                                      r'''$.message''',
+                                                                                                                    ).toString(),
+                                                                                                                    height: 130.0,
+                                                                                                                    title: ' ',
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                              );
+                                                                                                            },
+                                                                                                          );
+
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isLoadingIndicator = false;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isPaymentDone = true;
+                                                                                                          safeSetState(() {});
+                                                                                                        }
                                                                                                       } else {
                                                                                                         logFirebaseEvent('QuickPayContainer_alert_dialog');
                                                                                                         await showDialog(
@@ -6805,11 +6878,8 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                   FocusManager.instance.primaryFocus?.unfocus();
                                                                                                                 },
                                                                                                                 child: CustomAlertDailogWidget(
-                                                                                                                  des: getJsonField(
-                                                                                                                    (_model.apiResult44bquickPay?.jsonBody ?? ''),
-                                                                                                                    r'''$.message''',
-                                                                                                                  ).toString(),
-                                                                                                                  height: 130.0,
+                                                                                                                  des: FFAppConstants.vpnMSG,
+                                                                                                                  height: 140.0,
                                                                                                                   title: ' ',
                                                                                                                 ),
                                                                                                               ),

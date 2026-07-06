@@ -9691,20 +9691,494 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                   _model.index = 0;
                                                                                                   _model.isLoadingIndicator = true;
                                                                                                   safeSetState(() {});
-                                                                                                  if (_model.selectedArrayJson.length > 0) {
-                                                                                                    logFirebaseEvent('ApplePayContainer_backend_call');
-                                                                                                    _model.apiResultkgz = await QuickartGroup.upquickordertimeslotCall.call(
-                                                                                                      userid: FFAppState().userID,
-                                                                                                      datetimeArrayJson: _model.selectedArrayJson.map((e) => e.toMap()).toList(),
-                                                                                                      platform: isiOS ? 'ios' : 'android',
-                                                                                                    );
-
-                                                                                                    logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                    _model.isPaymentDone = false;
-                                                                                                    safeSetState(() {});
-                                                                                                    if ((_model.apiResultkgz?.succeeded ?? true)) {
+                                                                                                  logFirebaseEvent('ApplePayContainer_custom_action');
+                                                                                                  _model.isVpnON = await actions.isVpnEnabled();
+                                                                                                  if (_model.isVpnON == false) {
+                                                                                                    if (_model.selectedArrayJson.length > 0) {
                                                                                                       logFirebaseEvent('ApplePayContainer_backend_call');
-                                                                                                      _model.apiResultspayment = await QuickartGroup.paymentCall.call(
+                                                                                                      _model.apiResultkgz = await QuickartGroup.upquickordertimeslotCall.call(
+                                                                                                        userid: FFAppState().userID,
+                                                                                                        datetimeArrayJson: _model.selectedArrayJson.map((e) => e.toMap()).toList(),
+                                                                                                        platform: isiOS ? 'ios' : 'android',
+                                                                                                      );
+
+                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                      _model.isPaymentDone = false;
+                                                                                                      safeSetState(() {});
+                                                                                                      if ((_model.apiResultkgz?.succeeded ?? true)) {
+                                                                                                        logFirebaseEvent('ApplePayContainer_backend_call');
+                                                                                                        _model.apiResultspayment = await QuickartGroup.paymentCall.call(
+                                                                                                          addressid: FFAppState().selectedAddresID,
+                                                                                                          userid: FFAppState().userID,
+                                                                                                          couponDiscount: FFAppState().couponDiscount.toString(),
+                                                                                                          paymentMethod: 'applepay',
+                                                                                                          deviceid: FFAppState().deviceID,
+                                                                                                          walllet: (_model.isWalletCheckBoxSelected == 'add') || (_model.isRefWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                                          storeid: FFAppState().storeID,
+                                                                                                          couponid: FFAppState().selectedCouponID,
+                                                                                                          couponcode: FFAppState().couponCode,
+                                                                                                          deliveryDate: FFAppState().selectedDeliveryDate,
+                                                                                                          timeSlot: FFAppState().selectedDeliveryTimeSlot,
+                                                                                                          partertip: FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                          parterInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                                          totalWalletAmt: (_model.isWalletCheckBoxSelected == 'add'
+                                                                                                                  ? functions.calculateFinalPayableForCashPayment(
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      functions
+                                                                                                                          .checkWalletWithAction(
+                                                                                                                              _model.isRefWalletCheckBoxSelected,
+                                                                                                                              functions
+                                                                                                                                  .updateTotalAmount(
+                                                                                                                                      FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                      FFAppState().couponDiscount.toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.total_price''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      'false',
+                                                                                                                                      _model.selectedPaymentMethod,
+                                                                                                                                      getJsonField(
+                                                                                                                                        FFAppState().appInfo,
+                                                                                                                                        r'''$.codcharges''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      '',
+                                                                                                                                      '')
+                                                                                                                                  .toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                                                              ).toString())
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      _model.isWalletCheckBoxSelected)
+                                                                                                                  : 0.0)
+                                                                                                              .toString(),
+                                                                                                          paymentType: _model.dailyCartPaymentRadioButtonValue == 'Pay Now' ? 'paynow' : 'payperdelivery',
+                                                                                                          orderTotal: functions.updateTotalAmount(
+                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                              getJsonField(
+                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                r'''$.data.total_price''',
+                                                                                                              ).toString(),
+                                                                                                              functions
+                                                                                                                  .checkWalletWithAction(
+                                                                                                                      _model.isWalletCheckBoxSelected,
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'remove')
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                                      ).toString())
+                                                                                                                  .toString(),
+                                                                                                              _model.isWalletCheckBoxSelected,
+                                                                                                              _model.selectedPaymentMethod,
+                                                                                                              getJsonField(
+                                                                                                                FFAppState().appInfo,
+                                                                                                                r'''$.codcharges''',
+                                                                                                              ).toString(),
+                                                                                                              '',
+                                                                                                              ''),
+                                                                                                          orderInstruction: (String var1) {
+                                                                                                            return var1.trim() ?? '';
+                                                                                                          }(_model.textController.text),
+                                                                                                          platform: isiOS ? 'ios' : 'android',
+                                                                                                          totalrefwalletamt: (_model.isRefWalletCheckBoxSelected == 'add'
+                                                                                                                  ? functions.checkWalletWithAction(
+                                                                                                                      _model.isRefWalletCheckBoxSelected,
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false')
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                                      ).toString())
+                                                                                                                  : 0.0)
+                                                                                                              ?.toString(),
+                                                                                                        );
+
+                                                                                                        if ((_model.apiResults5yy66?.succeeded ?? true)) {
+                                                                                                          logFirebaseEvent('ApplePayContainer_navigate_to');
+
+                                                                                                          context.pushNamed(
+                                                                                                            PaymentScreenWidget.routeName,
+                                                                                                            queryParameters: {
+                                                                                                              'redirectURl': serializeParam(
+                                                                                                                getJsonField(
+                                                                                                                  (_model.apiResultspayment?.jsonBody ?? ''),
+                                                                                                                  r'''$.data.redirect_url''',
+                                                                                                                ).toString(),
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'screenPName': serializeParam(
+                                                                                                                'daily',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'mrp': serializeParam(
+                                                                                                                functions.updateTotalAmount(
+                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    functions
+                                                                                                                        .checkWalletWithAction(
+                                                                                                                            _model.isWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    'false',
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    'false')
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        .toString(),
+                                                                                                                    _model.isWalletCheckBoxSelected,
+                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.codcharges''',
+                                                                                                                    ).toString(),
+                                                                                                                    '',
+                                                                                                                    ''),
+                                                                                                                ParamType.double,
+                                                                                                              ),
+                                                                                                              'orderType': serializeParam(
+                                                                                                                'Daily order apple pay',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                            }.withoutNulls,
+                                                                                                          );
+
+                                                                                                          logFirebaseEvent('ApplePayContainer_update_app_state');
+                                                                                                          FFAppState().selectedDeliveryDate = '';
+                                                                                                          FFAppState().selectedDeliveryTimeSlot = '';
+                                                                                                          FFAppState().socityName = '';
+                                                                                                          FFAppState().isDeliveryPartnerTipSelected = '0';
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                          _model.isLoadingIndicator = false;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                          _model.isPaymentDone = true;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('ApplePayContainer_custom_action');
+                                                                                                          await actions.facebookEventClass(
+                                                                                                            (List<String> var1) {
+                                                                                                              return var1.join(', ');
+                                                                                                            }(functions
+                                                                                                                .getVarientIdsWithCartQty(
+                                                                                                                    getJsonField(
+                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                      r'''$.data.data''',
+                                                                                                                    ),
+                                                                                                                    'product')
+                                                                                                                .map((e) => e.toString())
+                                                                                                                .toList()),
+                                                                                                            '0',
+                                                                                                            'daily',
+                                                                                                            0.0,
+                                                                                                            0,
+                                                                                                            functions.updateTotalAmount(
+                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                FFAppState().couponDiscount.toString(),
+                                                                                                                getJsonField(
+                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                  r'''$.data.total_price''',
+                                                                                                                ).toString(),
+                                                                                                                functions
+                                                                                                                    .checkWalletWithAction(
+                                                                                                                        _model.isRefWalletCheckBoxSelected,
+                                                                                                                        functions
+                                                                                                                            .updateTotalAmount(
+                                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                FFAppState().couponDiscount.toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.total_price''',
+                                                                                                                                ).toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.referral_balance''',
+                                                                                                                                ).toString(),
+                                                                                                                                'false',
+                                                                                                                                _model.selectedPaymentMethod,
+                                                                                                                                getJsonField(
+                                                                                                                                  FFAppState().appInfo,
+                                                                                                                                  r'''$.codcharges''',
+                                                                                                                                ).toString(),
+                                                                                                                                '',
+                                                                                                                                '')
+                                                                                                                            .toString(),
+                                                                                                                        getJsonField(
+                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                          r'''$.data.referral_balance''',
+                                                                                                                        ).toString(),
+                                                                                                                        getJsonField(
+                                                                                                                          FFAppState().appInfo,
+                                                                                                                          r'''$.wallet_deduction_percentage''',
+                                                                                                                        ).toString())
+                                                                                                                    .toString(),
+                                                                                                                _model.isRefWalletCheckBoxSelected,
+                                                                                                                _model.selectedPaymentMethod,
+                                                                                                                getJsonField(
+                                                                                                                  FFAppState().appInfo,
+                                                                                                                  r'''$.codcharges''',
+                                                                                                                ).toString(),
+                                                                                                                functions
+                                                                                                                    .calculateFinalPayableForCashPayment(
+                                                                                                                        functions
+                                                                                                                            .updateTotalAmount(
+                                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                FFAppState().couponDiscount.toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.total_price''',
+                                                                                                                                ).toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.wallet_balance''',
+                                                                                                                                ).toString(),
+                                                                                                                                'false',
+                                                                                                                                _model.selectedPaymentMethod,
+                                                                                                                                getJsonField(
+                                                                                                                                  FFAppState().appInfo,
+                                                                                                                                  r'''$.codcharges''',
+                                                                                                                                ).toString(),
+                                                                                                                                '',
+                                                                                                                                '')
+                                                                                                                            .toString(),
+                                                                                                                        functions
+                                                                                                                            .checkWalletWithAction(
+                                                                                                                                _model.isRefWalletCheckBoxSelected,
+                                                                                                                                functions
+                                                                                                                                    .updateTotalAmount(
+                                                                                                                                        FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                        FFAppState().couponDiscount.toString(),
+                                                                                                                                        getJsonField(
+                                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                          r'''$.data.total_price''',
+                                                                                                                                        ).toString(),
+                                                                                                                                        getJsonField(
+                                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                          r'''$.data.referral_balance''',
+                                                                                                                                        ).toString(),
+                                                                                                                                        'false',
+                                                                                                                                        _model.selectedPaymentMethod,
+                                                                                                                                        getJsonField(
+                                                                                                                                          FFAppState().appInfo,
+                                                                                                                                          r'''$.codcharges''',
+                                                                                                                                        ).toString(),
+                                                                                                                                        '',
+                                                                                                                                        '')
+                                                                                                                                    .toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.referral_balance''',
+                                                                                                                                ).toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  FFAppState().appInfo,
+                                                                                                                                  r'''$.wallet_deduction_percentage''',
+                                                                                                                                ).toString())
+                                                                                                                            .toString(),
+                                                                                                                        getJsonField(
+                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                          r'''$.data.wallet_balance''',
+                                                                                                                        ).toString(),
+                                                                                                                        _model.isWalletCheckBoxSelected)
+                                                                                                                    .toString(),
+                                                                                                                _model.isWalletCheckBoxSelected)!,
+                                                                                                            'checkout',
+                                                                                                            getJsonField(
+                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                              r'''$.data.data''',
+                                                                                                            ),
+                                                                                                            'daily order apple pay',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                          );
+                                                                                                        } else {
+                                                                                                          logFirebaseEvent('ApplePayContainer_alert_dialog');
+                                                                                                          await showDialog(
+                                                                                                            context: context,
+                                                                                                            builder: (dialogContext) {
+                                                                                                              return Dialog(
+                                                                                                                elevation: 0,
+                                                                                                                insetPadding: EdgeInsets.zero,
+                                                                                                                backgroundColor: Colors.transparent,
+                                                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                child: GestureDetector(
+                                                                                                                  onTap: () {
+                                                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                  },
+                                                                                                                  child: CustomAlertDailogWidget(
+                                                                                                                    des: getJsonField(
+                                                                                                                      (_model.apiResults5yy66?.jsonBody ?? ''),
+                                                                                                                      r'''$.message''',
+                                                                                                                    ).toString(),
+                                                                                                                    height: 140.0,
+                                                                                                                    title: ' ',
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                              );
+                                                                                                            },
+                                                                                                          );
+
+                                                                                                          logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                          _model.isLoadingIndicator = false;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                          _model.isPaymentDone = true;
+                                                                                                          safeSetState(() {});
+                                                                                                        }
+                                                                                                      } else {
+                                                                                                        logFirebaseEvent('ApplePayContainer_alert_dialog');
+                                                                                                        await showDialog(
+                                                                                                          context: context,
+                                                                                                          builder: (dialogContext) {
+                                                                                                            return Dialog(
+                                                                                                              elevation: 0,
+                                                                                                              insetPadding: EdgeInsets.zero,
+                                                                                                              backgroundColor: Colors.transparent,
+                                                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                              child: GestureDetector(
+                                                                                                                onTap: () {
+                                                                                                                  FocusScope.of(dialogContext).unfocus();
+                                                                                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                },
+                                                                                                                child: CustomAlertDailogWidget(
+                                                                                                                  des: getJsonField(
+                                                                                                                    (_model.apiResultkgz?.jsonBody ?? ''),
+                                                                                                                    r'''$.message''',
+                                                                                                                  ).toString(),
+                                                                                                                  height: 140.0,
+                                                                                                                  title: ' ',
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            );
+                                                                                                          },
+                                                                                                        );
+
+                                                                                                        logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                        _model.isLoadingIndicator = false;
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                        _model.isPaymentDone = true;
+                                                                                                        safeSetState(() {});
+                                                                                                      }
+                                                                                                    } else {
+                                                                                                      logFirebaseEvent('ApplePayContainer_backend_call');
+                                                                                                      _model.apiResults5yy6Copy = await QuickartGroup.paymentCall.call(
                                                                                                         addressid: FFAppState().selectedAddresID,
                                                                                                         userid: FFAppState().userID,
                                                                                                         couponDiscount: FFAppState().couponDiscount.toString(),
@@ -9814,7 +10288,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                               dailyCartScreenShowspcatcartResponse.jsonBody,
                                                                                                                               r'''$.data.referral_balance''',
                                                                                                                             ).toString(),
-                                                                                                                            'remove')
+                                                                                                                            'false')
                                                                                                                         .toString(),
                                                                                                                     getJsonField(
                                                                                                                       dailyCartScreenShowspcatcartResponse.jsonBody,
@@ -9876,7 +10350,10 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                             ?.toString(),
                                                                                                       );
 
-                                                                                                      if ((_model.apiResults5yy66?.succeeded ?? true)) {
+                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                      _model.isPaymentDone = false;
+                                                                                                      safeSetState(() {});
+                                                                                                      if ((_model.apiResults5yy6Copy?.succeeded ?? true)) {
                                                                                                         logFirebaseEvent('ApplePayContainer_navigate_to');
 
                                                                                                         context.pushNamed(
@@ -9884,7 +10361,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                           queryParameters: {
                                                                                                             'redirectURl': serializeParam(
                                                                                                               getJsonField(
-                                                                                                                (_model.apiResultspayment?.jsonBody ?? ''),
+                                                                                                                (_model.apiResults5yy6Copy?.jsonBody ?? ''),
                                                                                                                 r'''$.data.redirect_url''',
                                                                                                               ).toString(),
                                                                                                               ParamType.String,
@@ -10120,7 +10597,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                 },
                                                                                                                 child: CustomAlertDailogWidget(
                                                                                                                   des: getJsonField(
-                                                                                                                    (_model.apiResults5yy66?.jsonBody ?? ''),
+                                                                                                                    (_model.apiResults5yy6Copy?.jsonBody ?? ''),
                                                                                                                     r'''$.message''',
                                                                                                                   ).toString(),
                                                                                                                   height: 140.0,
@@ -10138,480 +10615,38 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                         _model.isPaymentDone = true;
                                                                                                         safeSetState(() {});
                                                                                                       }
-                                                                                                    } else {
-                                                                                                      logFirebaseEvent('ApplePayContainer_alert_dialog');
-                                                                                                      await showDialog(
-                                                                                                        context: context,
-                                                                                                        builder: (dialogContext) {
-                                                                                                          return Dialog(
-                                                                                                            elevation: 0,
-                                                                                                            insetPadding: EdgeInsets.zero,
-                                                                                                            backgroundColor: Colors.transparent,
-                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                                                            child: GestureDetector(
-                                                                                                              onTap: () {
-                                                                                                                FocusScope.of(dialogContext).unfocus();
-                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                                                              },
-                                                                                                              child: CustomAlertDailogWidget(
-                                                                                                                des: getJsonField(
-                                                                                                                  (_model.apiResultkgz?.jsonBody ?? ''),
-                                                                                                                  r'''$.message''',
-                                                                                                                ).toString(),
-                                                                                                                height: 140.0,
-                                                                                                                title: ' ',
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          );
-                                                                                                        },
-                                                                                                      );
-
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                      _model.isLoadingIndicator = false;
-                                                                                                      safeSetState(() {});
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                      _model.isPaymentDone = true;
-                                                                                                      safeSetState(() {});
                                                                                                     }
                                                                                                   } else {
-                                                                                                    logFirebaseEvent('ApplePayContainer_backend_call');
-                                                                                                    _model.apiResults5yy6Copy = await QuickartGroup.paymentCall.call(
-                                                                                                      addressid: FFAppState().selectedAddresID,
-                                                                                                      userid: FFAppState().userID,
-                                                                                                      couponDiscount: FFAppState().couponDiscount.toString(),
-                                                                                                      paymentMethod: 'applepay',
-                                                                                                      deviceid: FFAppState().deviceID,
-                                                                                                      walllet: (_model.isWalletCheckBoxSelected == 'add') || (_model.isRefWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
-                                                                                                      storeid: FFAppState().storeID,
-                                                                                                      couponid: FFAppState().selectedCouponID,
-                                                                                                      couponcode: FFAppState().couponCode,
-                                                                                                      deliveryDate: FFAppState().selectedDeliveryDate,
-                                                                                                      timeSlot: FFAppState().selectedDeliveryTimeSlot,
-                                                                                                      partertip: FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                      parterInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                                      totalWalletAmt: (_model.isWalletCheckBoxSelected == 'add'
-                                                                                                              ? functions.calculateFinalPayableForCashPayment(
-                                                                                                                  functions
-                                                                                                                      .updateTotalAmount(
-                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.total_price''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false',
-                                                                                                                          _model.selectedPaymentMethod,
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.codcharges''',
-                                                                                                                          ).toString(),
-                                                                                                                          '',
-                                                                                                                          '')
-                                                                                                                      .toString(),
-                                                                                                                  functions
-                                                                                                                      .checkWalletWithAction(
-                                                                                                                          _model.isRefWalletCheckBoxSelected,
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                  FFAppState().couponDiscount.toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.referral_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  'false',
-                                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  '',
-                                                                                                                                  '')
-                                                                                                                              .toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.wallet_deduction_percentage''',
-                                                                                                                          ).toString())
-                                                                                                                      .toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                  ).toString(),
-                                                                                                                  _model.isWalletCheckBoxSelected)
-                                                                                                              : 0.0)
-                                                                                                          .toString(),
-                                                                                                      paymentType: _model.dailyCartPaymentRadioButtonValue == 'Pay Now' ? 'paynow' : 'payperdelivery',
-                                                                                                      orderTotal: functions.updateTotalAmount(
-                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                          getJsonField(
-                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                            r'''$.data.total_price''',
-                                                                                                          ).toString(),
-                                                                                                          functions
-                                                                                                              .checkWalletWithAction(
-                                                                                                                  _model.isWalletCheckBoxSelected,
-                                                                                                                  functions
-                                                                                                                      .updateTotalAmount(
-                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.total_price''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false',
-                                                                                                                          _model.selectedPaymentMethod,
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.codcharges''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false')
-                                                                                                                      .toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                  ).toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    FFAppState().appInfo,
-                                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                                  ).toString())
-                                                                                                              .toString(),
-                                                                                                          _model.isWalletCheckBoxSelected,
-                                                                                                          _model.selectedPaymentMethod,
-                                                                                                          getJsonField(
-                                                                                                            FFAppState().appInfo,
-                                                                                                            r'''$.codcharges''',
-                                                                                                          ).toString(),
-                                                                                                          '',
-                                                                                                          ''),
-                                                                                                      orderInstruction: (String var1) {
-                                                                                                        return var1.trim() ?? '';
-                                                                                                      }(_model.textController.text),
-                                                                                                      platform: isiOS ? 'ios' : 'android',
-                                                                                                      totalrefwalletamt: (_model.isRefWalletCheckBoxSelected == 'add'
-                                                                                                              ? functions.checkWalletWithAction(
-                                                                                                                  _model.isRefWalletCheckBoxSelected,
-                                                                                                                  functions
-                                                                                                                      .updateTotalAmount(
-                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.total_price''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false',
-                                                                                                                          _model.selectedPaymentMethod,
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.codcharges''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false')
-                                                                                                                      .toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                    r'''$.data.referral_balance''',
-                                                                                                                  ).toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    FFAppState().appInfo,
-                                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                                  ).toString())
-                                                                                                              : 0.0)
-                                                                                                          ?.toString(),
+                                                                                                    logFirebaseEvent('ApplePayContainer_alert_dialog');
+                                                                                                    await showDialog(
+                                                                                                      context: context,
+                                                                                                      builder: (dialogContext) {
+                                                                                                        return Dialog(
+                                                                                                          elevation: 0,
+                                                                                                          insetPadding: EdgeInsets.zero,
+                                                                                                          backgroundColor: Colors.transparent,
+                                                                                                          alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                          child: GestureDetector(
+                                                                                                            onTap: () {
+                                                                                                              FocusScope.of(dialogContext).unfocus();
+                                                                                                              FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                            },
+                                                                                                            child: CustomAlertDailogWidget(
+                                                                                                              des: FFAppConstants.vpnMSG,
+                                                                                                              height: 140.0,
+                                                                                                              title: ' ',
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
                                                                                                     );
 
                                                                                                     logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                    _model.isPaymentDone = false;
+                                                                                                    _model.isLoadingIndicator = false;
                                                                                                     safeSetState(() {});
-                                                                                                    if ((_model.apiResults5yy6Copy?.succeeded ?? true)) {
-                                                                                                      logFirebaseEvent('ApplePayContainer_navigate_to');
-
-                                                                                                      context.pushNamed(
-                                                                                                        PaymentScreenWidget.routeName,
-                                                                                                        queryParameters: {
-                                                                                                          'redirectURl': serializeParam(
-                                                                                                            getJsonField(
-                                                                                                              (_model.apiResults5yy6Copy?.jsonBody ?? ''),
-                                                                                                              r'''$.data.redirect_url''',
-                                                                                                            ).toString(),
-                                                                                                            ParamType.String,
-                                                                                                          ),
-                                                                                                          'screenPName': serializeParam(
-                                                                                                            'daily',
-                                                                                                            ParamType.String,
-                                                                                                          ),
-                                                                                                          'mrp': serializeParam(
-                                                                                                            functions.updateTotalAmount(
-                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                FFAppState().couponDiscount.toString(),
-                                                                                                                getJsonField(
-                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                  r'''$.data.total_price''',
-                                                                                                                ).toString(),
-                                                                                                                functions
-                                                                                                                    .checkWalletWithAction(
-                                                                                                                        _model.isWalletCheckBoxSelected,
-                                                                                                                        functions
-                                                                                                                            .updateTotalAmount(
-                                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                FFAppState().couponDiscount.toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.total_price''',
-                                                                                                                                ).toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.wallet_balance''',
-                                                                                                                                ).toString(),
-                                                                                                                                'false',
-                                                                                                                                _model.selectedPaymentMethod,
-                                                                                                                                getJsonField(
-                                                                                                                                  FFAppState().appInfo,
-                                                                                                                                  r'''$.codcharges''',
-                                                                                                                                ).toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.referral_balance''',
-                                                                                                                                ).toString(),
-                                                                                                                                'false')
-                                                                                                                            .toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                        ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          FFAppState().appInfo,
-                                                                                                                          r'''$.wallet_deduction_percentage''',
-                                                                                                                        ).toString())
-                                                                                                                    .toString(),
-                                                                                                                _model.isWalletCheckBoxSelected,
-                                                                                                                _model.selectedPaymentMethod,
-                                                                                                                getJsonField(
-                                                                                                                  FFAppState().appInfo,
-                                                                                                                  r'''$.codcharges''',
-                                                                                                                ).toString(),
-                                                                                                                '',
-                                                                                                                ''),
-                                                                                                            ParamType.double,
-                                                                                                          ),
-                                                                                                          'orderType': serializeParam(
-                                                                                                            'Daily order apple pay',
-                                                                                                            ParamType.String,
-                                                                                                          ),
-                                                                                                        }.withoutNulls,
-                                                                                                      );
-
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_app_state');
-                                                                                                      FFAppState().selectedDeliveryDate = '';
-                                                                                                      FFAppState().selectedDeliveryTimeSlot = '';
-                                                                                                      FFAppState().socityName = '';
-                                                                                                      FFAppState().isDeliveryPartnerTipSelected = '0';
-                                                                                                      safeSetState(() {});
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                      _model.isLoadingIndicator = false;
-                                                                                                      safeSetState(() {});
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                      _model.isPaymentDone = true;
-                                                                                                      safeSetState(() {});
-                                                                                                      logFirebaseEvent('ApplePayContainer_custom_action');
-                                                                                                      await actions.facebookEventClass(
-                                                                                                        (List<String> var1) {
-                                                                                                          return var1.join(', ');
-                                                                                                        }(functions
-                                                                                                            .getVarientIdsWithCartQty(
-                                                                                                                getJsonField(
-                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                  r'''$.data.data''',
-                                                                                                                ),
-                                                                                                                'product')
-                                                                                                            .map((e) => e.toString())
-                                                                                                            .toList()),
-                                                                                                        '0',
-                                                                                                        'daily',
-                                                                                                        0.0,
-                                                                                                        0,
-                                                                                                        functions.updateTotalAmount(
-                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                            FFAppState().couponDiscount.toString(),
-                                                                                                            getJsonField(
-                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                              r'''$.data.total_price''',
-                                                                                                            ).toString(),
-                                                                                                            functions
-                                                                                                                .checkWalletWithAction(
-                                                                                                                    _model.isRefWalletCheckBoxSelected,
-                                                                                                                    functions
-                                                                                                                        .updateTotalAmount(
-                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                            FFAppState().couponDiscount.toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                              r'''$.data.total_price''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                              r'''$.data.referral_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            'false',
-                                                                                                                            _model.selectedPaymentMethod,
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.codcharges''',
-                                                                                                                            ).toString(),
-                                                                                                                            '',
-                                                                                                                            '')
-                                                                                                                        .toString(),
-                                                                                                                    getJsonField(
-                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                      r'''$.data.referral_balance''',
-                                                                                                                    ).toString(),
-                                                                                                                    getJsonField(
-                                                                                                                      FFAppState().appInfo,
-                                                                                                                      r'''$.wallet_deduction_percentage''',
-                                                                                                                    ).toString())
-                                                                                                                .toString(),
-                                                                                                            _model.isRefWalletCheckBoxSelected,
-                                                                                                            _model.selectedPaymentMethod,
-                                                                                                            getJsonField(
-                                                                                                              FFAppState().appInfo,
-                                                                                                              r'''$.codcharges''',
-                                                                                                            ).toString(),
-                                                                                                            functions
-                                                                                                                .calculateFinalPayableForCashPayment(
-                                                                                                                    functions
-                                                                                                                        .updateTotalAmount(
-                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                            FFAppState().couponDiscount.toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                              r'''$.data.total_price''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            'false',
-                                                                                                                            _model.selectedPaymentMethod,
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.codcharges''',
-                                                                                                                            ).toString(),
-                                                                                                                            '',
-                                                                                                                            '')
-                                                                                                                        .toString(),
-                                                                                                                    functions
-                                                                                                                        .checkWalletWithAction(
-                                                                                                                            _model.isRefWalletCheckBoxSelected,
-                                                                                                                            functions
-                                                                                                                                .updateTotalAmount(
-                                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                    FFAppState().couponDiscount.toString(),
-                                                                                                                                    getJsonField(
-                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                      r'''$.data.total_price''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    getJsonField(
-                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                      r'''$.data.referral_balance''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    'false',
-                                                                                                                                    _model.selectedPaymentMethod,
-                                                                                                                                    getJsonField(
-                                                                                                                                      FFAppState().appInfo,
-                                                                                                                                      r'''$.codcharges''',
-                                                                                                                                    ).toString(),
-                                                                                                                                    '',
-                                                                                                                                    '')
-                                                                                                                                .toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                              r'''$.data.referral_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.wallet_deduction_percentage''',
-                                                                                                                            ).toString())
-                                                                                                                        .toString(),
-                                                                                                                    getJsonField(
-                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                      r'''$.data.wallet_balance''',
-                                                                                                                    ).toString(),
-                                                                                                                    _model.isWalletCheckBoxSelected)
-                                                                                                                .toString(),
-                                                                                                            _model.isWalletCheckBoxSelected)!,
-                                                                                                        'checkout',
-                                                                                                        getJsonField(
-                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                          r'''$.data.data''',
-                                                                                                        ),
-                                                                                                        'daily order apple pay',
-                                                                                                        ' ',
-                                                                                                        ' ',
-                                                                                                        ' ',
-                                                                                                        ' ',
-                                                                                                      );
-                                                                                                    } else {
-                                                                                                      logFirebaseEvent('ApplePayContainer_alert_dialog');
-                                                                                                      await showDialog(
-                                                                                                        context: context,
-                                                                                                        builder: (dialogContext) {
-                                                                                                          return Dialog(
-                                                                                                            elevation: 0,
-                                                                                                            insetPadding: EdgeInsets.zero,
-                                                                                                            backgroundColor: Colors.transparent,
-                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                                                            child: GestureDetector(
-                                                                                                              onTap: () {
-                                                                                                                FocusScope.of(dialogContext).unfocus();
-                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                                                                              },
-                                                                                                              child: CustomAlertDailogWidget(
-                                                                                                                des: getJsonField(
-                                                                                                                  (_model.apiResults5yy6Copy?.jsonBody ?? ''),
-                                                                                                                  r'''$.message''',
-                                                                                                                ).toString(),
-                                                                                                                height: 140.0,
-                                                                                                                title: ' ',
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          );
-                                                                                                        },
-                                                                                                      );
-
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                      _model.isLoadingIndicator = false;
-                                                                                                      safeSetState(() {});
-                                                                                                      logFirebaseEvent('ApplePayContainer_update_page_state');
-                                                                                                      _model.isPaymentDone = true;
-                                                                                                      safeSetState(() {});
-                                                                                                    }
+                                                                                                    logFirebaseEvent('ApplePayContainer_update_page_state');
+                                                                                                    _model.isPaymentDone = true;
+                                                                                                    safeSetState(() {});
                                                                                                   }
                                                                                                 } else {
                                                                                                   logFirebaseEvent('ApplePayContainer_alert_dialog');
@@ -12074,20 +12109,491 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                 _model.isLoadingIndicator = true;
                                                                                                 _model.index = 0;
                                                                                                 safeSetState(() {});
-                                                                                                if (_model.selectedArrayJson.length > 0) {
-                                                                                                  logFirebaseEvent('Container_backend_call');
-                                                                                                  _model.apiResultyfq = await QuickartGroup.upquickordertimeslotCall.call(
-                                                                                                    userid: FFAppState().userID,
-                                                                                                    datetimeArrayJson: _model.selectedArrayJson.map((e) => e.toMap()).toList(),
-                                                                                                    platform: isiOS ? 'ios' : 'android',
-                                                                                                  );
-
-                                                                                                  logFirebaseEvent('Container_update_page_state');
-                                                                                                  _model.isPaymentDone = false;
-                                                                                                  safeSetState(() {});
-                                                                                                  if ((_model.apiResultyfq?.succeeded ?? true)) {
+                                                                                                logFirebaseEvent('Container_custom_action');
+                                                                                                _model.isVpnONQP = await actions.isVpnEnabled();
+                                                                                                if (_model.isVpnONQP == false) {
+                                                                                                  if (_model.selectedArrayJson.length > 0) {
                                                                                                     logFirebaseEvent('Container_backend_call');
-                                                                                                    _model.apiResultsyy = await QuickartGroup.paymentCall.call(
+                                                                                                    _model.apiResultyfq = await QuickartGroup.upquickordertimeslotCall.call(
+                                                                                                      userid: FFAppState().userID,
+                                                                                                      datetimeArrayJson: _model.selectedArrayJson.map((e) => e.toMap()).toList(),
+                                                                                                      platform: isiOS ? 'ios' : 'android',
+                                                                                                    );
+
+                                                                                                    logFirebaseEvent('Container_update_page_state');
+                                                                                                    _model.isPaymentDone = false;
+                                                                                                    safeSetState(() {});
+                                                                                                    if ((_model.apiResultyfq?.succeeded ?? true)) {
+                                                                                                      logFirebaseEvent('Container_backend_call');
+                                                                                                      _model.apiResultsyy = await QuickartGroup.paymentCall.call(
+                                                                                                        addressid: FFAppState().selectedAddresID,
+                                                                                                        userid: FFAppState().userID,
+                                                                                                        couponDiscount: FFAppState().couponDiscount.toString(),
+                                                                                                        paymentMethod: 'Card',
+                                                                                                        deviceid: FFAppState().deviceID,
+                                                                                                        walllet: (_model.isWalletCheckBoxSelected == 'add') || (_model.isRefWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                                        storeid: FFAppState().storeID,
+                                                                                                        couponid: FFAppState().selectedCouponID,
+                                                                                                        couponcode: FFAppState().couponCode,
+                                                                                                        deliveryDate: FFAppState().selectedDeliveryDate,
+                                                                                                        timeSlot: FFAppState().selectedDeliveryTimeSlot,
+                                                                                                        partertip: FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                        parterInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                                        totalWalletAmt: (_model.isWalletCheckBoxSelected == 'add'
+                                                                                                                ? functions.calculateFinalPayableForCashPayment(
+                                                                                                                    functions
+                                                                                                                        .updateTotalAmount(
+                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.total_price''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            'false',
+                                                                                                                            _model.selectedPaymentMethod,
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.codcharges''',
+                                                                                                                            ).toString(),
+                                                                                                                            '',
+                                                                                                                            '')
+                                                                                                                        .toString(),
+                                                                                                                    functions
+                                                                                                                        .checkWalletWithAction(
+                                                                                                                            _model.isRefWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    'false',
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    '')
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.referral_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        .toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    _model.isWalletCheckBoxSelected)
+                                                                                                                : 0.0)
+                                                                                                            .toString(),
+                                                                                                        paymentType: _model.dailyCartPaymentRadioButtonValue == 'Pay Now' ? 'paynow' : 'payperdelivery',
+                                                                                                        orderTotal: functions.updateTotalAmount(
+                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                            getJsonField(
+                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            functions
+                                                                                                                .checkWalletWithAction(
+                                                                                                                    _model.isWalletCheckBoxSelected,
+                                                                                                                    functions
+                                                                                                                        .updateTotalAmount(
+                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.total_price''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            'false',
+                                                                                                                            _model.selectedPaymentMethod,
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.codcharges''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.referral_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            'false')
+                                                                                                                        .toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                                    ).toString())
+                                                                                                                .toString(),
+                                                                                                            _model.isWalletCheckBoxSelected,
+                                                                                                            _model.selectedPaymentMethod,
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            ''),
+                                                                                                        orderInstruction: (String var1) {
+                                                                                                          return var1.trim() ?? '';
+                                                                                                        }(_model.textController.text),
+                                                                                                        platform: isiOS ? 'ios' : 'android',
+                                                                                                        totalrefwalletamt: (_model.isRefWalletCheckBoxSelected == 'add'
+                                                                                                                ? functions.checkWalletWithAction(
+                                                                                                                    _model.isRefWalletCheckBoxSelected,
+                                                                                                                    functions
+                                                                                                                        .updateTotalAmount(
+                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.total_price''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            'false',
+                                                                                                                            _model.selectedPaymentMethod,
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.codcharges''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                              r'''$.data.referral_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            'false')
+                                                                                                                        .toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                                    ).toString())
+                                                                                                                : 0.0)
+                                                                                                            ?.toString(),
+                                                                                                      );
+
+                                                                                                      if ((_model.apiResultsyy?.succeeded ?? true)) {
+                                                                                                        logFirebaseEvent('Container_navigate_to');
+
+                                                                                                        context.pushNamed(
+                                                                                                          PaymentScreenWidget.routeName,
+                                                                                                          queryParameters: {
+                                                                                                            'redirectURl': serializeParam(
+                                                                                                              getJsonField(
+                                                                                                                (_model.apiResultsyy?.jsonBody ?? ''),
+                                                                                                                r'''$.data.redirect_url''',
+                                                                                                              ).toString(),
+                                                                                                              ParamType.String,
+                                                                                                            ),
+                                                                                                            'screenPName': serializeParam(
+                                                                                                              'daily',
+                                                                                                              ParamType.String,
+                                                                                                            ),
+                                                                                                            'mrp': serializeParam(
+                                                                                                              functions.updateTotalAmount(
+                                                                                                                  FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                  FFAppState().couponDiscount.toString(),
+                                                                                                                  getJsonField(
+                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                    r'''$.data.total_price''',
+                                                                                                                  ).toString(),
+                                                                                                                  functions
+                                                                                                                      .checkWalletWithAction(
+                                                                                                                          _model.isWalletCheckBoxSelected,
+                                                                                                                          functions
+                                                                                                                              .updateTotalAmount(
+                                                                                                                                  FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                  FFAppState().couponDiscount.toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                    r'''$.data.total_price''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                    r'''$.data.wallet_balance''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  'false',
+                                                                                                                                  _model.selectedPaymentMethod,
+                                                                                                                                  getJsonField(
+                                                                                                                                    FFAppState().appInfo,
+                                                                                                                                    r'''$.codcharges''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  '',
+                                                                                                                                  '')
+                                                                                                                              .toString(),
+                                                                                                                          getJsonField(
+                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                          ).toString(),
+                                                                                                                          getJsonField(
+                                                                                                                            FFAppState().appInfo,
+                                                                                                                            r'''$.wallet_deduction_percentage''',
+                                                                                                                          ).toString())
+                                                                                                                      .toString(),
+                                                                                                                  _model.isWalletCheckBoxSelected,
+                                                                                                                  _model.selectedPaymentMethod,
+                                                                                                                  getJsonField(
+                                                                                                                    FFAppState().appInfo,
+                                                                                                                    r'''$.codcharges''',
+                                                                                                                  ).toString(),
+                                                                                                                  '',
+                                                                                                                  ''),
+                                                                                                              ParamType.double,
+                                                                                                            ),
+                                                                                                            'orderType': serializeParam(
+                                                                                                              'Daily order  card',
+                                                                                                              ParamType.String,
+                                                                                                            ),
+                                                                                                          }.withoutNulls,
+                                                                                                        );
+
+                                                                                                        logFirebaseEvent('Container_update_page_state');
+                                                                                                        _model.isLoadingIndicator = false;
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('Container_update_app_state');
+                                                                                                        FFAppState().selectedDeliveryDate = '';
+                                                                                                        FFAppState().selectedDeliveryTimeSlot = '';
+                                                                                                        FFAppState().socityName = '';
+                                                                                                        FFAppState().isDeliveryPartnerTipSelected = '0';
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('Container_update_page_state');
+                                                                                                        _model.isPaymentDone = true;
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('Container_custom_action');
+                                                                                                        await actions.facebookEventClass(
+                                                                                                          (List<String> var1) {
+                                                                                                            return var1.join(', ');
+                                                                                                          }(functions
+                                                                                                              .getVarientIdsWithCartQty(
+                                                                                                                  getJsonField(
+                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                    r'''$.data.data''',
+                                                                                                                  ),
+                                                                                                                  'daily')
+                                                                                                              .map((e) => e.toString())
+                                                                                                              .toList()),
+                                                                                                          '0',
+                                                                                                          'daily',
+                                                                                                          0.0,
+                                                                                                          0,
+                                                                                                          functions.updateTotalAmount(
+                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                              getJsonField(
+                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                r'''$.data.total_price''',
+                                                                                                              ).toString(),
+                                                                                                              functions
+                                                                                                                  .checkWalletWithAction(
+                                                                                                                      _model.isRefWalletCheckBoxSelected,
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                                      ).toString())
+                                                                                                                  .toString(),
+                                                                                                              _model.isRefWalletCheckBoxSelected,
+                                                                                                              _model.selectedPaymentMethod,
+                                                                                                              getJsonField(
+                                                                                                                FFAppState().appInfo,
+                                                                                                                r'''$.codcharges''',
+                                                                                                              ).toString(),
+                                                                                                              functions
+                                                                                                                  .calculateFinalPayableForCashPayment(
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      functions
+                                                                                                                          .checkWalletWithAction(
+                                                                                                                              _model.isRefWalletCheckBoxSelected,
+                                                                                                                              functions
+                                                                                                                                  .updateTotalAmount(
+                                                                                                                                      FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                      FFAppState().couponDiscount.toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.total_price''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      'false',
+                                                                                                                                      _model.selectedPaymentMethod,
+                                                                                                                                      getJsonField(
+                                                                                                                                        FFAppState().appInfo,
+                                                                                                                                        r'''$.codcharges''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      '',
+                                                                                                                                      '')
+                                                                                                                                  .toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                                                              ).toString())
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      _model.isWalletCheckBoxSelected)
+                                                                                                                  .toString(),
+                                                                                                              _model.isWalletCheckBoxSelected)!,
+                                                                                                          'checkout',
+                                                                                                          getJsonField(
+                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                            r'''$.data.data.products''',
+                                                                                                          ),
+                                                                                                          'daily order cart payment',
+                                                                                                          ' ',
+                                                                                                          ' ',
+                                                                                                          ' ',
+                                                                                                          ' ',
+                                                                                                        );
+                                                                                                      } else {
+                                                                                                        logFirebaseEvent('Container_alert_dialog');
+                                                                                                        await showDialog(
+                                                                                                          context: context,
+                                                                                                          builder: (dialogContext) {
+                                                                                                            return Dialog(
+                                                                                                              elevation: 0,
+                                                                                                              insetPadding: EdgeInsets.zero,
+                                                                                                              backgroundColor: Colors.transparent,
+                                                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                              child: GestureDetector(
+                                                                                                                onTap: () {
+                                                                                                                  FocusScope.of(dialogContext).unfocus();
+                                                                                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                },
+                                                                                                                child: CustomAlertDailogWidget(
+                                                                                                                  des: getJsonField(
+                                                                                                                    (_model.apiResultsyy?.jsonBody ?? ''),
+                                                                                                                    r'''$.message''',
+                                                                                                                  ).toString(),
+                                                                                                                  height: 120.0,
+                                                                                                                  title: ' ',
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            );
+                                                                                                          },
+                                                                                                        );
+
+                                                                                                        logFirebaseEvent('Container_update_page_state');
+                                                                                                        _model.isLoadingIndicator = false;
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('Container_update_page_state');
+                                                                                                        _model.isPaymentDone = true;
+                                                                                                        safeSetState(() {});
+                                                                                                      }
+                                                                                                    } else {
+                                                                                                      logFirebaseEvent('Container_alert_dialog');
+                                                                                                      await showDialog(
+                                                                                                        context: context,
+                                                                                                        builder: (dialogContext) {
+                                                                                                          return Dialog(
+                                                                                                            elevation: 0,
+                                                                                                            insetPadding: EdgeInsets.zero,
+                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                            child: GestureDetector(
+                                                                                                              onTap: () {
+                                                                                                                FocusScope.of(dialogContext).unfocus();
+                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                              },
+                                                                                                              child: CustomAlertDailogWidget(
+                                                                                                                des: getJsonField(
+                                                                                                                  (_model.apiResultyfq?.jsonBody ?? ''),
+                                                                                                                  r'''$.message''',
+                                                                                                                ).toString(),
+                                                                                                                height: 120.0,
+                                                                                                                title: '  ',
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        },
+                                                                                                      );
+
+                                                                                                      logFirebaseEvent('Container_update_page_state');
+                                                                                                      _model.isLoadingIndicator = false;
+                                                                                                      safeSetState(() {});
+                                                                                                      logFirebaseEvent('Container_update_page_state');
+                                                                                                      _model.isPaymentDone = true;
+                                                                                                      safeSetState(() {});
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    logFirebaseEvent('Container_backend_call');
+                                                                                                    _model.apiResults5yCopy2 = await QuickartGroup.paymentCall.call(
                                                                                                       addressid: FFAppState().selectedAddresID,
                                                                                                       userid: FFAppState().userID,
                                                                                                       couponDiscount: FFAppState().couponDiscount.toString(),
@@ -12193,11 +12699,8 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                             FFAppState().appInfo,
                                                                                                                             r'''$.codcharges''',
                                                                                                                           ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false')
+                                                                                                                          '',
+                                                                                                                          '')
                                                                                                                       .toString(),
                                                                                                                   getJsonField(
                                                                                                                     dailyCartScreenShowspcatcartResponse.jsonBody,
@@ -12259,7 +12762,10 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                           ?.toString(),
                                                                                                     );
 
-                                                                                                    if ((_model.apiResultsyy?.succeeded ?? true)) {
+                                                                                                    logFirebaseEvent('Container_update_page_state');
+                                                                                                    _model.isPaymentDone = false;
+                                                                                                    safeSetState(() {});
+                                                                                                    if ((_model.apiResults5yCopy2?.succeeded ?? true)) {
                                                                                                       logFirebaseEvent('Container_navigate_to');
 
                                                                                                       context.pushNamed(
@@ -12267,7 +12773,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                         queryParameters: {
                                                                                                           'redirectURl': serializeParam(
                                                                                                             getJsonField(
-                                                                                                              (_model.apiResultsyy?.jsonBody ?? ''),
+                                                                                                              (_model.apiResults5yCopy2?.jsonBody ?? ''),
                                                                                                               r'''$.data.redirect_url''',
                                                                                                             ).toString(),
                                                                                                             ParamType.String,
@@ -12305,8 +12811,11 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                                   FFAppState().appInfo,
                                                                                                                                   r'''$.codcharges''',
                                                                                                                                 ).toString(),
-                                                                                                                                '',
-                                                                                                                                '')
+                                                                                                                                getJsonField(
+                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.referral_balance''',
+                                                                                                                                ).toString(),
+                                                                                                                                'false')
                                                                                                                             .toString(),
                                                                                                                         getJsonField(
                                                                                                                           dailyCartScreenShowspcatcartResponse.jsonBody,
@@ -12500,7 +13009,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                               },
                                                                                                               child: CustomAlertDailogWidget(
                                                                                                                 des: getJsonField(
-                                                                                                                  (_model.apiResultsyy?.jsonBody ?? ''),
+                                                                                                                  (_model.apiResults5yCopy2?.jsonBody ?? ''),
                                                                                                                   r'''$.message''',
                                                                                                                 ).toString(),
                                                                                                                 height: 120.0,
@@ -12518,477 +13027,38 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                       _model.isPaymentDone = true;
                                                                                                       safeSetState(() {});
                                                                                                     }
-                                                                                                  } else {
-                                                                                                    logFirebaseEvent('Container_alert_dialog');
-                                                                                                    await showDialog(
-                                                                                                      context: context,
-                                                                                                      builder: (dialogContext) {
-                                                                                                        return Dialog(
-                                                                                                          elevation: 0,
-                                                                                                          insetPadding: EdgeInsets.zero,
-                                                                                                          backgroundColor: Colors.transparent,
-                                                                                                          alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                                                          child: GestureDetector(
-                                                                                                            onTap: () {
-                                                                                                              FocusScope.of(dialogContext).unfocus();
-                                                                                                              FocusManager.instance.primaryFocus?.unfocus();
-                                                                                                            },
-                                                                                                            child: CustomAlertDailogWidget(
-                                                                                                              des: getJsonField(
-                                                                                                                (_model.apiResultyfq?.jsonBody ?? ''),
-                                                                                                                r'''$.message''',
-                                                                                                              ).toString(),
-                                                                                                              height: 120.0,
-                                                                                                              title: '  ',
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      },
-                                                                                                    );
-
-                                                                                                    logFirebaseEvent('Container_update_page_state');
-                                                                                                    _model.isLoadingIndicator = false;
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('Container_update_page_state');
-                                                                                                    _model.isPaymentDone = true;
-                                                                                                    safeSetState(() {});
                                                                                                   }
                                                                                                 } else {
-                                                                                                  logFirebaseEvent('Container_backend_call');
-                                                                                                  _model.apiResults5yCopy2 = await QuickartGroup.paymentCall.call(
-                                                                                                    addressid: FFAppState().selectedAddresID,
-                                                                                                    userid: FFAppState().userID,
-                                                                                                    couponDiscount: FFAppState().couponDiscount.toString(),
-                                                                                                    paymentMethod: 'Card',
-                                                                                                    deviceid: FFAppState().deviceID,
-                                                                                                    walllet: (_model.isWalletCheckBoxSelected == 'add') || (_model.isRefWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
-                                                                                                    storeid: FFAppState().storeID,
-                                                                                                    couponid: FFAppState().selectedCouponID,
-                                                                                                    couponcode: FFAppState().couponCode,
-                                                                                                    deliveryDate: FFAppState().selectedDeliveryDate,
-                                                                                                    timeSlot: FFAppState().selectedDeliveryTimeSlot,
-                                                                                                    partertip: FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                    parterInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                                    totalWalletAmt: (_model.isWalletCheckBoxSelected == 'add'
-                                                                                                            ? functions.calculateFinalPayableForCashPayment(
-                                                                                                                functions
-                                                                                                                    .updateTotalAmount(
-                                                                                                                        FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                        FFAppState().couponDiscount.toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.total_price''',
-                                                                                                                        ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                        ).toString(),
-                                                                                                                        'false',
-                                                                                                                        _model.selectedPaymentMethod,
-                                                                                                                        getJsonField(
-                                                                                                                          FFAppState().appInfo,
-                                                                                                                          r'''$.codcharges''',
-                                                                                                                        ).toString(),
-                                                                                                                        '',
-                                                                                                                        '')
-                                                                                                                    .toString(),
-                                                                                                                functions
-                                                                                                                    .checkWalletWithAction(
-                                                                                                                        _model.isRefWalletCheckBoxSelected,
-                                                                                                                        functions
-                                                                                                                            .updateTotalAmount(
-                                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                FFAppState().couponDiscount.toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.total_price''',
-                                                                                                                                ).toString(),
-                                                                                                                                getJsonField(
-                                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.referral_balance''',
-                                                                                                                                ).toString(),
-                                                                                                                                'false',
-                                                                                                                                _model.selectedPaymentMethod,
-                                                                                                                                getJsonField(
-                                                                                                                                  FFAppState().appInfo,
-                                                                                                                                  r'''$.codcharges''',
-                                                                                                                                ).toString(),
-                                                                                                                                '',
-                                                                                                                                '')
-                                                                                                                            .toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.referral_balance''',
-                                                                                                                        ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          FFAppState().appInfo,
-                                                                                                                          r'''$.wallet_deduction_percentage''',
-                                                                                                                        ).toString())
-                                                                                                                    .toString(),
-                                                                                                                getJsonField(
-                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                  r'''$.data.wallet_balance''',
-                                                                                                                ).toString(),
-                                                                                                                _model.isWalletCheckBoxSelected)
-                                                                                                            : 0.0)
-                                                                                                        .toString(),
-                                                                                                    paymentType: _model.dailyCartPaymentRadioButtonValue == 'Pay Now' ? 'paynow' : 'payperdelivery',
-                                                                                                    orderTotal: functions.updateTotalAmount(
-                                                                                                        FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                        FFAppState().couponDiscount.toString(),
-                                                                                                        getJsonField(
-                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                          r'''$.data.total_price''',
-                                                                                                        ).toString(),
-                                                                                                        functions
-                                                                                                            .checkWalletWithAction(
-                                                                                                                _model.isWalletCheckBoxSelected,
-                                                                                                                functions
-                                                                                                                    .updateTotalAmount(
-                                                                                                                        FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                        FFAppState().couponDiscount.toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.total_price''',
-                                                                                                                        ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                        ).toString(),
-                                                                                                                        'false',
-                                                                                                                        _model.selectedPaymentMethod,
-                                                                                                                        getJsonField(
-                                                                                                                          FFAppState().appInfo,
-                                                                                                                          r'''$.codcharges''',
-                                                                                                                        ).toString(),
-                                                                                                                        '',
-                                                                                                                        '')
-                                                                                                                    .toString(),
-                                                                                                                getJsonField(
-                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                  r'''$.data.wallet_balance''',
-                                                                                                                ).toString(),
-                                                                                                                getJsonField(
-                                                                                                                  FFAppState().appInfo,
-                                                                                                                  r'''$.wallet_deduction_percentage''',
-                                                                                                                ).toString())
-                                                                                                            .toString(),
-                                                                                                        _model.isWalletCheckBoxSelected,
-                                                                                                        _model.selectedPaymentMethod,
-                                                                                                        getJsonField(
-                                                                                                          FFAppState().appInfo,
-                                                                                                          r'''$.codcharges''',
-                                                                                                        ).toString(),
-                                                                                                        '',
-                                                                                                        ''),
-                                                                                                    orderInstruction: (String var1) {
-                                                                                                      return var1.trim() ?? '';
-                                                                                                    }(_model.textController.text),
-                                                                                                    platform: isiOS ? 'ios' : 'android',
-                                                                                                    totalrefwalletamt: (_model.isRefWalletCheckBoxSelected == 'add'
-                                                                                                            ? functions.checkWalletWithAction(
-                                                                                                                _model.isRefWalletCheckBoxSelected,
-                                                                                                                functions
-                                                                                                                    .updateTotalAmount(
-                                                                                                                        FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                        FFAppState().couponDiscount.toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.total_price''',
-                                                                                                                        ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                        ).toString(),
-                                                                                                                        'false',
-                                                                                                                        _model.selectedPaymentMethod,
-                                                                                                                        getJsonField(
-                                                                                                                          FFAppState().appInfo,
-                                                                                                                          r'''$.codcharges''',
-                                                                                                                        ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                          r'''$.data.referral_balance''',
-                                                                                                                        ).toString(),
-                                                                                                                        'false')
-                                                                                                                    .toString(),
-                                                                                                                getJsonField(
-                                                                                                                  dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                  r'''$.data.referral_balance''',
-                                                                                                                ).toString(),
-                                                                                                                getJsonField(
-                                                                                                                  FFAppState().appInfo,
-                                                                                                                  r'''$.wallet_deduction_percentage''',
-                                                                                                                ).toString())
-                                                                                                            : 0.0)
-                                                                                                        ?.toString(),
+                                                                                                  logFirebaseEvent('Container_alert_dialog');
+                                                                                                  await showDialog(
+                                                                                                    context: context,
+                                                                                                    builder: (dialogContext) {
+                                                                                                      return Dialog(
+                                                                                                        elevation: 0,
+                                                                                                        insetPadding: EdgeInsets.zero,
+                                                                                                        backgroundColor: Colors.transparent,
+                                                                                                        alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                        child: GestureDetector(
+                                                                                                          onTap: () {
+                                                                                                            FocusScope.of(dialogContext).unfocus();
+                                                                                                            FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                          },
+                                                                                                          child: CustomAlertDailogWidget(
+                                                                                                            des: FFAppConstants.vpnMSG,
+                                                                                                            height: 150.0,
+                                                                                                            title: ' ',
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      );
+                                                                                                    },
                                                                                                   );
 
                                                                                                   logFirebaseEvent('Container_update_page_state');
-                                                                                                  _model.isPaymentDone = false;
+                                                                                                  _model.isLoadingIndicator = false;
                                                                                                   safeSetState(() {});
-                                                                                                  if ((_model.apiResults5yCopy2?.succeeded ?? true)) {
-                                                                                                    logFirebaseEvent('Container_navigate_to');
-
-                                                                                                    context.pushNamed(
-                                                                                                      PaymentScreenWidget.routeName,
-                                                                                                      queryParameters: {
-                                                                                                        'redirectURl': serializeParam(
-                                                                                                          getJsonField(
-                                                                                                            (_model.apiResults5yCopy2?.jsonBody ?? ''),
-                                                                                                            r'''$.data.redirect_url''',
-                                                                                                          ).toString(),
-                                                                                                          ParamType.String,
-                                                                                                        ),
-                                                                                                        'screenPName': serializeParam(
-                                                                                                          'daily',
-                                                                                                          ParamType.String,
-                                                                                                        ),
-                                                                                                        'mrp': serializeParam(
-                                                                                                          functions.updateTotalAmount(
-                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                              FFAppState().couponDiscount.toString(),
-                                                                                                              getJsonField(
-                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                r'''$.data.total_price''',
-                                                                                                              ).toString(),
-                                                                                                              functions
-                                                                                                                  .checkWalletWithAction(
-                                                                                                                      _model.isWalletCheckBoxSelected,
-                                                                                                                      functions
-                                                                                                                          .updateTotalAmount(
-                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                              FFAppState().couponDiscount.toString(),
-                                                                                                                              getJsonField(
-                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                r'''$.data.total_price''',
-                                                                                                                              ).toString(),
-                                                                                                                              getJsonField(
-                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                r'''$.data.wallet_balance''',
-                                                                                                                              ).toString(),
-                                                                                                                              'false',
-                                                                                                                              _model.selectedPaymentMethod,
-                                                                                                                              getJsonField(
-                                                                                                                                FFAppState().appInfo,
-                                                                                                                                r'''$.codcharges''',
-                                                                                                                              ).toString(),
-                                                                                                                              getJsonField(
-                                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                r'''$.data.referral_balance''',
-                                                                                                                              ).toString(),
-                                                                                                                              'false')
-                                                                                                                          .toString(),
-                                                                                                                      getJsonField(
-                                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                        r'''$.data.wallet_balance''',
-                                                                                                                      ).toString(),
-                                                                                                                      getJsonField(
-                                                                                                                        FFAppState().appInfo,
-                                                                                                                        r'''$.wallet_deduction_percentage''',
-                                                                                                                      ).toString())
-                                                                                                                  .toString(),
-                                                                                                              _model.isWalletCheckBoxSelected,
-                                                                                                              _model.selectedPaymentMethod,
-                                                                                                              getJsonField(
-                                                                                                                FFAppState().appInfo,
-                                                                                                                r'''$.codcharges''',
-                                                                                                              ).toString(),
-                                                                                                              '',
-                                                                                                              ''),
-                                                                                                          ParamType.double,
-                                                                                                        ),
-                                                                                                        'orderType': serializeParam(
-                                                                                                          'Daily order  card',
-                                                                                                          ParamType.String,
-                                                                                                        ),
-                                                                                                      }.withoutNulls,
-                                                                                                    );
-
-                                                                                                    logFirebaseEvent('Container_update_page_state');
-                                                                                                    _model.isLoadingIndicator = false;
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('Container_update_app_state');
-                                                                                                    FFAppState().selectedDeliveryDate = '';
-                                                                                                    FFAppState().selectedDeliveryTimeSlot = '';
-                                                                                                    FFAppState().socityName = '';
-                                                                                                    FFAppState().isDeliveryPartnerTipSelected = '0';
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('Container_update_page_state');
-                                                                                                    _model.isPaymentDone = true;
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('Container_custom_action');
-                                                                                                    await actions.facebookEventClass(
-                                                                                                      (List<String> var1) {
-                                                                                                        return var1.join(', ');
-                                                                                                      }(functions
-                                                                                                          .getVarientIdsWithCartQty(
-                                                                                                              getJsonField(
-                                                                                                                dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                r'''$.data.data''',
-                                                                                                              ),
-                                                                                                              'daily')
-                                                                                                          .map((e) => e.toString())
-                                                                                                          .toList()),
-                                                                                                      '0',
-                                                                                                      'daily',
-                                                                                                      0.0,
-                                                                                                      0,
-                                                                                                      functions.updateTotalAmount(
-                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                          getJsonField(
-                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                            r'''$.data.total_price''',
-                                                                                                          ).toString(),
-                                                                                                          functions
-                                                                                                              .checkWalletWithAction(
-                                                                                                                  _model.isRefWalletCheckBoxSelected,
-                                                                                                                  functions
-                                                                                                                      .updateTotalAmount(
-                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.total_price''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false',
-                                                                                                                          _model.selectedPaymentMethod,
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.codcharges''',
-                                                                                                                          ).toString(),
-                                                                                                                          '',
-                                                                                                                          '')
-                                                                                                                      .toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                    r'''$.data.referral_balance''',
-                                                                                                                  ).toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    FFAppState().appInfo,
-                                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                                  ).toString())
-                                                                                                              .toString(),
-                                                                                                          _model.isRefWalletCheckBoxSelected,
-                                                                                                          _model.selectedPaymentMethod,
-                                                                                                          getJsonField(
-                                                                                                            FFAppState().appInfo,
-                                                                                                            r'''$.codcharges''',
-                                                                                                          ).toString(),
-                                                                                                          functions
-                                                                                                              .calculateFinalPayableForCashPayment(
-                                                                                                                  functions
-                                                                                                                      .updateTotalAmount(
-                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                          FFAppState().couponDiscount.toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.total_price''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          'false',
-                                                                                                                          _model.selectedPaymentMethod,
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.codcharges''',
-                                                                                                                          ).toString(),
-                                                                                                                          '',
-                                                                                                                          '')
-                                                                                                                      .toString(),
-                                                                                                                  functions
-                                                                                                                      .checkWalletWithAction(
-                                                                                                                          _model.isRefWalletCheckBoxSelected,
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  FFAppState().isDeliveryPartnerTipSelected,
-                                                                                                                                  FFAppState().couponDiscount.toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.referral_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  'false',
-                                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  '',
-                                                                                                                                  '')
-                                                                                                                              .toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                            r'''$.data.referral_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.wallet_deduction_percentage''',
-                                                                                                                          ).toString())
-                                                                                                                      .toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                  ).toString(),
-                                                                                                                  _model.isWalletCheckBoxSelected)
-                                                                                                              .toString(),
-                                                                                                          _model.isWalletCheckBoxSelected)!,
-                                                                                                      'checkout',
-                                                                                                      getJsonField(
-                                                                                                        dailyCartScreenShowspcatcartResponse.jsonBody,
-                                                                                                        r'''$.data.data.products''',
-                                                                                                      ),
-                                                                                                      'daily order cart payment',
-                                                                                                      ' ',
-                                                                                                      ' ',
-                                                                                                      ' ',
-                                                                                                      ' ',
-                                                                                                    );
-                                                                                                  } else {
-                                                                                                    logFirebaseEvent('Container_alert_dialog');
-                                                                                                    await showDialog(
-                                                                                                      context: context,
-                                                                                                      builder: (dialogContext) {
-                                                                                                        return Dialog(
-                                                                                                          elevation: 0,
-                                                                                                          insetPadding: EdgeInsets.zero,
-                                                                                                          backgroundColor: Colors.transparent,
-                                                                                                          alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                                                          child: GestureDetector(
-                                                                                                            onTap: () {
-                                                                                                              FocusScope.of(dialogContext).unfocus();
-                                                                                                              FocusManager.instance.primaryFocus?.unfocus();
-                                                                                                            },
-                                                                                                            child: CustomAlertDailogWidget(
-                                                                                                              des: getJsonField(
-                                                                                                                (_model.apiResults5yCopy2?.jsonBody ?? ''),
-                                                                                                                r'''$.message''',
-                                                                                                              ).toString(),
-                                                                                                              height: 120.0,
-                                                                                                              title: ' ',
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      },
-                                                                                                    );
-
-                                                                                                    logFirebaseEvent('Container_update_page_state');
-                                                                                                    _model.isLoadingIndicator = false;
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('Container_update_page_state');
-                                                                                                    _model.isPaymentDone = true;
-                                                                                                    safeSetState(() {});
-                                                                                                  }
+                                                                                                  logFirebaseEvent('Container_update_page_state');
+                                                                                                  _model.isPaymentDone = true;
+                                                                                                  safeSetState(() {});
                                                                                                 }
                                                                                               } else {
                                                                                                 logFirebaseEvent('Container_alert_dialog');
