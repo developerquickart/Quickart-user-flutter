@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quic_kart/custom_code/actions/initialize_push_notification.dart';
 
 import '/custom_code/actions/index.dart' as actions;
 import 'package:provider/provider.dart';
@@ -25,6 +27,7 @@ import 'index.dart';
 
 late FirebaseAnalytics analytics;
 void main() async {
+  print("G1---->splash load-0---->${DateTime.now()}");
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
@@ -35,25 +38,43 @@ void main() async {
   await initFirebase();
 
   // Start initial custom actions code
-  await actions.lockOrientation();
-  await actions.initializeAppsflyer();
-  await actions.setFBEvent();
-  await actions.initializePushNotification();
-  await actions.initReferrerDetails();
+
   // End initial custom actions code
- analytics = FirebaseAnalytics.instance;
+  analytics = FirebaseAnalytics.instance;
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
-    await FirebaseAnalytics.instance
-      .setAnalyticsCollectionEnabled(true);
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
+     actions.initializePushNotification();
+  // print("G1---->splash load-01---->${DateTime.now()}");
 //  GoogleFonts.config.allowRuntimeFetching = false;
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
     child: MyApp(),
   ));
+  // Background initialization
+  // unawaited(_initializeBackgroundServices());
+}
+
+Future<void> _initializeBackgroundServices() async {
+  try {
+    print("Background Init Start : ${DateTime.now()}");
+
+    await Future.wait([
+      actions.lockOrientation(),
+      actions.initializeAppsflyer(),
+      actions.setFBEvent(),
+      actions.initializePushNotification(),
+      actions.initReferrerDetails(),
+    ]);
+
+    print("Background Init Complete : ${DateTime.now()}");
+  } catch (e, s) {
+    debugPrint("Background Init Error : $e");
+    debugPrint("$s");
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -124,54 +145,34 @@ class _MyAppState extends State<MyApp> {
         _themeMode = mode;
       });
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'QuicKart',
+      scrollBehavior: MyAppScrollBehavior(),
+      builder: (context, child) {
+        final mediaQuery = MediaQuery.of(context);
 
-
-@override
-Widget build(BuildContext context) {
-  return MaterialApp.router(
-    debugShowCheckedModeBanner: false,
-    title: 'QuicKart',
-    scrollBehavior: MyAppScrollBehavior(),
-
-    // // 🔑 TEXT SCALE HANDLING (ADD THIS)
-    // builder: (context, child) {
-    //   final mediaQuery = MediaQuery.of(context);
-
-    //   return MediaQuery(
-    //     data: mediaQuery.copyWith(
-    //       // iOS text size restriction
-    //       textScaleFactor: Platform.isIOS
-    //           ? mediaQuery.textScaleFactor.clamp(1.0, 1.2) // ✅ recommended
-    //           : mediaQuery.textScaleFactor,
-    //     ),
-    //     child: child!,
-    //   );
-    // },
-    builder: (context, child) {
-      final mediaQuery = MediaQuery.of(context);
-
-      return MediaQuery(
-        data: mediaQuery.copyWith(
-          textScaleFactor: 1.0,
-        ),
-        child: child!,
-      );
-    },
-
-    localizationsDelegates: const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
-    supportedLocales: const [Locale('en', '')],
-    theme: ThemeData(
-      brightness: Brightness.light,
-      useMaterial3: false,
-    ),
-    themeMode: _themeMode,
-    routerConfig: _router,
-  );
-}
-
-
+        return MediaQuery(
+          data: mediaQuery.copyWith(
+            textScaleFactor: 1.0,
+          ),
+          child: child!,
+        );
+      },
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en', '')],
+      theme: ThemeData(
+        brightness: Brightness.light,
+        useMaterial3: false,
+      ),
+      themeMode: _themeMode,
+      routerConfig: _router,
+    );
+  }
 }

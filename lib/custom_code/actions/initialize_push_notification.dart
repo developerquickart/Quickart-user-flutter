@@ -1,4 +1,8 @@
 // Automatic FlutterFlow imports
+import 'dart:async';
+
+import 'package:quic_kart/custom_code/appsflyer_service.dart';
+
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -31,23 +35,46 @@ const AndroidNotificationChannel _channel = AndroidNotificationChannel(
 );
 
 // ▶ Helper function MUST be BEFORE usage
-Future _showLocalNotification(String title, String body) async {
-  final androidDetails = AndroidNotificationDetails(
-    _channel.id,
-    _channel.name,
-    channelDescription: _channel.description,
+Future _showLocalNotification(
+  String title,
+  String body,
+  Map<String, dynamic> data,
+) async {
+  // final androidDetails = AndroidNotificationDetails(
+  //   _channel.id,
+  //   _channel.name,
+  //   channelDescription: _channel.description,
+  //   importance: Importance.max,
+  //   priority: Priority.high,
+  //   icon: 'ic_notification',
+  // );
+  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    'high_importance_channel',
+    'High Importance Notifications',
+    channelDescription: 'Used for important notifications.',
     importance: Importance.max,
     priority: Priority.high,
     icon: 'ic_notification',
   );
 
-  final details = NotificationDetails(android: androidDetails);
+  // final details = NotificationDetails(android: androidDetails);
+  const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+    presentAlert: true,
+    presentBadge: true,
+    presentSound: true,
+  );
+
+  const NotificationDetails details = NotificationDetails(
+    android: androidDetails,
+    iOS: iosDetails,
+  );
 
   await _localNotifications.show(
     0,
     title,
     body,
     details,
+    payload: jsonEncode(data),
   );
 }
 
@@ -64,6 +91,12 @@ Future initializePushNotification() async {
   );
 
   print("📌 Permission status: ${settings.authorizationStatus}");
+  // ✅ Required for iOS foreground notifications
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
   // 2️⃣ Create Android channel
   if (Platform.isAndroid) {
@@ -92,34 +125,90 @@ Future initializePushNotification() async {
   await _localNotifications.initialize(
     initSettings,
     onDidReceiveNotificationResponse: (response) async {
-      print("🔔 Notification clicked: ${response.payload}");
+      print("🔔 FCM Foreground message 2: ${response}");
+
+      if (response.payload == null) return;
+
+      final data = jsonDecode(response.payload!);
+
+      AppsflyerService().navigateFromNotification(
+        data["deep_link_value"],
+        Map<String, dynamic>.from(data),
+      );
     },
   );
 
   // 4️⃣ Foreground notifications listener
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("🔥 FCM Foreground message: ${message.notification?.title}");
+    print("🔥 FCM Foreground message 1: ${message.notification?.title}");
 
     final notification = message.notification;
     if (notification != null) {
-      _showLocalNotification(
-        notification.title ?? "",
-        notification.body ?? "",
-      );
+      if (Platform.isAndroid) {
+        _showLocalNotification(
+          notification.title ?? "",
+          notification.body ?? "",
+          message.data,
+        );
+      }
     }
   });
 
   // 5️⃣ When opened from background
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print("📬 Opened app from notification: ${message.data}");
+    print("📬 FCM Foreground message 3: ${message.data}");
+    print(message.data);
+
+    final deepLink = message.data["deep_link_value"];
+
+    AppsflyerService().navigateFromNotification(
+      deepLink,
+      Map<String, dynamic>.from(message.data),
+    );
   });
 
   // 6️⃣ When app was terminated
-  FirebaseMessaging.instance.getInitialMessage().then((message) {
-    if (message != null) {
-      print("🚀 Notification opened from terminated state: ${message.data}");
-    }
-  });
+  // FirebaseMessaging.instance.getInitialMessage().then((message) {
+  //   print("🚀 getInitialMessage called");
+  //   print("🚀 message = $message");
+  //   if (message != null) {
+  //     print("🚀 FCM Foreground message 4: ${message.data}");
+  //     // NotificationManager.pendingNotification =
+  //     //     Map<String, dynamic>.from(message.data);
+  //     print("message = $message");
+
+  //     NotificationService.instance.setInitialNotification(
+  //       message == null ? null : Map<String, dynamic>.from(message.data),
+  //     );
+  //   }
+  // });
+  final message = await FirebaseMessaging.instance.getInitialMessage();
+
+  print("🚀 Initial Message = ${message?.data}");
+
+  NotificationService.instance.setInitialNotification(
+    message == null ? null : Map<String, dynamic>.from(message.data),
+  );
 
   print("✅ Push notification setup completed.");
+}
+
+// class NotificationManager {
+//   static Map<String, dynamic>? pendingNotification;
+// }
+
+class NotificationService {
+  NotificationService._();
+
+  static final NotificationService instance = NotificationService._();
+
+  Map<String, dynamic>? initialNotification;
+
+  void setInitialNotification(Map<String, dynamic>? data) {
+    initialNotification = data;
+  }
+
+  void clear() {
+    initialNotification = null;
+  }
 }

@@ -10,3 +10,5 @@ export 'cached_image.dart' show CachedImage;
 export 'web_view_widgetin_app.dart' show WebViewWidgetinApp;
 export 'lifecycle_wrapper.dart' show LifecycleWrapper;
 export 'total_pay_checkout_web_view.dart' show TotalPayCheckoutWebView;
+export 'splash_gif_widget.dart' show SplashGifWidget;
+

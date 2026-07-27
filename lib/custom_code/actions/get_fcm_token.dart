@@ -32,6 +32,7 @@ Future<String?> getFcmToken() async {
 
     // Get token
     String? token = await fcm.getToken();
+     FFAppState().fcmToken = "$token";
     print("FCM Token: $token");
     return token;
   } catch (e) {

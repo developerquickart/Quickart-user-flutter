@@ -4,7 +4,7 @@ import '/backend/schema/structs/index.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/date_time_slot_bottom_sheet/date_time_slot_bottom_sheet_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
-import '/components/products_list_view/products_list_view_widget.dart';
+import '/components/save_letterproducts_list/save_letterproducts_list_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -104,6 +104,10 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   // Stores action output result for [Backend Call - API (addtosubcart)] action in Container widget.
   ApiCallResponse? apiResultAddSubc;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
+  bool? networkCheck1;
+  // Stores action output result for [Backend Call - API (addtosavecart)] action in Button widget.
+  ApiCallResponse? addtoSaveLetter;
+  // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? internetCheckdc;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtoCartAPIDC;
@@ -111,10 +115,6 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   bool? internetCheckcp;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtoCartAPIDCP;
-  // Stores action output result for [Custom Action - checkInternetConnection] action in IconButton widget.
-  bool? internet;
-  // Stores action output result for [Backend Call - API (Add to Cart)] action in IconButton widget.
-  ApiCallResponse? removedailycartproduct;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? isInternet4;
   // Stores action output result for [Backend Call - API (updatecart)] action in Container widget.
@@ -123,8 +123,6 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   bool? internetCheckcp1;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtoCartAPID;
-  // Model for productsListView component.
-  late ProductsListViewModel productsListViewModel;
   // State field(s) for CheckboxWallet widget.
   bool? checkboxWalletValue1;
   // State field(s) for CheckboxWallet widget.
@@ -133,6 +131,8 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // Model for saveLetterproductsList component.
+  late SaveLetterproductsListModel saveLetterproductsListModel;
   // State field(s) for DailyCartPaymentRadioButton widget.
   FormFieldController<String>? dailyCartPaymentRadioButtonValueController;
   // Stores action output result for [Custom Action - checkInternetConnection] action in ApplePayContainer widget.
@@ -194,7 +194,8 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
 
   @override
   void initState(BuildContext context) {
-    productsListViewModel = createModel(context, () => ProductsListViewModel());
+    saveLetterproductsListModel =
+        createModel(context, () => SaveLetterproductsListModel());
     emptyDataTwoLineComponentModel =
         createModel(context, () => EmptyDataTwoLineComponentModel());
   }
@@ -202,10 +203,10 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   @override
   void dispose() {
     tabBarController?.dispose();
-    productsListViewModel.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();
 
+    saveLetterproductsListModel.dispose();
     emptyDataTwoLineComponentModel.dispose();
   }
 

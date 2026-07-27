@@ -159,8 +159,19 @@ class _TrendingProductsScreenWidgetState
                 context.pop();
               } else {
                 logFirebaseEvent('IconButton_navigate_to');
+                if (FFAppState().isUserLogin == true) {
+                  logFirebaseEvent('IconButton_navigate_to');
 
-                context.pushNamed(LoginOnBoardScreenWidget.routeName);
+                  context.pushNamed(DashboardScreenWidget.routeName);
+
+                  logFirebaseEvent('IconButton_update_app_state');
+                  FFAppState().isCartShow = false;
+                  safeSetState(() {});
+                } else {
+                  logFirebaseEvent('IconButton_navigate_to');
+
+                  context.pushNamed(LoginOnBoardScreenWidget.routeName);
+                }
               }
             },
           ),

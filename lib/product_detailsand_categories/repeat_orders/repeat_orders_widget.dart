@@ -4126,6 +4126,8 @@ class _RepeatOrdersWidgetState extends State<RepeatOrdersWidget> {
                                             FFAppState().isFriSelected,
                                             FFAppState().isSatSelected),
                                         platform: isiOS ? 'ios' : 'android',
+                                        variantID:
+                                            FFAppState().varientID.toString(),
                                       );
 
                                       if ((_model.apiResultTimeSlotrepeatorder

@@ -149,6 +149,8 @@ class QuickartGroup {
   static UpdatecartCall updatecartCall = UpdatecartCall();
   static UpdatessubcartCall updatessubcartCall = UpdatessubcartCall();
   static SpentbywalletCall spentbywalletCall = SpentbywalletCall();
+  static AddtosavecartCall addtosavecartCall = AddtosavecartCall();
+  static AddtosavesubcartCall addtosavesubcartCall = AddtosavesubcartCall();
 }
 
 class LoginCall {
@@ -1353,6 +1355,7 @@ class AppinfoCall {
   "actual_device_id": "${deviceid}",
   "store_id": "7"
 }''';
+print("G1---appinfo----->$ffApiRequestBody");
     return ApiManager.instance.makeApiCall(
       callName: 'appinfo',
       apiUrl: '${baseUrl}api/app_info',
@@ -2005,22 +2008,23 @@ class TotaldeliveriesCall {
         true,
       ) as List?;
 }
-
 class TimeslotCall {
   Future<ApiCallResponse> call({
     String? storeID = '',
     String? selectedDate = '',
     String? repeatedDays = '',
     String? platform = '',
+    String? variantID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeID}",
   "selected_date": "${selectedDate}",
   "repeated_days": "${repeatedDays}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+   "varient_id": "${variantID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'timeslot',
@@ -5205,12 +5209,12 @@ class SpentbywalletCall {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
-{
-  "user_id": "${escapeStringForJson(userID)}",
-  "start_date": "${escapeStringForJson(startDate)}",
-  "end_date": "${escapeStringForJson(endDate)}",
-  "type": "${escapeStringForJson(type)}"
-}''';
+    {
+      "user_id": "${escapeStringForJson(userID)}",
+      "start_date": "${escapeStringForJson(startDate)}",
+      "end_date": "${escapeStringForJson(endDate)}",
+      "type": "${escapeStringForJson(type)}"
+    }''';
     return ApiManager.instance.makeApiCall(
       callName: 'spentbywallet',
       apiUrl: '${baseUrl}api/spent_by_wallet',
@@ -5236,6 +5240,94 @@ class SpentbywalletCall {
         true,
       ) as List?;
 }
+class AddtosavecartCall {
+  Future<ApiCallResponse> call({
+    String? userID = '',
+    String? variantID = '',
+    String? orderCartID = '',
+    String? platform = '',
+  }) async {
+    final baseUrl = QuickartGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+    {
+      "user_id": "${escapeStringForJson(userID)}",
+      "varient_id": "${escapeStringForJson(variantID)}",
+      "order_cart_id": "${escapeStringForJson(orderCartID)}",
+      "platform": "${escapeStringForJson(platform)}"
+    }''';
+    print("G1---->add_to_save_cart--->$ffApiRequestBody");
+    return ApiManager.instance.makeApiCall(
+      callName: 'addtosavecart',
+      apiUrl: '${baseUrl}api/add_to_save_cart',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.status''',
+      ));
+  String? message(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+}
+
+class AddtosavesubcartCall {
+  Future<ApiCallResponse> call({
+    String? userID = '',
+    String? variantID = '',
+    String? orderCartID = '',
+    String? platform = '',
+  }) async {
+
+    final baseUrl = QuickartGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+      {
+        "user_id": "${escapeStringForJson(userID)}",
+        "varient_id": "${escapeStringForJson(variantID)}",
+        "order_cart_id": "${escapeStringForJson(orderCartID)}",
+        "platform": "${escapeStringForJson(platform)}"
+      }''';
+          return ApiManager.instance.makeApiCall(
+            callName: 'addtosavesubcart',
+            apiUrl: '${baseUrl}api/add_to_save_subcart',
+            callType: ApiCallType.POST,
+            headers: {},
+            params: {},
+            body: ffApiRequestBody,
+            bodyType: BodyType.JSON,
+            returnBody: true,
+            encodeBodyUtf8: false,
+            decodeUtf8: false,
+            cache: false,
+            isStreamingApi: false,
+            alwaysAllowBody: false,
+          );
+        }
+
+        String? status(dynamic response) => castToType<String>(getJsonField(
+              response,
+              r'''$.status''',
+            ));
+        String? message(dynamic response) => castToType<String>(getJsonField(
+              response,
+              r'''$.message''',
+            ));
+}
+
 
 /// End Quickart Group Code
 

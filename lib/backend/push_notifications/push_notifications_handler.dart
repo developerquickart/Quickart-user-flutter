@@ -33,11 +33,11 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
       return;
     }
 
-    final notification = await FirebaseMessaging.instance.getInitialMessage();
-    if (notification != null) {
-      await _handlePushNotification(notification);
-    }
-    FirebaseMessaging.onMessageOpenedApp.listen(_handlePushNotification);
+    // final notification = await FirebaseMessaging.instance.getInitialMessage();
+    // if (notification != null) {
+    //   await _handlePushNotification(notification);
+    // }
+    // FirebaseMessaging.onMessageOpenedApp.listen(_handlePushNotification);
   }
 
   Future _handlePushNotification(RemoteMessage message) async {

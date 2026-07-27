@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/components/products_list_view/products_list_view_widget.dart';
+import '/components/save_letterproducts_list/save_letterproducts_list_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -371,12 +372,27 @@ class _CartSubscriptionScreenWidgetState
                                     decoration: BoxDecoration(),
                                     child: Builder(
                                       builder: (context) {
-                                        if (getJsonField(
-                                              tabBarShowsubcartResponse
-                                                  .jsonBody,
-                                              r'''$.data''',
-                                            ) !=
-                                            null) {
+                                        if ((getJsonField(
+                                                  tabBarShowsubcartResponse
+                                                      .jsonBody,
+                                                  r'''$.data''',
+                                                ) !=
+                                                null) &&
+                                            ((getJsonField(
+                                                  tabBarShowsubcartResponse
+                                                      .jsonBody,
+                                                  r'''$.data.data''',
+                                                )
+                                                            .toList()
+                                                            .map<ProductCountStruct?>(
+                                                                ProductCountStruct
+                                                                    .maybeFromMap)
+                                                            .toList()
+                                                        as Iterable<
+                                                            ProductCountStruct?>)
+                                                    .withoutNulls
+                                                    .length >
+                                                0)) {
                                           return Stack(
                                             children: [
                                               Container(
@@ -594,7 +610,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
                                                                               Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 5.0, 0.0),
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(9.0, 10.0, 9.0, 0.0),
                                                                                 child: InkWell(
                                                                                   splashColor: Colors.transparent,
                                                                                   focusColor: Colors.transparent,
@@ -839,7 +855,7 @@ class _CartSubscriptionScreenWidgetState
                                                                                   },
                                                                                   child: Row(
                                                                                     mainAxisSize: MainAxisSize.max,
-                                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                     crossAxisAlignment: CrossAxisAlignment.end,
                                                                                     children: [
                                                                                       Column(
@@ -1026,6 +1042,122 @@ class _CartSubscriptionScreenWidgetState
                                                                                                                   fontWeight: FontWeight.w500,
                                                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                                 ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Align(
+                                                                                                        alignment: AlignmentDirectional(1.0, 1.0),
+                                                                                                        child: Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
+                                                                                                          child: FFButtonWidget(
+                                                                                                            onPressed: () async {
+                                                                                                              logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_SAVE_FOR_LATER_');
+                                                                                                              logFirebaseEvent('Button_custom_action');
+                                                                                                              _model.networkCheck1 = await actions.checkInternetConnection();
+                                                                                                              if (_model.networkCheck1 == true) {
+                                                                                                                logFirebaseEvent('Button_haptic_feedback');
+                                                                                                                HapticFeedback.heavyImpact();
+                                                                                                                logFirebaseEvent('Button_backend_call');
+                                                                                                                _model.addtoSaveLetter = await QuickartGroup.addtosavesubcartCall.call(
+                                                                                                                  userID: FFAppState().userID,
+                                                                                                                  variantID: getJsonField(
+                                                                                                                    productSubModelItem,
+                                                                                                                    r'''$.varient_id''',
+                                                                                                                  ).toString(),
+                                                                                                                  orderCartID: 'savelater',
+                                                                                                                  platform: FFAppState().platform,
+                                                                                                                );
+
+                                                                                                                if ((_model.addtoSaveLetter?.succeeded ?? true)) {
+                                                                                                                  if (FFAppConstants.checkStatus ==
+                                                                                                                      QuickartGroup.addtosavesubcartCall.status(
+                                                                                                                        (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                      )) {
+                                                                                                                    logFirebaseEvent('Button_refresh_database_request');
+                                                                                                                    safeSetState(() => _model.apiRequestCompleter = null);
+                                                                                                                    await _model.waitForApiRequestCompleted();
+                                                                                                                  } else {
+                                                                                                                    logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                      SnackBar(
+                                                                                                                        content: Text(
+                                                                                                                          QuickartGroup.addtosavesubcartCall.message(
+                                                                                                                            (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                          )!,
+                                                                                                                          style: GoogleFonts.montserrat(
+                                                                                                                            color: FFAppConstants.indigoColor,
+                                                                                                                            fontWeight: FontWeight.w500,
+                                                                                                                            fontSize: 15.0,
+                                                                                                                          ),
+                                                                                                                        ),
+                                                                                                                        duration: Duration(milliseconds: 1500),
+                                                                                                                        backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                      ),
+                                                                                                                    );
+                                                                                                                  }
+                                                                                                                } else {
+                                                                                                                  logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                    SnackBar(
+                                                                                                                      content: Text(
+                                                                                                                        QuickartGroup.addtosavesubcartCall.message(
+                                                                                                                          (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                        )!,
+                                                                                                                        style: GoogleFonts.montserrat(
+                                                                                                                          color: FFAppConstants.indigoColor,
+                                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                                          fontSize: 15.0,
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                      duration: Duration(milliseconds: 1500),
+                                                                                                                      backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                    ),
+                                                                                                                  );
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                  SnackBar(
+                                                                                                                    content: Text(
+                                                                                                                      FFAppConstants.internetString,
+                                                                                                                      style: GoogleFonts.montserrat(
+                                                                                                                        color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                        fontSize: 12.0,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    duration: Duration(milliseconds: 4000),
+                                                                                                                    backgroundColor: FFAppConstants.NeutralBlack50Color,
+                                                                                                                  ),
+                                                                                                                );
+                                                                                                              }
+
+                                                                                                              safeSetState(() {});
+                                                                                                            },
+                                                                                                            text: 'Save for later',
+                                                                                                            options: FFButtonOptions(
+                                                                                                              width: MediaQuery.sizeOf(context).width < 370.0 ? 130.0 : 145.0,
+                                                                                                              height: 30.0,
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                              color: FFAppConstants.whiteColor,
+                                                                                                              textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                    font: GoogleFonts.montserrat(
+                                                                                                                      fontWeight: FontWeight.w500,
+                                                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                                    ),
+                                                                                                                    color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                    fontSize: 12.0,
+                                                                                                                    letterSpacing: 0.0,
+                                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                                  ),
+                                                                                                              elevation: 0.0,
+                                                                                                              borderSide: BorderSide(
+                                                                                                                color: FFAppConstants.greyBgd6d2d3,
+                                                                                                                width: 0.7,
+                                                                                                              ),
+                                                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                                                            ),
                                                                                                           ),
                                                                                                         ),
                                                                                                       ),
@@ -1622,143 +1754,6 @@ class _CartSubscriptionScreenWidgetState
                                                                                               ),
                                                                                             ],
                                                                                           ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Align(
-                                                                                        alignment: AlignmentDirectional(0.0, 1.0),
-                                                                                        child: FlutterFlowIconButton(
-                                                                                          borderColor: Colors.transparent,
-                                                                                          buttonSize: 40.0,
-                                                                                          icon: Icon(
-                                                                                            Icons.delete_outline,
-                                                                                            color: FFAppConstants.redDF3F56,
-                                                                                            size: 25.0,
-                                                                                          ),
-                                                                                          onPressed: () async {
-                                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_delete_outline_');
-                                                                                            logFirebaseEvent('IconButton_custom_action');
-                                                                                            _model.internetsubcart = await actions.checkInternetConnection();
-                                                                                            if (_model.internetsubcart!) {
-                                                                                              logFirebaseEvent('IconButton_haptic_feedback');
-                                                                                              HapticFeedback.mediumImpact();
-                                                                                              logFirebaseEvent('IconButton_backend_call');
-                                                                                              _model.addtosubCart1 = await QuickartGroup.addtosubcartCall.call(
-                                                                                                userid: FFAppState().userID,
-                                                                                                qty: functions.addRemoveQTY(0, 'remove'),
-                                                                                                storeid: FFAppState().storeID,
-                                                                                                varientid: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.varient_id''',
-                                                                                                ).toString(),
-                                                                                                deviceid: FFAppState().deviceID,
-                                                                                                repeatOrder: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.repeat_orders''',
-                                                                                                ).toString(),
-                                                                                                timeSlot: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.sub_time_slot''',
-                                                                                                ).toString(),
-                                                                                                subTotalDelivery: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.sub_total_delivery''',
-                                                                                                ).toString(),
-                                                                                                subTotalDate: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.sub_delivery_date''',
-                                                                                                ).toString(),
-                                                                                                platform: isiOS ? 'ios' : 'android',
-                                                                                              );
-
-                                                                                              if ((_model.addtosubCart1?.succeeded ?? true)) {
-                                                                                                logFirebaseEvent('IconButton_update_app_state');
-                                                                                                FFAppState().subCartSavingAmount = functions.stringToDouble(QuickartGroup.addtosubcartCall
-                                                                                                    .savingPrice(
-                                                                                                      (_model.addtosubCart1?.jsonBody ?? ''),
-                                                                                                    )!
-                                                                                                    .toString());
-                                                                                                FFAppState().subCartTotalPrice = functions.stringToDouble(QuickartGroup.addtosubcartCall
-                                                                                                    .totalPrice(
-                                                                                                      (_model.addtosubCart1?.jsonBody ?? ''),
-                                                                                                    )!
-                                                                                                    .toString());
-                                                                                                FFAppState().subCartTotalItem = QuickartGroup.addtosubcartCall.totalItems(
-                                                                                                  (_model.addtosubCart1?.jsonBody ?? ''),
-                                                                                                )!;
-                                                                                                FFAppState().update(() {});
-                                                                                                logFirebaseEvent('IconButton_update_page_state');
-                                                                                                _model.autorenewProduct = 'no';
-                                                                                                safeSetState(() {});
-                                                                                                logFirebaseEvent('IconButton_google_analytics_event');
-                                                                                                logFirebaseEvent(
-                                                                                                  'Remove From Sub Cart',
-                                                                                                  parameters: {
-                                                                                                    'Screen Name': 'Subscription Cart Screen',
-                                                                                                    'API Name': 'Add To SubCart',
-                                                                                                  },
-                                                                                                );
-                                                                                                logFirebaseEvent('IconButton_refresh_database_request');
-                                                                                                safeSetState(() => _model.apiRequestCompleter = null);
-                                                                                                await _model.waitForApiRequestCompleted();
-                                                                                                logFirebaseEvent('IconButton_custom_action');
-                                                                                                await actions.facebookEventClass(
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.varient_id''',
-                                                                                                  ).toString(),
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.product_name''',
-                                                                                                  ).toString(),
-                                                                                                  'subscription product',
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.price''',
-                                                                                                  ),
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.cart_qty''',
-                                                                                                  ),
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.mrp''',
-                                                                                                  ),
-                                                                                                  'remove',
-                                                                                                  FFAppState().emptyJson,
-                                                                                                  'emptyjons',
-                                                                                                  ' ',
-                                                                                                  ' ',
-                                                                                                  ' ',
-                                                                                                  ' ',
-                                                                                                );
-                                                                                              } else {
-                                                                                                logFirebaseEvent('IconButton_show_snack_bar');
-                                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                  SnackBar(
-                                                                                                    content: Text(
-                                                                                                      getJsonField(
-                                                                                                        (_model.addtosubCart?.jsonBody ?? ''),
-                                                                                                        r'''$.message''',
-                                                                                                      ).toString(),
-                                                                                                      style: GoogleFonts.montserrat(
-                                                                                                        color: FFAppConstants.indigoColor,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                        fontSize: 12.0,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    duration: Duration(milliseconds: 1200),
-                                                                                                    backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
-                                                                                                  ),
-                                                                                                );
-                                                                                              }
-                                                                                            } else {
-                                                                                              logFirebaseEvent('IconButton_update_app_state');
-
-                                                                                              safeSetState(() {});
-                                                                                            }
-
-                                                                                            safeSetState(() {});
-                                                                                          },
                                                                                         ),
                                                                                       ),
                                                                                     ],
@@ -4741,7 +4736,7 @@ class _CartSubscriptionScreenWidgetState
                                                                         0.0,
                                                                         5.0,
                                                                         0.0,
-                                                                        30.0),
+                                                                        10.0),
                                                             child: Container(
                                                               width: MediaQuery
                                                                           .sizeOf(
@@ -4892,6 +4887,112 @@ class _CartSubscriptionScreenWidgetState
                                                               ),
                                                             ),
                                                           ),
+                                                          if ((getJsonField(
+                                                                tabBarShowsubcartResponse
+                                                                    .jsonBody,
+                                                                r'''$.data.savelater''',
+                                                              )
+                                                                      .toList()
+                                                                      .map<ProductCountStruct?>(
+                                                                          ProductCountStruct
+                                                                              .maybeFromMap)
+                                                                      .toList() as Iterable<ProductCountStruct?>)
+                                                                  .withoutNulls
+                                                                  .length >
+                                                              0)
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          50.0),
+                                                              child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              -1.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            20.0,
+                                                                            5.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Saved for later',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.montserrat(
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                                color: FFAppConstants.blackColor0A0A0A,
+                                                                                fontSize: 16.0,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          20.0,
+                                                                          5.0,
+                                                                          20.0,
+                                                                          5.0),
+                                                                      child:
+                                                                          Container(
+                                                                        width: MediaQuery.sizeOf(context).width *
+                                                                            1.0,
+                                                                        height:
+                                                                            279.0,
+                                                                        decoration:
+                                                                            BoxDecoration(),
+                                                                        child:
+                                                                            wrapWithModel(
+                                                                          model:
+                                                                              _model.saveLetterproductsListModel,
+                                                                          updateCallback: () =>
+                                                                              safeSetState(() {}),
+                                                                          updateOnChange:
+                                                                              true,
+                                                                          child:
+                                                                              SaveLetterproductsListWidget(
+                                                                            productList:
+                                                                                getJsonField(
+                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                              r'''$.data.savelater''',
+                                                                            ),
+                                                                            isSubscription:
+                                                                                true,
+                                                                            isReload:
+                                                                                () async {
+                                                                              logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_Container_07m3h');
+                                                                              logFirebaseEvent('saveLetterproductsList_refresh_database_');
+                                                                              safeSetState(() => _model.apiRequestCompleter = null);
+                                                                              await _model.waitForApiRequestCompleted();
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
                                                         ],
                                                       ),
                                                     ],
@@ -11830,6 +11931,9 @@ class _CartSubscriptionScreenWidgetState
                                               FFAppState().isThuSelected,
                                               FFAppState().isFriSelected,
                                               FFAppState().isSatSelected),
+                                          variantID:
+                                              FFAppState().varientID.toString(),
+                                          platform: FFAppState().platform,
                                         );
 
                                         if ((_model
