@@ -2014,7 +2014,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                       r'''$.product_feature_value''',
                                                                                                     ).toString()
                                                                                                 ? 179.0
-                                                                                                : 134.0,
+                                                                                                : 136.0,
                                                                                             179.0,
                                                                                           ),
                                                                                           decoration: BoxDecoration(
@@ -2530,37 +2530,61 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                     },
                                                                                                                   ),
                                                                                                                 ),
-                                                                                                                Align(
-                                                                                                                  alignment: AlignmentDirectional(1.0, 1.0),
-                                                                                                                  child: Padding(
-                                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
-                                                                                                                    child: FFButtonWidget(
-                                                                                                                      onPressed: () async {
-                                                                                                                        logFirebaseEvent('DAILY_CART_SCREEN_SAVE_FOR_LATER_BTN_ON_');
-                                                                                                                        logFirebaseEvent('Button_custom_action');
-                                                                                                                        _model.networkCheck1 = await actions.checkInternetConnection();
-                                                                                                                        if (_model.networkCheck1 == true) {
-                                                                                                                          logFirebaseEvent('Button_haptic_feedback');
-                                                                                                                          HapticFeedback.heavyImpact();
-                                                                                                                          logFirebaseEvent('Button_backend_call');
-                                                                                                                          _model.addtoSaveLetter = await QuickartGroup.addtosavecartCall.call(
-                                                                                                                            userID: FFAppState().userID,
-                                                                                                                            variantID: getJsonField(
-                                                                                                                              productModelItem,
-                                                                                                                              r'''$.varient_id''',
-                                                                                                                            ).toString(),
-                                                                                                                            orderCartID: 'savelater',
-                                                                                                                            platform: FFAppState().platform,
-                                                                                                                          );
+                                                                                                                if (FFAppConstants.isSubcribe ==
+                                                                                                                    getJsonField(
+                                                                                                                      productModelItem,
+                                                                                                                      r'''$.isOfferProduct''',
+                                                                                                                    ).toString())
+                                                                                                                  Align(
+                                                                                                                    alignment: AlignmentDirectional(1.0, 1.0),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
+                                                                                                                      child: FFButtonWidget(
+                                                                                                                        onPressed: () async {
+                                                                                                                          logFirebaseEvent('DAILY_CART_SCREEN_SAVE_FOR_LATER_BTN_ON_');
+                                                                                                                          logFirebaseEvent('Button_custom_action');
+                                                                                                                          _model.networkCheck1 = await actions.checkInternetConnection();
+                                                                                                                          if (_model.networkCheck1 == true) {
+                                                                                                                            logFirebaseEvent('Button_haptic_feedback');
+                                                                                                                            HapticFeedback.heavyImpact();
+                                                                                                                            logFirebaseEvent('Button_backend_call');
+                                                                                                                            _model.addtoSaveLetter = await QuickartGroup.addtosavecartCall.call(
+                                                                                                                              userID: FFAppState().userID,
+                                                                                                                              variantID: getJsonField(
+                                                                                                                                productModelItem,
+                                                                                                                                r'''$.varient_id''',
+                                                                                                                              ).toString(),
+                                                                                                                              orderCartID: 'savelater',
+                                                                                                                              platform: FFAppState().platform,
+                                                                                                                            );
 
-                                                                                                                          if ((_model.addtoSaveLetter?.succeeded ?? true)) {
-                                                                                                                            if (FFAppConstants.checkStatus ==
-                                                                                                                                QuickartGroup.addtosavecartCall.status(
-                                                                                                                                  (_model.addtoSaveLetter?.jsonBody ?? ''),
-                                                                                                                                )) {
-                                                                                                                              logFirebaseEvent('Button_refresh_database_request');
-                                                                                                                              safeSetState(() => _model.apiRequestCompleter = null);
-                                                                                                                              await _model.waitForApiRequestCompleted();
+                                                                                                                            if ((_model.addtoSaveLetter?.succeeded ?? true)) {
+                                                                                                                              if (FFAppConstants.checkStatus ==
+                                                                                                                                  QuickartGroup.addtosavecartCall.status(
+                                                                                                                                    (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                                  )) {
+                                                                                                                                logFirebaseEvent('Button_refresh_database_request');
+                                                                                                                                safeSetState(() => _model.apiRequestCompleter = null);
+                                                                                                                                await _model.waitForApiRequestCompleted();
+                                                                                                                              } else {
+                                                                                                                                logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                                  SnackBar(
+                                                                                                                                    content: Text(
+                                                                                                                                      QuickartGroup.addtosavecartCall.message(
+                                                                                                                                        (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                                      )!,
+                                                                                                                                      style: GoogleFonts.montserrat(
+                                                                                                                                        color: FFAppConstants.indigoColor,
+                                                                                                                                        fontWeight: FontWeight.w500,
+                                                                                                                                        fontSize: 15.0,
+                                                                                                                                      ),
+                                                                                                                                    ),
+                                                                                                                                    duration: Duration(milliseconds: 1500),
+                                                                                                                                    backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                                  ),
+                                                                                                                                );
+                                                                                                                              }
                                                                                                                             } else {
                                                                                                                               logFirebaseEvent('Button_show_snack_bar');
                                                                                                                               ScaffoldMessenger.of(context).showSnackBar(
@@ -2585,67 +2609,48 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                             ScaffoldMessenger.of(context).showSnackBar(
                                                                                                                               SnackBar(
                                                                                                                                 content: Text(
-                                                                                                                                  QuickartGroup.addtosavecartCall.message(
-                                                                                                                                    (_model.addtoSaveLetter?.jsonBody ?? ''),
-                                                                                                                                  )!,
+                                                                                                                                  FFAppConstants.internetString,
                                                                                                                                   style: GoogleFonts.montserrat(
-                                                                                                                                    color: FFAppConstants.indigoColor,
-                                                                                                                                    fontWeight: FontWeight.w500,
-                                                                                                                                    fontSize: 15.0,
+                                                                                                                                    color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                                    fontSize: 12.0,
                                                                                                                                   ),
                                                                                                                                 ),
-                                                                                                                                duration: Duration(milliseconds: 1500),
-                                                                                                                                backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                                duration: Duration(milliseconds: 4000),
+                                                                                                                                backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                                                                               ),
                                                                                                                             );
                                                                                                                           }
-                                                                                                                        } else {
-                                                                                                                          logFirebaseEvent('Button_show_snack_bar');
-                                                                                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                                            SnackBar(
-                                                                                                                              content: Text(
-                                                                                                                                FFAppConstants.internetString,
-                                                                                                                                style: GoogleFonts.montserrat(
-                                                                                                                                  color: FFAppConstants.blackColor0A0A0A,
-                                                                                                                                  fontSize: 12.0,
-                                                                                                                                ),
-                                                                                                                              ),
-                                                                                                                              duration: Duration(milliseconds: 4000),
-                                                                                                                              backgroundColor: FFAppConstants.NeutralBlack50Color,
-                                                                                                                            ),
-                                                                                                                          );
-                                                                                                                        }
 
-                                                                                                                        safeSetState(() {});
-                                                                                                                      },
-                                                                                                                      text: 'Save for later',
-                                                                                                                      options: FFButtonOptions(
-                                                                                                                        width: MediaQuery.sizeOf(context).width < 370.0 ? 130.0 : 145.0,
-                                                                                                                        height: 30.0,
-                                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                                                                                                        color: FFAppConstants.whiteColor,
-                                                                                                                        textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                              font: GoogleFonts.montserrat(
+                                                                                                                          safeSetState(() {});
+                                                                                                                        },
+                                                                                                                        text: 'Save for later',
+                                                                                                                        options: FFButtonOptions(
+                                                                                                                          width: MediaQuery.sizeOf(context).width < 370.0 ? 130.0 : 145.0,
+                                                                                                                          height: 30.0,
+                                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                                          iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                                          color: FFAppConstants.whiteColor,
+                                                                                                                          textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                                font: GoogleFonts.montserrat(
+                                                                                                                                  fontWeight: FontWeight.w500,
+                                                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                                                ),
+                                                                                                                                color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                                fontSize: 12.0,
+                                                                                                                                letterSpacing: 0.0,
                                                                                                                                 fontWeight: FontWeight.w500,
                                                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                                               ),
-                                                                                                                              color: FFAppConstants.blackColor0A0A0A,
-                                                                                                                              fontSize: 12.0,
-                                                                                                                              letterSpacing: 0.0,
-                                                                                                                              fontWeight: FontWeight.w500,
-                                                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                                            ),
-                                                                                                                        elevation: 0.0,
-                                                                                                                        borderSide: BorderSide(
-                                                                                                                          color: FFAppConstants.greyBgd6d2d3,
-                                                                                                                          width: 0.7,
+                                                                                                                          elevation: 0.0,
+                                                                                                                          borderSide: BorderSide(
+                                                                                                                            color: FFAppConstants.greyBgd6d2d3,
+                                                                                                                            width: 0.7,
+                                                                                                                          ),
+                                                                                                                          borderRadius: BorderRadius.circular(8.0),
                                                                                                                         ),
-                                                                                                                        borderRadius: BorderRadius.circular(8.0),
                                                                                                                       ),
                                                                                                                     ),
                                                                                                                   ),
-                                                                                                                ),
                                                                                                               ],
                                                                                                             ),
                                                                                                             Container(
@@ -2778,52 +2783,56 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                                                       ),
                                                                                                                     ],
                                                                                                                   ),
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 7.0, 0.0, 7.0),
-                                                                                                                    child: RichText(
-                                                                                                                      textScaler: MediaQuery.of(context).textScaler,
-                                                                                                                      text: TextSpan(
-                                                                                                                        children: [
-                                                                                                                          TextSpan(
-                                                                                                                            text: 'Item Total AED ',
-                                                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                                  font: GoogleFonts.montserrat(
+                                                                                                                  Align(
+                                                                                                                    alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 7.0, 0.0, 7.0),
+                                                                                                                      child: RichText(
+                                                                                                                        textScaler: MediaQuery.of(context).textScaler,
+                                                                                                                        text: TextSpan(
+                                                                                                                          children: [
+                                                                                                                            TextSpan(
+                                                                                                                              text: 'Item Total AED ',
+                                                                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                                    font: GoogleFonts.montserrat(
+                                                                                                                                      fontWeight: FontWeight.w600,
+                                                                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                                                    ),
+                                                                                                                                    color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                                    fontSize: 13.0,
+                                                                                                                                    letterSpacing: 0.0,
                                                                                                                                     fontWeight: FontWeight.w600,
                                                                                                                                     fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                                                   ),
-                                                                                                                                  color: FFAppConstants.blackColor0A0A0A,
-                                                                                                                                  fontSize: 13.0,
-                                                                                                                                  letterSpacing: 0.0,
-                                                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                                            ),
+                                                                                                                            TextSpan(
+                                                                                                                              text: functions.setDecimalValue((double.parse(getJsonField(
+                                                                                                                                        productModelItem,
+                                                                                                                                        r'''$.price''',
+                                                                                                                                      ).toString()) *
+                                                                                                                                      int.parse(getJsonField(
+                                                                                                                                        productModelItem,
+                                                                                                                                        r'''$.cart_qty''',
+                                                                                                                                      ).toString()))
+                                                                                                                                  .toString())!,
+                                                                                                                              style: GoogleFonts.montserrat(
+                                                                                                                                color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                                fontWeight: FontWeight.w600,
+                                                                                                                                fontSize: 13.0,
+                                                                                                                              ),
+                                                                                                                            )
+                                                                                                                          ],
+                                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                                font: GoogleFonts.montserrat(
+                                                                                                                                  fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
                                                                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                                                 ),
-                                                                                                                          ),
-                                                                                                                          TextSpan(
-                                                                                                                            text: functions.setDecimalValue((double.parse(getJsonField(
-                                                                                                                                      productModelItem,
-                                                                                                                                      r'''$.price''',
-                                                                                                                                    ).toString()) *
-                                                                                                                                    int.parse(getJsonField(
-                                                                                                                                      productModelItem,
-                                                                                                                                      r'''$.cart_qty''',
-                                                                                                                                    ).toString()))
-                                                                                                                                .toString())!,
-                                                                                                                            style: GoogleFonts.montserrat(
-                                                                                                                              color: FFAppConstants.blackColor0A0A0A,
-                                                                                                                              fontWeight: FontWeight.w600,
-                                                                                                                              fontSize: 13.0,
-                                                                                                                            ),
-                                                                                                                          )
-                                                                                                                        ],
-                                                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                                              font: GoogleFonts.montserrat(
+                                                                                                                                letterSpacing: 0.0,
                                                                                                                                 fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
                                                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                                               ),
-                                                                                                                              letterSpacing: 0.0,
-                                                                                                                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
-                                                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                                            ),
+                                                                                                                        ),
+                                                                                                                        textAlign: TextAlign.end,
                                                                                                                       ),
                                                                                                                     ),
                                                                                                                   ),
@@ -9345,6 +9354,7 @@ class _DailyCartScreenWidgetState extends State<DailyCartScreenWidget>
                                                                                 dailyCartScreenShowspcatcartResponse.jsonBody,
                                                                                 r'''$.data.savelater''',
                                                                               ),
+                                                                              isSubscription: false,
                                                                               isReload: () async {
                                                                                 logFirebaseEvent('DAILY_CART_SCREEN_Container_lxxz1fyx_CAL');
                                                                                 logFirebaseEvent('saveLetterproductsList_refresh_database_');

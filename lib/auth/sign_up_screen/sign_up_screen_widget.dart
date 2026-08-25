@@ -194,7 +194,7 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.asset(
-                          'assets/images/QuicKart_Final_logo.png',
+                          'assets/images/QuicKart_New_Final.png',
                           width: MediaQuery.sizeOf(context).width * 0.75,
                           height: 175.0,
                           fit: BoxFit.contain,

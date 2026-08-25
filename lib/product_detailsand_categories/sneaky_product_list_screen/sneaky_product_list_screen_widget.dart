@@ -51,7 +51,7 @@ class SneakyProductListScreenWidget extends StatefulWidget {
 }
 
 class _SneakyProductListScreenWidgetState
-    extends State<SneakyProductListScreenWidget> {
+    extends State<SneakyProductListScreenWidget> with WidgetsBindingObserver {
   late SneakyProductListScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -60,20 +60,38 @@ class _SneakyProductListScreenWidgetState
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SneakyProductListScreenModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'SneakyProductListScreen'});
-    getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
-        .then((loc) => safeSetState(() => currentUserLocationValue = loc));
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => SneakyProductListScreenModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'SneakyProductListScreen'});
+      getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0), cached: true)
+          .then((loc) => safeSetState(() => currentUserLocationValue = loc));
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

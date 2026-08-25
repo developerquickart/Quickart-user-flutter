@@ -54,7 +54,8 @@ class FeaturedCategoryWidget extends StatefulWidget {
   State<FeaturedCategoryWidget> createState() => _FeaturedCategoryWidgetState();
 }
 
-class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
+class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
+    with WidgetsBindingObserver {
   late FeaturedCategoryModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,71 +63,89 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => FeaturedCategoryModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'FeaturedCategory'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('FEATURED_CATEGORY_FeaturedCategory_ON_IN');
-      if (widget!.id != null && widget!.id != '') {
-        logFirebaseEvent('FeaturedCategory_backend_call');
-        _model.apiResultSeo = await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmNetwork,
-          utmkeyword: FFAppState().utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: FFAppState().platform,
-        );
-
-        if ((_model.apiResultSeo?.succeeded ?? true)) {
-          logFirebaseEvent('FeaturedCategory_wait__delay');
-          await Future.delayed(
-            Duration(
-              milliseconds: 1000,
-            ),
-          );
-          logFirebaseEvent('FeaturedCategory_update_app_state');
-          FFAppState().catID = widget!.id == null || widget!.id == ''
-              ? FFAppState().catID
-              : widget!.id!;
-          safeSetState(() {});
-        } else {
-          logFirebaseEvent('FeaturedCategory_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeo?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 1200),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => FeaturedCategoryModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'FeaturedCategory'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('FEATURED_CATEGORY_FeaturedCategory_ON_IN');
+        if (widget!.id != null && widget!.id != '') {
+          logFirebaseEvent('FeaturedCategory_backend_call');
+          _model.apiResultSeo = await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmNetwork,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
+
+          if ((_model.apiResultSeo?.succeeded ?? true)) {
+            logFirebaseEvent('FeaturedCategory_wait__delay');
+            await Future.delayed(
+              Duration(
+                milliseconds: 1000,
+              ),
+            );
+            logFirebaseEvent('FeaturedCategory_update_app_state');
+            FFAppState().catID = widget!.id == null || widget!.id == ''
+                ? FFAppState().catID
+                : widget!.id!;
+            safeSetState(() {});
+          } else {
+            logFirebaseEvent('FeaturedCategory_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeo?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

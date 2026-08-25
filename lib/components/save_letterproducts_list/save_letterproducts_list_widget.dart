@@ -629,156 +629,58 @@ class _SaveLetterproductsListWidgetState
                                       logFirebaseEvent(
                                           'Button_haptic_feedback');
                                       HapticFeedback.heavyImpact();
-                                      if (widget!.isSubscription == false) {
-                                        logFirebaseEvent('Button_backend_call');
-                                        _model.addtoCart2 = await QuickartGroup
-                                            .addtosavecartCall
-                                            .call(
-                                          userID: FFAppState().userID,
-                                          variantID: getJsonField(
-                                            productModelMMItem,
-                                            r'''$.varient_id''',
-                                          ).toString(),
-                                          orderCartID: 'incart',
-                                          platform: FFAppState().platform,
-                                        );
+                                      logFirebaseEvent('Button_backend_call');
+                                      _model.remvoeSaveLater =
+                                          await QuickartGroup.removesavecartCall
+                                              .call(
+                                        userID: FFAppState().userID,
+                                        variantID: getJsonField(
+                                          productModelMMItem,
+                                          r'''$.varient_id''',
+                                        ).toString(),
+                                        isSubscription:
+                                            widget!.isSubscription == true
+                                                ? '1'
+                                                : '0',
+                                      );
 
-                                        if ((_model.addtoCart2?.succeeded ??
-                                            true)) {
-                                          if (FFAppConstants.checkStatus ==
-                                              QuickartGroup.addtosavecartCall
-                                                  .status(
-                                                (_model.addtoCart2?.jsonBody ??
-                                                    ''),
-                                              )) {
-                                            logFirebaseEvent(
-                                                'Button_backend_call');
-                                            _model.addtoCart12 =
-                                                await QuickartGroup
-                                                    .addToCartCall
-                                                    .call(
-                                              userid: FFAppState().userID,
-                                              qty: '0',
-                                              storeid: FFAppState().storeID,
-                                              varientid: getJsonField(
-                                                productModelMMItem,
-                                                r'''$.varient_id''',
-                                              ).toString(),
-                                              deviceid: FFAppState().deviceID,
-                                              itemPrice: getJsonField(
-                                                productModelMMItem,
-                                                r'''$.price''',
-                                              ).toString(),
-                                              itemName: getJsonField(
-                                                productModelMMItem,
-                                                r'''$.product_name''',
-                                              ).toString(),
-                                              platform: FFAppState().platform,
-                                              featuresID: '0',
-                                            );
-
-                                            if ((_model
-                                                    .addtoCart12?.succeeded ??
-                                                true)) {
-                                              if (FFAppConstants.checkStatus ==
-                                                  getJsonField(
-                                                    (_model.addtoCart12
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                    r'''$.status''',
-                                                  ).toString()) {
-                                                logFirebaseEvent(
-                                                    'Button_execute_callback');
-                                                await widget.isReload?.call();
-                                              } else {
-                                                logFirebaseEvent(
-                                                    'Button_show_snack_bar');
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      QuickartGroup
-                                                          .addToCartCall
-                                                          .message(
-                                                        (_model.addtoCart12
-                                                                ?.jsonBody ??
-                                                            ''),
-                                                      )!,
-                                                      style: GoogleFonts
-                                                          .montserrat(
-                                                        color: FFAppConstants
-                                                            .indigoColor,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 15.0,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 1500),
-                                                    backgroundColor:
-                                                        FFAppConstants
-                                                            .primaryPurpleE4D8F5,
-                                                  ),
-                                                );
-                                              }
-                                            } else {
-                                              logFirebaseEvent(
-                                                  'Button_show_snack_bar');
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    QuickartGroup.addToCartCall
-                                                        .message(
-                                                      (_model.addtoCart12
-                                                              ?.jsonBody ??
-                                                          ''),
-                                                    )!,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .indigoColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 15.0,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 1500),
-                                                  backgroundColor:
-                                                      FFAppConstants
-                                                          .primaryPurpleE4D8F5,
+                                      if ((_model.remvoeSaveLater?.succeeded ??
+                                          true)) {
+                                        if (FFAppConstants.checkStatus ==
+                                            QuickartGroup.removesavecartCall
+                                                .status(
+                                              (_model.remvoeSaveLater
+                                                      ?.jsonBody ??
+                                                  ''),
+                                            )) {
+                                          logFirebaseEvent(
+                                              'Button_show_snack_bar');
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                QuickartGroup.removesavecartCall
+                                                    .message(
+                                                  (_model.remvoeSaveLater
+                                                          ?.jsonBody ??
+                                                      ''),
+                                                )!,
+                                                style: GoogleFonts.montserrat(
+                                                  color: FFAppConstants
+                                                      .indigoColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15.0,
                                                 ),
-                                              );
-                                            }
-                                          } else {
-                                            logFirebaseEvent(
-                                                'Button_show_snack_bar');
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  QuickartGroup
-                                                      .addtosavecartCall
-                                                      .message(
-                                                    (_model.addtoCart2
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                  )!,
-                                                  style: GoogleFonts.montserrat(
-                                                    color: FFAppConstants
-                                                        .indigoColor,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 15.0,
-                                                  ),
-                                                ),
-                                                duration: Duration(
-                                                    milliseconds: 1500),
-                                                backgroundColor: FFAppConstants
-                                                    .primaryPurpleE4D8F5,
                                               ),
-                                            );
-                                          }
+                                              duration:
+                                                  Duration(milliseconds: 1500),
+                                              backgroundColor: FFAppConstants
+                                                  .primaryPurpleE4D8F5,
+                                            ),
+                                          );
+                                          logFirebaseEvent(
+                                              'Button_execute_callback');
+                                          await widget.isReload?.call();
                                         } else {
                                           logFirebaseEvent(
                                               'Button_show_snack_bar');
@@ -786,9 +688,9 @@ class _SaveLetterproductsListWidgetState
                                               .showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                QuickartGroup.addtosavecartCall
+                                                QuickartGroup.removesavecartCall
                                                     .message(
-                                                  (_model.addtoCart2
+                                                  (_model.remvoeSaveLater
                                                           ?.jsonBody ??
                                                       ''),
                                                 )!,
@@ -807,175 +709,31 @@ class _SaveLetterproductsListWidgetState
                                           );
                                         }
                                       } else {
-                                        logFirebaseEvent('Button_backend_call');
-                                        _model.addtoSubCart =
-                                            await QuickartGroup
-                                                .addtosavesubcartCall
-                                                .call(
-                                          userID: FFAppState().userID,
-                                          variantID: getJsonField(
-                                            productModelMMItem,
-                                            r'''$.varient_id''',
-                                          ).toString(),
-                                          orderCartID: 'incart',
-                                          platform: FFAppState().platform,
-                                        );
-
-                                        if ((_model.addtoSubCart?.succeeded ??
-                                            true)) {
-                                          if (FFAppConstants.checkStatus ==
-                                              QuickartGroup.addtosavesubcartCall
-                                                  .status(
-                                                (_model.addtoSubCart
+                                        logFirebaseEvent(
+                                            'Button_show_snack_bar');
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              QuickartGroup.removesavecartCall
+                                                  .message(
+                                                (_model.remvoeSaveLater
                                                         ?.jsonBody ??
                                                     ''),
-                                              )) {
-                                            logFirebaseEvent(
-                                                'Button_backend_call');
-                                            _model.addtosubCart12 =
-                                                await QuickartGroup
-                                                    .addtosubcartCall
-                                                    .call(
-                                              userid: FFAppState().userID,
-                                              qty: '0',
-                                              storeid: FFAppState().storeID,
-                                              varientid: getJsonField(
-                                                productModelMMItem,
-                                                r'''$.varient_id''',
-                                              ).toString(),
-                                            );
-
-                                            if ((_model.addtosubCart12
-                                                    ?.succeeded ??
-                                                true)) {
-                                              if (FFAppConstants.checkStatus ==
-                                                  getJsonField(
-                                                    (_model.addtosubCart12
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                    r'''$.status''',
-                                                  ).toString()) {
-                                                logFirebaseEvent(
-                                                    'Button_execute_callback');
-                                                await widget.isReload?.call();
-                                              } else {
-                                                logFirebaseEvent(
-                                                    'Button_show_snack_bar');
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      QuickartGroup
-                                                          .addtosubcartCall
-                                                          .message(
-                                                        (_model.addtosubCart12
-                                                                ?.jsonBody ??
-                                                            ''),
-                                                      )!,
-                                                      style: GoogleFonts
-                                                          .montserrat(
-                                                        color: FFAppConstants
-                                                            .indigoColor,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 15.0,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 1500),
-                                                    backgroundColor:
-                                                        FFAppConstants
-                                                            .primaryPurpleE4D8F5,
-                                                  ),
-                                                );
-                                              }
-                                            } else {
-                                              logFirebaseEvent(
-                                                  'Button_show_snack_bar');
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    QuickartGroup
-                                                        .addtosubcartCall
-                                                        .message(
-                                                      (_model.addtosubCart12
-                                                              ?.jsonBody ??
-                                                          ''),
-                                                    )!,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .indigoColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 15.0,
-                                                    ),
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 1500),
-                                                  backgroundColor:
-                                                      FFAppConstants
-                                                          .primaryPurpleE4D8F5,
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            logFirebaseEvent(
-                                                'Button_show_snack_bar');
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  QuickartGroup
-                                                      .addtosavesubcartCall
-                                                      .message(
-                                                    (_model.addtoSubCart
-                                                            ?.jsonBody ??
-                                                        ''),
-                                                  )!,
-                                                  style: GoogleFonts.montserrat(
-                                                    color: FFAppConstants
-                                                        .indigoColor,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 15.0,
-                                                  ),
-                                                ),
-                                                duration: Duration(
-                                                    milliseconds: 1500),
-                                                backgroundColor: FFAppConstants
-                                                    .primaryPurpleE4D8F5,
+                                              )!,
+                                              style: GoogleFonts.montserrat(
+                                                color:
+                                                    FFAppConstants.indigoColor,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15.0,
                                               ),
-                                            );
-                                          }
-                                        } else {
-                                          logFirebaseEvent(
-                                              'Button_show_snack_bar');
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                QuickartGroup
-                                                    .addtosavesubcartCall
-                                                    .message(
-                                                  (_model.addtoSubCart
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                )!,
-                                                style: GoogleFonts.montserrat(
-                                                  color: FFAppConstants
-                                                      .indigoColor,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15.0,
-                                                ),
-                                              ),
-                                              duration:
-                                                  Duration(milliseconds: 1500),
-                                              backgroundColor: FFAppConstants
-                                                  .primaryPurpleE4D8F5,
                                             ),
-                                          );
-                                        }
+                                            duration:
+                                                Duration(milliseconds: 1500),
+                                            backgroundColor: FFAppConstants
+                                                .primaryPurpleE4D8F5,
+                                          ),
+                                        );
                                       }
                                     } else {
                                       logFirebaseEvent('Button_show_snack_bar');

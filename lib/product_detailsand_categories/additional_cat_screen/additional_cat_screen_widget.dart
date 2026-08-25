@@ -54,7 +54,8 @@ class AdditionalCatScreenWidget extends StatefulWidget {
       _AdditionalCatScreenWidgetState();
 }
 
-class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget> {
+class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
+    with WidgetsBindingObserver {
   late AdditionalCatScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,85 +63,103 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => AdditionalCatScreenModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'AdditionalCatScreen'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('ADDITIONAL_CAT_SCREEN_AdditionalCatScree');
-      if (widget!.name != null && widget!.name != '') {
-        logFirebaseEvent('AdditionalCatScreen_backend_call');
-        _model.apiResultSeoSourceAddCat =
-            await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmNetwork,
-          utmkeyword: FFAppState().utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: FFAppState().platform,
-        );
-
-        if ((_model.apiResultSeoSourceAddCat?.succeeded ?? true)) {
-          logFirebaseEvent('AdditionalCatScreen_google_analytics_eve');
-          logFirebaseEvent(
-            'SearchScreenAnalytics',
-            parameters: {
-              'API Name': 'searchbystoreproduct',
-              'Keyword': FFAppState().keyword,
-            },
-          );
-          logFirebaseEvent('AdditionalCatScreen_custom_action');
-          await actions.facebookEventClass(
-            widget!.utmKeyword!,
-            widget!.utmPlacement!,
-            FFAppState().userID,
-            0.0,
-            0,
-            0.0,
-            'utmSource',
-            FFAppState().emptyJson,
-            'additional category',
-            widget!.utmSource,
-            widget!.utmCampaign,
-            widget!.utmNetwork,
-            widget!.utmMedium,
-          );
-        } else {
-          logFirebaseEvent('AdditionalCatScreen_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeoSourceAddCat?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 1200),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+//Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => AdditionalCatScreenModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'AdditionalCatScreen'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('ADDITIONAL_CAT_SCREEN_AdditionalCatScree');
+        if (widget!.name != null && widget!.name != '') {
+          logFirebaseEvent('AdditionalCatScreen_backend_call');
+          _model.apiResultSeoSourceAddCat =
+              await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmNetwork,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
+
+          if ((_model.apiResultSeoSourceAddCat?.succeeded ?? true)) {
+            logFirebaseEvent('AdditionalCatScreen_google_analytics_eve');
+            logFirebaseEvent(
+              'SearchScreenAnalytics',
+              parameters: {
+                'API Name': 'searchbystoreproduct',
+                'Keyword': FFAppState().keyword,
+              },
+            );
+            logFirebaseEvent('AdditionalCatScreen_custom_action');
+            await actions.facebookEventClass(
+              widget!.utmKeyword!,
+              widget!.utmPlacement!,
+              FFAppState().userID,
+              0.0,
+              0,
+              0.0,
+              'utmSource',
+              FFAppState().emptyJson,
+              'additional category',
+              widget!.utmSource,
+              widget!.utmCampaign,
+              widget!.utmNetwork,
+              widget!.utmMedium,
+            );
+          } else {
+            logFirebaseEvent('AdditionalCatScreen_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeoSourceAddCat?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

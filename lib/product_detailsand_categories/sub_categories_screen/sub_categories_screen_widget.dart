@@ -57,7 +57,8 @@ class SubCategoriesScreenWidget extends StatefulWidget {
       _SubCategoriesScreenWidgetState();
 }
 
-class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget> {
+class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
+    with WidgetsBindingObserver {
   late SubCategoriesScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -65,173 +66,219 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SubCategoriesScreenModel());
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
+  }
 
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'subCategoriesScreen'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('SUB_CATEGORIES_SCREEN_subCategoriesScree');
-      logFirebaseEvent('subCategoriesScreen_custom_action');
-      _model.connectivityResultCatee = await actions.checkInternetConnection();
-      if (_model.connectivityResultCatee == true) {
-        logFirebaseEvent('subCategoriesScreen_backend_call');
-        _model.apiResultSubcatID = await QuickartGroup.subcateeCall.call(
-          storeid: valueOrDefault<String>(
-            FFAppState().storeID,
-            '7',
-          ),
-          catid: widget!.catid == null || widget!.catid == ''
-              ? FFAppState().catID
-              : widget!.catid,
-          platform: isiOS ? 'ios' : 'android',
-        );
+  @override
+  void dispose() {
+    _model.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
-        if ((_model.apiResultSubcatID?.succeeded ?? true)) {
-          logFirebaseEvent('subCategoriesScreen_wait__delay');
-          await Future.delayed(
-            Duration(
-              milliseconds: 100,
-            ),
-          );
-          logFirebaseEvent('subCategoriesScreen_custom_action');
-          await actions.facebookEventClass(
-            widget!.catid == null || widget!.catid == ''
-                ? FFAppState().catID
-                : widget!.catid!,
-            getJsonField(
-              (_model.apiResultSubcatID?.jsonBody ?? ''),
-              r'''$.data[0].title''',
-            ).toString(),
-            widget!.subcatid == null || widget!.subcatid == ''
-                ? getJsonField(
-                    (_model.apiResultSubcatID?.jsonBody ?? ''),
-                    r'''$.data[0].cat_id''',
-                  ).toString()
-                : widget!.subcatid!,
-            0.0,
-            0,
-            0.0,
-            'subcategory',
-            FFAppState().emptyJson,
-            'c',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-          );
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => SubCategoriesScreenModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'subCategoriesScreen'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('SUB_CATEGORIES_SCREEN_subCategoriesScree');
+        logFirebaseEvent('subCategoriesScreen_custom_action');
+        _model.connectivityResultCatee =
+            await actions.checkInternetConnection();
+        if (_model.connectivityResultCatee == true) {
           logFirebaseEvent('subCategoriesScreen_backend_call');
-          _model.apiResultCatProduct1 = await QuickartGroup.catproductCall.call(
-            userid: FFAppState().userID,
-            storeid: FFAppState().storeID,
+          _model.apiResultSubcatID = await QuickartGroup.subcateeCall.call(
+            storeid: valueOrDefault<String>(
+              FFAppState().storeID,
+              '7',
+            ),
             catid: widget!.catid == null || widget!.catid == ''
                 ? FFAppState().catID
                 : widget!.catid,
-            byName: FFAppState().byName,
-            minPrice: FFAppState().minPrice,
-            maxPrice: FFAppState().maxPrice,
-            stock: FFAppState().stock,
-            minDiscount: FFAppState().minDiscount,
-            maxDiscount: FFAppState().maxDiscount,
-            sort: FFAppState().sort,
-            sortName: FFAppState().sortName,
-            sortPrice: FFAppState().sortPrice,
-            subCatID: widget!.subcatid == null || widget!.subcatid == ''
-                ? 'all'
-                : widget!.subcatid,
             platform: isiOS ? 'ios' : 'android',
           );
 
-          if ((_model.apiResultCatProduct1?.succeeded ?? true)) {
-            logFirebaseEvent('subCategoriesScreen_update_page_state');
-            _model.productModelJson = getJsonField(
-              (_model.apiResultCatProduct1?.jsonBody ?? ''),
-              r'''$.data''',
+          if ((_model.apiResultSubcatID?.succeeded ?? true)) {
+            logFirebaseEvent('subCategoriesScreen_wait__delay');
+            await Future.delayed(
+              Duration(
+                milliseconds: 100,
+              ),
             );
-            _model.onCategorySelected = 'notSelected';
-            _model.selectedSubCatID =
-                widget!.subcatid == null || widget!.subcatid == ''
-                    ? 'all'
-                    : widget!.subcatid;
-            _model.subCatName =
-                widget!.subcatid == null || widget!.subcatid == ''
-                    ? getJsonField(
-                        (_model.apiResultSubcatID?.jsonBody ?? ''),
-                        r'''$.data[0].title''',
-                      ).toString()
-                    : widget!.name!;
-            safeSetState(() {});
-            logFirebaseEvent('subCategoriesScreen_update_app_state');
-            FFAppState().categoryName =
-                widget!.category == null || widget!.category == ''
-                    ? FFAppState().categoryName
-                    : widget!.category!;
-            FFAppState().selectedCatId = 0;
-            safeSetState(() {});
-            if (widget!.catid != null && widget!.catid != '') {
-              logFirebaseEvent('subCategoriesScreen_backend_call');
-              _model.apiResultSeoSource =
-                  await QuickartGroup.seosourceCall.call(
-                utmSource: widget!.utmSource,
-                utmcampaign: widget!.utmCampaign,
-                utmnetwork: widget!.utmNetwork,
-                utmmedium: widget!.utmMedium,
-                utmkeyword: widget!.utmKeyword,
-                placement: widget!.utmPlacement,
-                userid: FFAppState().userID,
-                deviceid: FFAppState().deviceID,
-                fcmtoken: FFAppState().fcmToken,
-                platform: FFAppState().platform,
-              );
+            logFirebaseEvent('subCategoriesScreen_custom_action');
+            await actions.facebookEventClass(
+              widget!.catid == null || widget!.catid == ''
+                  ? FFAppState().catID
+                  : widget!.catid!,
+              getJsonField(
+                (_model.apiResultSubcatID?.jsonBody ?? ''),
+                r'''$.data[0].title''',
+              ).toString(),
+              widget!.subcatid == null || widget!.subcatid == ''
+                  ? getJsonField(
+                      (_model.apiResultSubcatID?.jsonBody ?? ''),
+                      r'''$.data[0].cat_id''',
+                    ).toString()
+                  : widget!.subcatid!,
+              0.0,
+              0,
+              0.0,
+              'subcategory',
+              FFAppState().emptyJson,
+              'c',
+              ' ',
+              ' ',
+              ' ',
+              ' ',
+            );
+            logFirebaseEvent('subCategoriesScreen_backend_call');
+            _model.apiResultCatProduct1 =
+                await QuickartGroup.catproductCall.call(
+              userid: FFAppState().userID,
+              storeid: FFAppState().storeID,
+              catid: widget!.catid == null || widget!.catid == ''
+                  ? FFAppState().catID
+                  : widget!.catid,
+              byName: FFAppState().byName,
+              minPrice: FFAppState().minPrice,
+              maxPrice: FFAppState().maxPrice,
+              stock: FFAppState().stock,
+              minDiscount: FFAppState().minDiscount,
+              maxDiscount: FFAppState().maxDiscount,
+              sort: FFAppState().sort,
+              sortName: FFAppState().sortName,
+              sortPrice: FFAppState().sortPrice,
+              subCatID: widget!.subcatid == null || widget!.subcatid == ''
+                  ? 'all'
+                  : widget!.subcatid,
+              platform: isiOS ? 'ios' : 'android',
+            );
 
-              if ((_model.apiResultSeoSource?.succeeded ?? true)) {
+            if ((_model.apiResultCatProduct1?.succeeded ?? true)) {
+              logFirebaseEvent('subCategoriesScreen_update_page_state');
+              _model.productModelJson = getJsonField(
+                (_model.apiResultCatProduct1?.jsonBody ?? ''),
+                r'''$.data''',
+              );
+              _model.onCategorySelected = 'notSelected';
+              _model.selectedSubCatID =
+                  widget!.subcatid == null || widget!.subcatid == ''
+                      ? 'all'
+                      : widget!.subcatid;
+              _model.subCatName =
+                  widget!.subcatid == null || widget!.subcatid == ''
+                      ? getJsonField(
+                          (_model.apiResultSubcatID?.jsonBody ?? ''),
+                          r'''$.data[0].title''',
+                        ).toString()
+                      : widget!.name!;
+              safeSetState(() {});
+              logFirebaseEvent('subCategoriesScreen_update_app_state');
+              FFAppState().categoryName =
+                  widget!.category == null || widget!.category == ''
+                      ? FFAppState().categoryName
+                      : widget!.category!;
+              FFAppState().selectedCatId = 0;
+              safeSetState(() {});
+              if (widget!.catid != null && widget!.catid != '') {
+                logFirebaseEvent('subCategoriesScreen_backend_call');
+                _model.apiResultSeoSource =
+                    await QuickartGroup.seosourceCall.call(
+                  utmSource: widget!.utmSource,
+                  utmcampaign: widget!.utmCampaign,
+                  utmnetwork: widget!.utmNetwork,
+                  utmmedium: widget!.utmMedium,
+                  utmkeyword: widget!.utmKeyword,
+                  placement: widget!.utmPlacement,
+                  userid: FFAppState().userID,
+                  deviceid: FFAppState().deviceID,
+                  fcmtoken: FFAppState().fcmToken,
+                  platform: FFAppState().platform,
+                );
+
+                if ((_model.apiResultSeoSource?.succeeded ?? true)) {
+                  logFirebaseEvent('subCategoriesScreen_update_page_state');
+                  _model.imagePath = getJsonField(
+                    (_model.apiResultSubcatID?.jsonBody ?? ''),
+                    r'''$.data[0].banner''',
+                  ).toString();
+                  safeSetState(() {});
+                  logFirebaseEvent('subCategoriesScreen_custom_action');
+                  await actions.facebookEventClass(
+                    widget!.utmKeyword!,
+                    widget!.utmPlacement!,
+                    FFAppState().userID,
+                    0.0,
+                    0,
+                    0.0,
+                    'utmSource',
+                    FFAppState().emptyJson,
+                    'subcatgory',
+                    widget!.utmSource,
+                    widget!.utmCampaign,
+                    widget!.utmNetwork,
+                    widget!.utmMedium,
+                  );
+                } else {
+                  logFirebaseEvent('subCategoriesScreen_show_snack_bar');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        getJsonField(
+                          (_model.apiResultSeoSource?.jsonBody ?? ''),
+                          r'''$.message''',
+                        ).toString(),
+                        style: TextStyle(
+                          color: FlutterFlowTheme.of(context).primaryText,
+                        ),
+                      ),
+                      duration: Duration(milliseconds: 4000),
+                      backgroundColor: FFAppConstants.NeutralBlack50Color,
+                    ),
+                  );
+                }
+              } else {
                 logFirebaseEvent('subCategoriesScreen_update_page_state');
                 _model.imagePath = getJsonField(
                   (_model.apiResultSubcatID?.jsonBody ?? ''),
                   r'''$.data[0].banner''',
                 ).toString();
                 safeSetState(() {});
-                logFirebaseEvent('subCategoriesScreen_custom_action');
-                await actions.facebookEventClass(
-                  widget!.utmKeyword!,
-                  widget!.utmPlacement!,
-                  FFAppState().userID,
-                  0.0,
-                  0,
-                  0.0,
-                  'utmSource',
-                  FFAppState().emptyJson,
-                  'subcatgory',
-                  widget!.utmSource,
-                  widget!.utmCampaign,
-                  widget!.utmNetwork,
-                  widget!.utmMedium,
-                );
-              } else {
-                logFirebaseEvent('subCategoriesScreen_show_snack_bar');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      getJsonField(
-                        (_model.apiResultSeoSource?.jsonBody ?? ''),
-                        r'''$.message''',
-                      ).toString(),
-                      style: TextStyle(
-                        color: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 4000),
-                    backgroundColor: FFAppConstants.NeutralBlack50Color,
-                  ),
-                );
               }
             } else {
-              logFirebaseEvent('subCategoriesScreen_update_page_state');
-              _model.imagePath = getJsonField(
-                (_model.apiResultSubcatID?.jsonBody ?? ''),
-                r'''$.data[0].banner''',
-              ).toString();
-              safeSetState(() {});
+              logFirebaseEvent('subCategoriesScreen_show_snack_bar');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    getJsonField(
+                      (_model.apiResultCatProduct1?.jsonBody ?? ''),
+                      r'''$.message''',
+                    ).toString(),
+                    style: GoogleFonts.montserrat(
+                      color: FFAppConstants.indigoColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  duration: Duration(milliseconds: 5050),
+                  backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                ),
+              );
             }
           } else {
             logFirebaseEvent('subCategoriesScreen_show_snack_bar');
@@ -239,76 +286,50 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget> {
               SnackBar(
                 content: Text(
                   getJsonField(
-                    (_model.apiResultCatProduct1?.jsonBody ?? ''),
+                    (_model.apiResultSubcatID?.jsonBody ?? ''),
                     r'''$.message''',
                   ).toString(),
                   style: GoogleFonts.montserrat(
-                    color: FFAppConstants.indigoColor,
+                    color: FFAppConstants.blackColor0A0A0A,
                     fontWeight: FontWeight.w500,
                     fontSize: 12.0,
                   ),
                 ),
-                duration: Duration(milliseconds: 5050),
-                backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                duration: Duration(milliseconds: 4100),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
               ),
             );
           }
+
+          logFirebaseEvent('subCategoriesScreen_google_analytics_eve');
+          logFirebaseEvent(
+            'SubCategoriesScreenAnalytics',
+            parameters: {
+              'ScreenName': 'Subcategory Screen',
+              'ApiName': 'subcatee',
+            },
+          );
         } else {
           logFirebaseEvent('subCategoriesScreen_show_snack_bar');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                getJsonField(
-                  (_model.apiResultSubcatID?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
+                FFAppConstants.internetString,
                 style: GoogleFonts.montserrat(
                   color: FFAppConstants.blackColor0A0A0A,
                   fontWeight: FontWeight.w500,
                   fontSize: 12.0,
                 ),
               ),
-              duration: Duration(milliseconds: 4100),
+              duration: Duration(milliseconds: 4000),
               backgroundColor: FFAppConstants.NeutralBlack50Color,
             ),
           );
         }
+      });
 
-        logFirebaseEvent('subCategoriesScreen_google_analytics_eve');
-        logFirebaseEvent(
-          'SubCategoriesScreenAnalytics',
-          parameters: {
-            'ScreenName': 'Subcategory Screen',
-            'ApiName': 'subcatee',
-          },
-        );
-      } else {
-        logFirebaseEvent('subCategoriesScreen_show_snack_bar');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              FFAppConstants.internetString,
-              style: GoogleFonts.montserrat(
-                color: FFAppConstants.blackColor0A0A0A,
-                fontWeight: FontWeight.w500,
-                fontSize: 12.0,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FFAppConstants.NeutralBlack50Color,
-          ),
-        );
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-
-    super.dispose();
   }
 
   @override

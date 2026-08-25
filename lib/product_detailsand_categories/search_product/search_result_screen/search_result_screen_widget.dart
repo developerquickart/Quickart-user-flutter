@@ -55,7 +55,8 @@ class SearchResultScreenWidget extends StatefulWidget {
       _SearchResultScreenWidgetState();
 }
 
-class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
+class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget>
+    with WidgetsBindingObserver {
   late SearchResultScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -63,104 +64,122 @@ class _SearchResultScreenWidgetState extends State<SearchResultScreenWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SearchResultScreenModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'SearchResultScreen'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('SEARCH_RESULT_SCREEN_SearchResultScreen_');
-      if (widget!.keyword != null && widget!.keyword != '') {
-        logFirebaseEvent('SearchResultScreen_backend_call');
-        _model.apiResultSeoSource = await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmMedium,
-          utmkeyword: widget!.utmKeyword,
-          placement: widget!.placement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: isiOS ? 'ios' : 'android',
-        );
-
-        if ((_model.apiResultSeoSource?.succeeded ?? true)) {
-          logFirebaseEvent('SearchResultScreen_google_analytics_even');
-          logFirebaseEvent(
-            'SearchScreenAnalytics',
-            parameters: {
-              'API Name': 'searchbystoreproduct',
-              'Keyword': FFAppState().keyword,
-            },
-          );
-          logFirebaseEvent('SearchResultScreen_custom_action');
-          await actions.facebookEventClass(
-            widget!.utmMedium!,
-            widget!.placement!,
-            FFAppState().userID,
-            0.0,
-            0,
-            0.0,
-            'utmSource',
-            FFAppState().emptyJson,
-            ' search product',
-            widget!.utmSource,
-            widget!.utmCampaign,
-            widget!.utmNetwork,
-            widget!.utmMedium,
-          );
-        } else {
-          logFirebaseEvent('SearchResultScreen_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeoSource?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 1200),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-      logFirebaseEvent('SearchResultScreen_custom_action');
-      await actions.facebookEventClass(
-        '0',
-        widget!.keyword == null || widget!.keyword == ''
-            ? FFAppState().searchText
-            : ((String var1) {
-                return var1.replaceAll(RegExp('_'), ' ');
-              }(widget!.keyword!)),
-        'search product',
-        0.0,
-        0,
-        0.0,
-        'search',
-        FFAppState().emptyJson,
-        ' ',
-        ' ',
-        ' ',
-        ' ',
-        ' ',
-      );
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => SearchResultScreenModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'SearchResultScreen'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('SEARCH_RESULT_SCREEN_SearchResultScreen_');
+        if (widget!.keyword != null && widget!.keyword != '') {
+          logFirebaseEvent('SearchResultScreen_backend_call');
+          _model.apiResultSeoSource = await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmMedium,
+            utmkeyword: widget!.utmKeyword,
+            placement: widget!.placement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: isiOS ? 'ios' : 'android',
+          );
+
+          if ((_model.apiResultSeoSource?.succeeded ?? true)) {
+            logFirebaseEvent('SearchResultScreen_google_analytics_even');
+            logFirebaseEvent(
+              'SearchScreenAnalytics',
+              parameters: {
+                'API Name': 'searchbystoreproduct',
+                'Keyword': FFAppState().keyword,
+              },
+            );
+            logFirebaseEvent('SearchResultScreen_custom_action');
+            await actions.facebookEventClass(
+              widget!.utmMedium!,
+              widget!.placement!,
+              FFAppState().userID,
+              0.0,
+              0,
+              0.0,
+              'utmSource',
+              FFAppState().emptyJson,
+              ' search product',
+              widget!.utmSource,
+              widget!.utmCampaign,
+              widget!.utmNetwork,
+              widget!.utmMedium,
+            );
+          } else {
+            logFirebaseEvent('SearchResultScreen_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeoSource?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+        logFirebaseEvent('SearchResultScreen_custom_action');
+        await actions.facebookEventClass(
+          '0',
+          widget!.keyword == null || widget!.keyword == ''
+              ? FFAppState().searchText
+              : ((String var1) {
+                  return var1.replaceAll(RegExp('_'), ' ');
+                }(widget!.keyword!)),
+          'search product',
+          0.0,
+          0,
+          0.0,
+          'search',
+          FFAppState().emptyJson,
+          ' ',
+          ' ',
+          ' ',
+          ' ',
+          ' ',
+        );
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

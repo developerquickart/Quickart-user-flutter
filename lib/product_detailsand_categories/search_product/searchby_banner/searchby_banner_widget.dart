@@ -56,7 +56,8 @@ class SearchbyBannerWidget extends StatefulWidget {
   State<SearchbyBannerWidget> createState() => _SearchbyBannerWidgetState();
 }
 
-class _SearchbyBannerWidgetState extends State<SearchbyBannerWidget> {
+class _SearchbyBannerWidgetState extends State<SearchbyBannerWidget>
+    with WidgetsBindingObserver {
   late SearchbyBannerModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -64,66 +65,84 @@ class _SearchbyBannerWidgetState extends State<SearchbyBannerWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SearchbyBannerModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'searchbyBanner'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('SEARCHBY_BANNER_searchbyBanner_ON_INIT_S');
-      logFirebaseEvent('searchbyBanner_custom_action');
-      await actions.facebookEventClass(
-        '0',
-        FFAppState().categoryName,
-        'banner search',
-        0.0,
-        0,
-        0.0,
-        'search',
-        FFAppState().emptyJson,
-        'search',
-        ' ',
-        ' ',
-        ' ',
-        ' ',
-      );
-      if (widget!.name != null && widget!.name != '') {
-        logFirebaseEvent('searchbyBanner_backend_call');
-        _model.apiResultSeoSourcebannerscreen =
-            await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmNetwork,
-          utmkeyword: FFAppState().utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: FFAppState().platform,
-        );
-
-        if ((_model.apiResultSeoSourcebannerscreen?.succeeded ?? true)) {
-          logFirebaseEvent('searchbyBanner_google_analytics_event');
-          logFirebaseEvent(
-            'SearchScreenAnalytics',
-            parameters: {
-              'API Name': 'searchbystoreproduct',
-              'Keyword': FFAppState().keyword,
-            },
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => SearchbyBannerModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'searchbyBanner'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('SEARCHBY_BANNER_searchbyBanner_ON_INIT_S');
+        logFirebaseEvent('searchbyBanner_custom_action');
+        await actions.facebookEventClass(
+          '0',
+          FFAppState().categoryName,
+          'banner search',
+          0.0,
+          0,
+          0.0,
+          'search',
+          FFAppState().emptyJson,
+          'search',
+          ' ',
+          ' ',
+          ' ',
+          ' ',
+        );
+        if (widget!.name != null && widget!.name != '') {
+          logFirebaseEvent('searchbyBanner_backend_call');
+          _model.apiResultSeoSourcebannerscreen =
+              await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmNetwork,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
+
+          if ((_model.apiResultSeoSourcebannerscreen?.succeeded ?? true)) {
+            logFirebaseEvent('searchbyBanner_google_analytics_event');
+            logFirebaseEvent(
+              'SearchScreenAnalytics',
+              parameters: {
+                'API Name': 'searchbystoreproduct',
+                'Keyword': FFAppState().keyword,
+              },
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

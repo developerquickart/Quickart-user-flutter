@@ -2285,3 +2285,20 @@ String getGrandPrizeMessage(
 
   return "Add AED ${remainingAmount.toStringAsFixed(2)} $addMsg";
 }
+String removeHtmlTags(String html) {
+  if (html.isEmpty) {
+    return '';
+  }
+
+  String text = html.replaceAll(RegExp(r'<[^>]*>'), '');
+
+  text = text
+      .replaceAll('&nbsp;', ' ')
+      .replaceAll('&amp;', '&')
+      .replaceAll('&lt;', '<')
+      .replaceAll('&gt;', '>')
+      .replaceAll('&quot;', '"')
+      .replaceAll('&#39;', "'");
+
+  return text.replaceAll(RegExp(r'\s+'), ' ').trim();
+}

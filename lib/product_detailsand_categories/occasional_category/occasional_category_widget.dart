@@ -53,7 +53,8 @@ class OccasionalCategoryWidget extends StatefulWidget {
       _OccasionalCategoryWidgetState();
 }
 
-class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
+class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget>
+    with WidgetsBindingObserver {
   late OccasionalCategoryModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -61,87 +62,105 @@ class _OccasionalCategoryWidgetState extends State<OccasionalCategoryWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => OccasionalCategoryModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'OccasionalCategory'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('OCCASIONAL_CATEGORY_OccasionalCategory_O');
-      logFirebaseEvent('OccasionalCategory_refresh_database_requ');
-      safeSetState(() => _model.apiRequestCompleter = null);
-      await _model.waitForApiRequestCompleted();
-      if (widget!.name != null && widget!.name != '') {
-        logFirebaseEvent('OccasionalCategory_backend_call');
-        _model.apiResultSeoSourceOc = await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmNetwork,
-          utmkeyword: FFAppState().utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: FFAppState().platform,
-        );
-
-        if ((_model.apiResultSeoSourceOc?.succeeded ?? true)) {
-          logFirebaseEvent('OccasionalCategory_google_analytics_even');
-          logFirebaseEvent(
-            'SearchScreenAnalytics',
-            parameters: {
-              'API Name': 'seosource',
-              'Keyword': widget!.name,
-            },
-          );
-          logFirebaseEvent('OccasionalCategory_custom_action');
-          await actions.facebookEventClass(
-            widget!.utmKeyword!,
-            widget!.utmPlacement!,
-            FFAppState().userID,
-            0.0,
-            0,
-            0.0,
-            'utmSource',
-            FFAppState().emptyJson,
-            ' occanal category',
-            widget!.utmSource,
-            widget!.utmCampaign,
-            widget!.utmNetwork,
-            widget!.utmMedium,
-          );
-        } else {
-          logFirebaseEvent('OccasionalCategory_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeoSourceOc?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 1200),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => OccasionalCategoryModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'OccasionalCategory'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('OCCASIONAL_CATEGORY_OccasionalCategory_O');
+        logFirebaseEvent('OccasionalCategory_refresh_database_requ');
+        safeSetState(() => _model.apiRequestCompleter = null);
+        await _model.waitForApiRequestCompleted();
+        if (widget!.name != null && widget!.name != '') {
+          logFirebaseEvent('OccasionalCategory_backend_call');
+          _model.apiResultSeoSourceOc = await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmNetwork,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
+
+          if ((_model.apiResultSeoSourceOc?.succeeded ?? true)) {
+            logFirebaseEvent('OccasionalCategory_google_analytics_even');
+            logFirebaseEvent(
+              'SearchScreenAnalytics',
+              parameters: {
+                'API Name': 'seosource',
+                'Keyword': widget!.name,
+              },
+            );
+            logFirebaseEvent('OccasionalCategory_custom_action');
+            await actions.facebookEventClass(
+              widget!.utmKeyword!,
+              widget!.utmPlacement!,
+              FFAppState().userID,
+              0.0,
+              0,
+              0.0,
+              'utmSource',
+              FFAppState().emptyJson,
+              ' occanal category',
+              widget!.utmSource,
+              widget!.utmCampaign,
+              widget!.utmNetwork,
+              widget!.utmMedium,
+            );
+          } else {
+            logFirebaseEvent('OccasionalCategory_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeoSourceOc?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

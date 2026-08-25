@@ -24,14 +24,8 @@ class SaveLetterproductsListModel
 
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? networkCheck11;
-  // Stores action output result for [Backend Call - API (addtosavecart)] action in Button widget.
-  ApiCallResponse? addtoCart2;
-  // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
-  ApiCallResponse? addtoCart12;
-  // Stores action output result for [Backend Call - API (addtosavesubcart)] action in Button widget.
-  ApiCallResponse? addtoSubCart;
-  // Stores action output result for [Backend Call - API (addtosubcart)] action in Button widget.
-  ApiCallResponse? addtosubCart12;
+  // Stores action output result for [Backend Call - API (removesavecart)] action in Button widget.
+  ApiCallResponse? remvoeSaveLater;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? networkCheck1;
   // Stores action output result for [Backend Call - API (addtosavecart)] action in Button widget.

@@ -55,7 +55,8 @@ class SearchbyPopupBannerWidget extends StatefulWidget {
       _SearchbyPopupBannerWidgetState();
 }
 
-class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
+class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
+    with WidgetsBindingObserver {
   late SearchbyPopupBannerModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -63,84 +64,102 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SearchbyPopupBannerModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'searchbyPopupBanner'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('SEARCHBY_POPUP_BANNER_searchbyPopupBanne');
-      logFirebaseEvent('searchbyPopupBanner_custom_action');
-      await actions.facebookEventClass(
-        '0',
-        FFAppState().keyword,
-        'popup banner search',
-        0.0,
-        0,
-        0.0,
-        'search',
-        FFAppState().emptyJson,
-        'search',
-        ' ',
-        ' ',
-        ' ',
-        ' ',
-      );
-      if (widget!.title != null && widget!.title != '') {
-        logFirebaseEvent('searchbyPopupBanner_backend_call');
-        _model.apiResultSeopop = await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmMedium,
-          utmkeyword: FFAppState().utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: FFAppState().platform,
-        );
-
-        if ((_model.apiResultSeopop?.succeeded ?? true)) {
-          logFirebaseEvent('searchbyPopupBanner_google_analytics_eve');
-          logFirebaseEvent(
-            'SearchScreenAnalytics',
-            parameters: {
-              'API Name': 'searchbypopupbaneerproduct',
-              'Keyword': widget!.title,
-            },
-          );
-        } else {
-          logFirebaseEvent('searchbyPopupBanner_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeopop?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 1200),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => SearchbyPopupBannerModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'searchbyPopupBanner'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('SEARCHBY_POPUP_BANNER_searchbyPopupBanne');
+        logFirebaseEvent('searchbyPopupBanner_custom_action');
+        await actions.facebookEventClass(
+          '0',
+          FFAppState().keyword,
+          'popup banner search',
+          0.0,
+          0,
+          0.0,
+          'search',
+          FFAppState().emptyJson,
+          'search',
+          ' ',
+          ' ',
+          ' ',
+          ' ',
+        );
+        if (widget!.title != null && widget!.title != '') {
+          logFirebaseEvent('searchbyPopupBanner_backend_call');
+          _model.apiResultSeopop = await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmMedium,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
+
+          if ((_model.apiResultSeopop?.succeeded ?? true)) {
+            logFirebaseEvent('searchbyPopupBanner_google_analytics_eve');
+            logFirebaseEvent(
+              'SearchScreenAnalytics',
+              parameters: {
+                'API Name': 'searchbypopupbaneerproduct',
+                'Keyword': widget!.title,
+              },
+            );
+          } else {
+            logFirebaseEvent('searchbyPopupBanner_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeopop?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

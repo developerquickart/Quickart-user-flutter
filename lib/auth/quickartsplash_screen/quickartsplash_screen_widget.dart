@@ -188,7 +188,7 @@ class _QuickartsplashScreenWidgetState
               print("G1---->splash load-8---->${DateTime.now()}");
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -252,7 +252,7 @@ class _QuickartsplashScreenWidgetState
               // print("G1---->splash load-11---->${DateTime.now()}");
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -349,7 +349,7 @@ class _QuickartsplashScreenWidgetState
               // print("G1---->splash load-14---->${DateTime.now()}");
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -380,7 +380,7 @@ class _QuickartsplashScreenWidgetState
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -492,7 +492,7 @@ class _QuickartsplashScreenWidgetState
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -569,7 +569,7 @@ class _QuickartsplashScreenWidgetState
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -663,7 +663,7 @@ class _QuickartsplashScreenWidgetState
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -693,7 +693,7 @@ class _QuickartsplashScreenWidgetState
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
               await Future.delayed(
                 Duration(
-                  milliseconds: 1000,
+                  milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
@@ -856,13 +856,14 @@ class _QuickartsplashScreenWidgetState
                   width: MediaQuery.sizeOf(context).width * 1.0,
                   height: MediaQuery.sizeOf(context).height * 1.0,
                   imageUrl:
-                      'https://quickart.b-cdn.net/images/app-home-splash-screeneid1.gif',
+                      // 'https://quickart.b-cdn.net/images/app-home-splash-screeneid1.gif',
+                      "https://quickart.b-cdn.net/images/app-home-loadernew.gif",
                   version: '$imageVersion',
                 ),
               ),
             ],
           ),
-        ),
+        ), 
       ),
     );
   }

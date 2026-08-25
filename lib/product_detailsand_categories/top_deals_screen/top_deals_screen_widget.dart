@@ -48,7 +48,8 @@ class TopDealsScreenWidget extends StatefulWidget {
   State<TopDealsScreenWidget> createState() => _TopDealsScreenWidgetState();
 }
 
-class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
+class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
+    with WidgetsBindingObserver {
   late TopDealsScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -56,77 +57,95 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => TopDealsScreenModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'topDealsScreen'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('TOP_DEALS_SCREEN_topDealsScreen_ON_INIT_');
-      logFirebaseEvent('topDealsScreen_refresh_database_request');
-      safeSetState(() => _model.apiRequestCompleter = null);
-      await _model.waitForApiRequestCompleted();
-      if (widget!.utmSource != null && widget!.utmSource != '') {
-        logFirebaseEvent('topDealsScreen_backend_call');
-        _model.apiResultSeoSource = await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmMedium,
-          utmkeyword: widget!.utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: isiOS == true ? 'ios' : 'android',
-        );
-
-        if ((_model.apiResultSeoSource?.succeeded ?? true)) {
-          logFirebaseEvent('topDealsScreen_custom_action');
-          await actions.facebookEventClass(
-            widget!.utmKeyword!,
-            widget!.utmPlacement!,
-            FFAppState().userID,
-            0.0,
-            0,
-            0.0,
-            'utmSource',
-            FFAppState().emptyJson,
-            'topselling',
-            widget!.utmSource,
-            widget!.utmCampaign,
-            widget!.utmNetwork,
-            widget!.utmMedium,
-          );
-        } else {
-          logFirebaseEvent('topDealsScreen_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeoSource?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: TextStyle(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              ),
-              duration: Duration(milliseconds: 4000),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => TopDealsScreenModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'topDealsScreen'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('TOP_DEALS_SCREEN_topDealsScreen_ON_INIT_');
+        logFirebaseEvent('topDealsScreen_refresh_database_request');
+        safeSetState(() => _model.apiRequestCompleter = null);
+        await _model.waitForApiRequestCompleted();
+        if (widget!.utmSource != null && widget!.utmSource != '') {
+          logFirebaseEvent('topDealsScreen_backend_call');
+          _model.apiResultSeoSource = await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmMedium,
+            utmkeyword: widget!.utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: isiOS == true ? 'ios' : 'android',
+          );
+
+          if ((_model.apiResultSeoSource?.succeeded ?? true)) {
+            logFirebaseEvent('topDealsScreen_custom_action');
+            await actions.facebookEventClass(
+              widget!.utmKeyword!,
+              widget!.utmPlacement!,
+              FFAppState().userID,
+              0.0,
+              0,
+              0.0,
+              'utmSource',
+              FFAppState().emptyJson,
+              'topselling',
+              widget!.utmSource,
+              widget!.utmCampaign,
+              widget!.utmNetwork,
+              widget!.utmMedium,
+            );
+          } else {
+            logFirebaseEvent('topDealsScreen_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeoSource?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override

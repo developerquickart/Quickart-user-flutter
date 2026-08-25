@@ -18,9 +18,9 @@ class QuickartGroup {
   // static String getBaseUrl() => 'https://supaapioriginal-production.up.railway.app/testnodejsapp/';
 
  //Demo server
-    static String getBaseUrl() => 'https://demoapi.quickart.ae/testnodejsapp/';
+    // static String getBaseUrl() => 'https://demoapi.quickart.ae/testnodejsapp/';
 //Live server
-    //  static String getBaseUrl() => 'https://api.quickart.ae/testnodejsapp/';
+  static String getBaseUrl() => 'https://api.quickart.ae/testnodejsapp/';
   
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
@@ -151,6 +151,8 @@ class QuickartGroup {
   static SpentbywalletCall spentbywalletCall = SpentbywalletCall();
   static AddtosavecartCall addtosavecartCall = AddtosavecartCall();
   static AddtosavesubcartCall addtosavesubcartCall = AddtosavesubcartCall();
+  static RemovesavecartCall removesavecartCall = RemovesavecartCall();
+
 }
 
 class LoginCall {
@@ -2306,13 +2308,18 @@ class CancelledproductorderCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
+      final safecancelReason = (cancelReason ?? '')
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\r', '\\r')
+    .replaceAll('\n', '\\n');
 
     final ffApiRequestBody = '''
 {
   "cart_id": "${cartID}",
   "user_id": "${userid}",
   "store_order_id": "${storeOrderid}",
-  "cancel_reason": "${cancelReason}",
+  "cancel_reason": "${safecancelReason}",
   "platform": "${platform}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -2696,11 +2703,16 @@ class CancelledquickorderCall {
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
+final safecancelReason = (cancelResoan ?? '')
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\r', '\\r')
+    .replaceAll('\n', '\\n');
     final ffApiRequestBody = '''
 {
   "group_id": "${cartID}",
   "user_id": "${userID}",
-  "cancel_reason": "${cancelResoan}",
+  "cancel_reason": "${safecancelReason}",
   "platform": "${platform}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -2748,7 +2760,11 @@ class CheckoutsubcribtionorderCall {
     String? totalrefwalletamt = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-
+     final safeOrderInstruction = (orderInstruction ?? '')
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\r', '\\r')
+    .replaceAll('\n', '\\n');
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
@@ -2770,7 +2786,7 @@ class CheckoutsubcribtionorderCall {
   "payment_type": "${paymentType}",
   "del_partner_tip": "0",
   "totalwalletamt": "${totalwalletamt}",
-  "order_instruction": "${orderInstruction}",
+  "order_instruction": "${safeOrderInstruction}",
   "AutoRenewSubCart": "${autorenewSubCart}",
   "platform": "${platform}",
   "totalrefwalletamt": "${totalrefwalletamt}"
@@ -2831,6 +2847,11 @@ class CheckoutquickorderCall {
     String? totalrefwalletamt = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
+    final safeOrderInstruction = (orderInstruction ?? '')
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\r', '\\r')
+    .replaceAll('\n', '\\n');
 
     final ffApiRequestBody = '''
 {
@@ -2853,10 +2874,11 @@ class CheckoutquickorderCall {
   "del_partner_tip": "${deliveryPartnerTip}",
   "del_partner_instruction": "${deliveryPartnerInstruction}",
   "totalwalletamt": ${totalwalletamt},
-  "order_instruction": "${orderInstruction}",
+  "order_instruction": "${safeOrderInstruction}",
   "platform": "${platform}",
   "totalrefwalletamt": "${totalrefwalletamt}"
 }''';
+
 
     return ApiManager.instance.makeApiCall(
       callName: 'checkoutquickorder',
@@ -3210,12 +3232,17 @@ class CancelledquickorderprodCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
+      final safecancelReason = (cancelReason ?? '')
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\r', '\\r')
+    .replaceAll('\n', '\\n');
 
     final ffApiRequestBody = '''
 {
   "cart_id": "${cartid}",
   "user_id": "${userid}",
-  "cancel_reason": "${cancelReason}",
+  "cancel_reason": "${safecancelReason}",
   "platform": "${platform}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -4078,7 +4105,8 @@ class ShowspcatcartCall {
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'showspcatcart',
-      apiUrl: '${baseUrl}api/show_spcatcart',
+      // apiUrl: '${baseUrl}api/show_spcatcart',
+      apiUrl: '${baseUrl}api/show_spcatcart_new',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -4546,7 +4574,11 @@ class CheckouttrailpackCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-
+    final safeOrderInstruction = (orderInstruction ?? '')
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\r', '\\r')
+    .replaceAll('\n', '\\n');
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userid)}",
@@ -4564,7 +4596,7 @@ class CheckouttrailpackCall {
   "device_id": "${escapeStringForJson(deviceid)}",
   "del_partner_tip": "${escapeStringForJson(deliverypartnerTip)}",
   "del_partner_instruction": "${escapeStringForJson(deliveryInstruction)}",
-  "order_instruction": "${escapeStringForJson(orderInstruction)}",
+  "order_instruction": "${escapeStringForJson(safeOrderInstruction)}",
   "platform": "${escapeStringForJson(platform)}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -5327,6 +5359,50 @@ class AddtosavesubcartCall {
               r'''$.message''',
             ));
 }
+class RemovesavecartCall {
+  Future<ApiCallResponse> call({
+    String? userID = '',
+    String? variantID = '',
+    String? isSubscription = '',
+  }) async {
+    final baseUrl = QuickartGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "user_id": "${escapeStringForJson(userID)}",
+  "varient_id": "${escapeStringForJson(variantID)}",
+  "is_subscription": "${escapeStringForJson(isSubscription)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'removesavecart',
+      apiUrl: '${baseUrl}api/remove_save_cart',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.status''',
+      ));
+  String? message(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  dynamic? data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+}
 
 
 /// End Quickart Group Code
@@ -5455,7 +5531,7 @@ class ProductsearchCall {
     return ApiManager.instance.makeApiCall(
       callName: 'productsearch',
       apiUrl:
-          'https://kqnbbiyijarwsoymqtup.supabase.co/functions/v1/product-search',
+          'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
