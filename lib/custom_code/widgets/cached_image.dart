@@ -1,9 +1,10 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/flutter_flow/ff_builtin_enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom widgets
+import '/custom_code/widgets/index.dart'; // Imports other custom widgets
 import '/custom_code/actions/index.dart'; // Imports custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
@@ -35,7 +36,12 @@ class _CachedImageState extends State<CachedImage> {
       imageUrl: widget.imageUrl,
       placeholder: (context, url) =>
           const Center(child: CircularProgressIndicator()),
-      //errorWidget: (context, url, error) => const Icon(Icons.error),
+      errorWidget: (context, url, error) => Image.asset(
+        'assets/images/bg-banner.jpg',
+        width: widget.width,
+        height: widget.height,
+        fit: BoxFit.cover,
+      ),
       width: widget.width,
       height: widget.height,
       fit: BoxFit.cover,

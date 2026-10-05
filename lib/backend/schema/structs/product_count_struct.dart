@@ -133,7 +133,7 @@ Map<String, dynamic> getProductCountFirestoreData(
   final firestoreData = mapToFirestore(productCount.toMap());
 
   // Add any Firestore field values
-  productCount.firestoreUtilData.fieldValues
+  mapToFirestore(productCount.firestoreUtilData.fieldValues)
       .forEach((k, v) => firestoreData[k] = v);
 
   return forFieldValue ? mergeNestedFields(firestoreData) : firestoreData;

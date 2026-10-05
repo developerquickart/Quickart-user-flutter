@@ -124,10 +124,10 @@ class _SimilarPproductWidgetState extends State<SimilarPproductWidget> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
                     topLeft: Radius.circular(8.0),
                     topRight: Radius.circular(8.0),
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
                   ),
                   border: Border.all(
                     color: FFAppConstants.neutralWhiteF5F5F5,
@@ -148,8 +148,6 @@ class _SimilarPproductWidgetState extends State<SimilarPproductWidget> {
                             decoration: BoxDecoration(
                               color: FFAppConstants.productBgClr,
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(0.0),
-                                bottomRight: Radius.circular(0.0),
                                 topLeft: Radius.circular(8.0),
                                 topRight: Radius.circular(8.0),
                               ),
@@ -411,10 +409,8 @@ class _SimilarPproductWidgetState extends State<SimilarPproductWidget> {
                       height: 20.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(0.0),
-                          bottomRight: Radius.circular(8.0),
                           topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(0.0),
+                          bottomRight: Radius.circular(8.0),
                         ),
                       ),
                       child: Row(
@@ -433,10 +429,7 @@ class _SimilarPproductWidgetState extends State<SimilarPproductWidget> {
                                   decoration: BoxDecoration(
                                     color: FFAppConstants.green44AC20,
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(0.0),
-                                      bottomRight: Radius.circular(0.0),
                                       topLeft: Radius.circular(8.0),
-                                      topRight: Radius.circular(0.0),
                                     ),
                                   ),
                                   child: Align(
@@ -561,8 +554,6 @@ class _SimilarPproductWidgetState extends State<SimilarPproductWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF4F6F4),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(0.0),
-                                  bottomRight: Radius.circular(8.0),
                                   topLeft:
                                       Radius.circular(valueOrDefault<double>(
                                     FFAppConstants.percentageCheck <
@@ -574,7 +565,7 @@ class _SimilarPproductWidgetState extends State<SimilarPproductWidget> {
                                         : 8.0,
                                     0.0,
                                   )),
-                                  topRight: Radius.circular(0.0),
+                                  bottomRight: Radius.circular(8.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFDCE9D8),

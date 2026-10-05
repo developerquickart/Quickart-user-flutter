@@ -61,6 +61,12 @@ class ProductDetailsScreenModel
 
   bool isLoaderIndicator = false;
 
+  String surgeCharge = 'surge_charge';
+
+  String cashback = 'cashback';
+
+  String discount = 'discount';
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (seosource)] action in product_details_screen widget.

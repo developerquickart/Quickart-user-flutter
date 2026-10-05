@@ -159,10 +159,10 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                                   decoration: BoxDecoration(
                                     color: FFAppConstants.whiteColor,
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0),
                                       topLeft: Radius.circular(10.0),
                                       topRight: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
                                     ),
                                     border: Border.all(
                                       color: FFAppConstants.lightBlack7a7a7a,

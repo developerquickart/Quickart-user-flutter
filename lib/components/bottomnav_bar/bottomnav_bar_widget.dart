@@ -72,8 +72,6 @@ class _BottomnavBarWidgetState extends State<BottomnavBarWidget> {
               )
             ],
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(0.0),
-              bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(8.0),
               topRight: Radius.circular(8.0),
             ),
@@ -495,7 +493,7 @@ class _BottomnavBarWidgetState extends State<BottomnavBarWidget> {
                               if (FFAppState().isUserLogin == true) {
                                 logFirebaseEvent('IconButton_navigate_to');
 
-                                context.pushNamed(ProfilePageWidget.routeName);
+                                context.goNamed(ProfilePageWidget.routeName);
                               } else {
                                 logFirebaseEvent('IconButton_navigate_to');
 

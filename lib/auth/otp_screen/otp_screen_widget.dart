@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/custom_o_t_p_alert_dailog/custom_o_t_p_alert_dailog_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -45,6 +46,7 @@ class _OtpScreenWidgetState extends State<OtpScreenWidget> {
   late OtpScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
@@ -301,10 +303,6 @@ class _OtpScreenWidgetState extends State<OtpScreenWidget> {
                             ),
                             controller: _model.pinCodeController,
                             onChanged: (_) {},
-                            onCompleted: (_) async {
-                              logFirebaseEvent(
-                                  'OTP_SCREEN_PinCode_vdogrubf_ON_PINCODE_C');
-                            },
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             validator: _model.pinCodeControllerValidator
@@ -589,6 +587,9 @@ class _OtpScreenWidgetState extends State<OtpScreenWidget> {
                             onPressed: () async {
                               logFirebaseEvent(
                                   'OTP_SCREEN_VERIFY__CONTINUE_BTN_ON_TAP');
+                              currentUserLocationValue =
+                                  await getCurrentUserLocation(
+                                      defaultLocation: LatLng(0.0, 0.0));
                               logFirebaseEvent('Button_custom_action');
                               _model.connectivityOtpResultbutton =
                                   await actions.checkInternetConnection();
@@ -631,12 +632,70 @@ class _OtpScreenWidgetState extends State<OtpScreenWidget> {
                                           ? 'register'
                                           : 'registerrr',
                                       FFAppState().emptyJson,
-                                      ' ',
-                                      ' ',
+                                      getJsonField(
+                                        (_model.apiResultVerifyOTPbutton
+                                                ?.jsonBody ??
+                                            ''),
+                                        r'''$.data.id''',
+                                      ).toString(),
+                                      FFAppState().phoneNo,
                                       ' ',
                                       ' ',
                                       ' ',
                                     );
+                                    logFirebaseEvent('Button_backend_call');
+                                    _model.getZoneIDResult =
+                                        await QuickartZoneGroup.getZoneIDCall
+                                            .call(
+                                      lat: functions
+                                          .getCurrentLatitudeLogitude(
+                                              currentUserLocationValue!, 'lat')
+                                          .toString(),
+                                      lng: functions
+                                          .getCurrentLatitudeLogitude(
+                                              currentUserLocationValue!, 'lng')
+                                          .toString(),
+                                      userid: getJsonField(
+                                        (_model.apiResultVerifyOTPbutton
+                                                ?.jsonBody ??
+                                            ''),
+                                        r'''$.data.id''',
+                                      ).toString(),
+                                    );
+
+                                    if (!(_model.getZoneIDResult?.succeeded ??
+                                        true)) {
+                                      logFirebaseEvent('Button_alert_dialog');
+                                      await showDialog(
+                                        context: context,
+                                        builder: (dialogContext) {
+                                          return Dialog(
+                                            elevation: 0,
+                                            insetPadding: EdgeInsets.zero,
+                                            backgroundColor: Colors.transparent,
+                                            alignment: AlignmentDirectional(
+                                                    0.0, 0.0)
+                                                .resolve(
+                                                    Directionality.of(context)),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                FocusScope.of(dialogContext)
+                                                    .unfocus();
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              child: CustomAlertDailogWidget(
+                                                des:
+                                                    'Something went wrong. Please try again',
+                                                height: 150.0,
+                                                title: ' ',
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                     logFirebaseEvent('Button_update_app_state');
                                     FFAppState().deleteUserName();
                                     FFAppState().userName = '';
@@ -652,6 +711,10 @@ class _OtpScreenWidgetState extends State<OtpScreenWidget> {
                                     FFAppState().deleteUsserType();
                                     FFAppState().usserType = '';
 
+                                    FFAppState().zoneInfo =
+                                        QuickartZoneGroup.getZoneIDCall.data(
+                                      (_model.getZoneIDResult?.jsonBody ?? ''),
+                                    );
                                     safeSetState(() {});
                                     if (functions.checkUUIDCondition(
                                             getJsonField(
@@ -1356,10 +1419,10 @@ class _OtpScreenWidgetState extends State<OtpScreenWidget> {
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(6.0),
-                                bottomRight: Radius.circular(6.0),
                                 topLeft: Radius.circular(6.0),
                                 topRight: Radius.circular(6.0),
+                                bottomLeft: Radius.circular(6.0),
+                                bottomRight: Radius.circular(6.0),
                               ),
                               hoverColor: FFAppConstants.indigoColor,
                               hoverTextColor: FFAppConstants.yellowColor,

@@ -124,9 +124,8 @@ class _TrialPackcategoriesWidgetState extends State<TrialPackcategoriesWidget> {
             ),
             onPressed: () async {
               logFirebaseEvent('TRIAL_PACKCATEGORIES_chevron_left_ICN_ON');
-              logFirebaseEvent('IconButton_navigate_to');
-
-              context.goNamed(DashboardScreenWidget.routeName);
+              logFirebaseEvent('IconButton_navigate_back');
+              context.safePop();
             },
           ),
           title: InkWell(
@@ -188,6 +187,14 @@ class _TrialPackcategoriesWidgetState extends State<TrialPackcategoriesWidget> {
                             ..complete(QuickartGroup.trialproductlistCall.call(
                               userId: FFAppState().userID,
                               platform: isiOS ? 'ios' : 'android',
+                              zoneID: getJsonField(
+                                FFAppState().zoneInfo,
+                                r'''$.zone_id''',
+                              ).toString(),
+                              storeID: getJsonField(
+                                FFAppState().zoneInfo,
+                                r'''$.store_id''',
+                              ).toString(),
                             )))
                           .future,
                       builder: (context, snapshot) {
@@ -270,6 +277,7 @@ class _TrialPackcategoriesWidgetState extends State<TrialPackcategoriesWidget> {
                                         catteeDataItem,
                                         r'''$.title''',
                                       ).toString();
+                                      FFAppState().screenName = 'trailList';
                                       safeSetState(() {});
                                       logFirebaseEvent(
                                           'Container_google_analytics_event');
@@ -343,9 +351,6 @@ class _TrialPackcategoriesWidgetState extends State<TrialPackcategoriesWidget> {
                                                       Radius.circular(20.0),
                                                   bottomRight:
                                                       Radius.circular(20.0),
-                                                  topLeft: Radius.circular(0.0),
-                                                  topRight:
-                                                      Radius.circular(0.0),
                                                 ),
                                               ),
                                               child: Align(

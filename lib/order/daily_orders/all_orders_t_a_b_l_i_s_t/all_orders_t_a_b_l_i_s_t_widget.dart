@@ -480,80 +480,34 @@ class _AllOrdersTABLISTWidgetState extends State<AllOrdersTABLISTWidget>
                                                                                   alignment: AlignmentDirectional(0.0, 0.0),
                                                                                   child: Container(
                                                                                     decoration: BoxDecoration(
-                                                                                      color: FFAppConstants.green44AC20,
                                                                                       borderRadius: BorderRadius.circular(8.0),
                                                                                     ),
-                                                                                    child: Visibility(
-                                                                                      visible: _model.orderTypeTrial ==
-                                                                                          getJsonField(
-                                                                                            dataModelItem,
-                                                                                            r'''$.orderType''',
-                                                                                          ).toString(),
-                                                                                      child: Padding(
-                                                                                        padding: EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 3.0),
-                                                                                        child: Text(
-                                                                                          'TRIAL PACK ',
-                                                                                          textAlign: TextAlign.center,
-                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                font: GoogleFonts.montserrat(
-                                                                                                  fontWeight: FontWeight.w600,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                ),
-                                                                                                color: FFAppConstants.whiteColor,
-                                                                                                fontSize: 10.0,
-                                                                                                letterSpacing: 0.0,
+                                                                                    child: Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 3.0),
+                                                                                      child: Text(
+                                                                                        functions.setOrderStatus(getJsonField(
+                                                                                          dataModelItem,
+                                                                                          r'''$.order_status''',
+                                                                                        ).toString())!,
+                                                                                        textAlign: TextAlign.center,
+                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              font: GoogleFonts.montserrat(
                                                                                                 fontWeight: FontWeight.w600,
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                               ),
-                                                                                        ),
+                                                                                              color: functions.setBgColorinIOrder(getJsonField(
+                                                                                                dataModelItem,
+                                                                                                r'''$.order_status''',
+                                                                                              ).toString()),
+                                                                                              fontSize: 12.0,
+                                                                                              letterSpacing: 0.0,
+                                                                                              fontWeight: FontWeight.w600,
+                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                            ),
                                                                                       ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                                if (_model.orderTypeTrial !=
-                                                                                    getJsonField(
-                                                                                      dataModelItem,
-                                                                                      r'''$.orderType''',
-                                                                                    ).toString())
-                                                                                  Align(
-                                                                                    alignment: AlignmentDirectional(0.0, 0.0),
-                                                                                    child: Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        borderRadius: BorderRadius.circular(8.0),
-                                                                                      ),
-                                                                                      child: Visibility(
-                                                                                        visible: _model.orderTypeTrial !=
-                                                                                            getJsonField(
-                                                                                              dataModelItem,
-                                                                                              r'''$.orderType''',
-                                                                                            ).toString(),
-                                                                                        child: Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 5.0, 3.0),
-                                                                                          child: Text(
-                                                                                            functions.setOrderStatus(getJsonField(
-                                                                                              dataModelItem,
-                                                                                              r'''$.order_status''',
-                                                                                            ).toString())!,
-                                                                                            textAlign: TextAlign.center,
-                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                                  font: GoogleFonts.montserrat(
-                                                                                                    fontWeight: FontWeight.w600,
-                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                  ),
-                                                                                                  color: functions.setBgColorinIOrder(getJsonField(
-                                                                                                    dataModelItem,
-                                                                                                    r'''$.order_status''',
-                                                                                                  ).toString()),
-                                                                                                  fontSize: 12.0,
-                                                                                                  letterSpacing: 0.0,
-                                                                                                  fontWeight: FontWeight.w600,
-                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                                ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
                                                                               ],
                                                                             ),
                                                                           ),
@@ -789,7 +743,10 @@ class _AllOrdersTABLISTWidgetState extends State<AllOrdersTABLISTWidget>
                                           ..complete(QuickartGroup
                                               .myorderssubscriptionlistCall
                                               .call(
-                                            storeid: FFAppState().storeID,
+                                            storeid: getJsonField(
+                                              FFAppState().zoneInfo,
+                                              r'''$.store_id''',
+                                            ).toString(),
                                             userid: FFAppState().userID,
                                             page: FFAppState().page,
                                             pageper: 30,
@@ -916,13 +873,13 @@ class _AllOrdersTABLISTWidgetState extends State<AllOrdersTABLISTWidget>
                                                     color: Colors.white,
                                                     borderRadius:
                                                         BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(8.0),
-                                                      bottomRight:
-                                                          Radius.circular(8.0),
                                                       topLeft:
                                                           Radius.circular(8.0),
                                                       topRight:
+                                                          Radius.circular(8.0),
+                                                      bottomLeft:
+                                                          Radius.circular(8.0),
+                                                      bottomRight:
                                                           Radius.circular(8.0),
                                                     ),
                                                     border: Border.all(
@@ -1356,6 +1313,12 @@ class _AllOrdersTABLISTWidgetState extends State<AllOrdersTABLISTWidget>
                                                                         platform: isiOS
                                                                             ? 'ios'
                                                                             : 'android',
+                                                                        storeId:
+                                                                            getJsonField(
+                                                                          FFAppState()
+                                                                              .zoneInfo,
+                                                                          r'''$.store_id''',
+                                                                        ).toString(),
                                                                       );
 
                                                                       if ((_model
@@ -1770,8 +1733,11 @@ class _AllOrdersTABLISTWidgetState extends State<AllOrdersTABLISTWidget>
                                                                       userid: FFAppState()
                                                                           .userID,
                                                                       storeid:
-                                                                          FFAppState()
-                                                                              .storeID,
+                                                                          getJsonField(
+                                                                        FFAppState()
+                                                                            .zoneInfo,
+                                                                        r'''$.store_id''',
+                                                                      ).toString(),
                                                                       groupid:
                                                                           getJsonField(
                                                                         subscriptionModelItem,

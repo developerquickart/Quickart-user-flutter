@@ -166,7 +166,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     return FutureBuilder<ApiCallResponse>(
       future: (_model.apiRequestCompleter ??= Completer<ApiCallResponse>()
             ..complete(QuickartGroup.productDetailCall.call(
-              storeID: FFAppState().storeID,
+              storeID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
               userID: FFAppState().userID,
               productID: widget!.id != null
                   ? valueOrDefault<String>(
@@ -175,6 +178,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     )
                   : FFAppState().productID,
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
             )))
           .future,
       builder: (context, snapshot) {
@@ -217,9 +224,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   FFAppState().isSubcribeCartVisible = false;
                   safeSetState(() {});
                   if (FFAppState().isUserLogin == true) {
-                    logFirebaseEvent('IconButton_navigate_to');
-
-                    context.pushNamed(DashboardScreenWidget.routeName);
+                    logFirebaseEvent('IconButton_navigate_back');
+                    context.safePop();
                   } else {
                     logFirebaseEvent('IconButton_navigate_to');
 
@@ -874,8 +880,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                     userid: FFAppState()
                                                                         .userID,
                                                                     storeID:
-                                                                        FFAppState()
-                                                                            .storeID,
+                                                                        getJsonField(
+                                                                      FFAppState()
+                                                                          .zoneInfo,
+                                                                      r'''$.store_id''',
+                                                                    ).toString(),
                                                                     varientID:
                                                                         getJsonField(
                                                                       productDetailsScreenProductDetailResponse
@@ -1072,8 +1081,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                     userid: FFAppState()
                                                                         .userID,
                                                                     storeID:
-                                                                        FFAppState()
-                                                                            .storeID,
+                                                                        getJsonField(
+                                                                      FFAppState()
+                                                                          .zoneInfo,
+                                                                      r'''$.store_id''',
+                                                                    ).toString(),
                                                                     varientID:
                                                                         getJsonField(
                                                                       productDetailsScreenProductDetailResponse
@@ -2239,6 +2251,26 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                     safeSetState(
                                                                         () {});
                                                                     logFirebaseEvent(
+                                                                        'Container_custom_action');
+                                                                    await actions
+                                                                        .facebookEventClass(
+                                                                      FFAppState()
+                                                                          .userID,
+                                                                      '0',
+                                                                      '0',
+                                                                      0.0,
+                                                                      0,
+                                                                      0.0,
+                                                                      'timeSlotView',
+                                                                      FFAppState()
+                                                                          .emptyJson,
+                                                                      '0',
+                                                                      'SubscriptionCart',
+                                                                      '0',
+                                                                      '0',
+                                                                      '0',
+                                                                    );
+                                                                    logFirebaseEvent(
                                                                         'Container_backend_call');
                                                                     _model.apiResultWeek1 =
                                                                         await QuickartGroup
@@ -2602,8 +2634,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                     userid: FFAppState()
                                                                         .userID,
                                                                     storeid:
-                                                                        FFAppState()
-                                                                            .storeID,
+                                                                        getJsonField(
+                                                                      FFAppState()
+                                                                          .zoneInfo,
+                                                                      r'''$.store_id''',
+                                                                    ).toString(),
                                                                     varientid:
                                                                         getJsonField(
                                                                       _model
@@ -3546,30 +3581,27 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 5.0, 10.0, 0.0),
                                         child: Text(
-                                          functions.removeHtmlTags(
-                                              functions.getVariantDescription(
-                                                  getJsonField(
-                                                    QuickartGroup
-                                                        .productDetailCall
-                                                        .productDetailData(
-                                                      productDetailsScreenProductDetailResponse
-                                                          .jsonBody,
-                                                    ),
-                                                    r'''$.varients''',
-                                                  ),
-                                                  (_model.selectedVarient == 0
-                                                          ? getJsonField(
-                                                              QuickartGroup
-                                                                  .productDetailCall
-                                                                  .productDetailData(
-                                                                productDetailsScreenProductDetailResponse
-                                                                    .jsonBody,
-                                                              ),
-                                                              r'''$.varients[0].varient_id''',
-                                                            )
-                                                          : _model
-                                                              .selectedVarient!)
-                                                      .toString())),
+                                          functions.getVariantDescription(
+                                              getJsonField(
+                                                QuickartGroup.productDetailCall
+                                                    .productDetailData(
+                                                  productDetailsScreenProductDetailResponse
+                                                      .jsonBody,
+                                                ),
+                                                r'''$.varients''',
+                                              ),
+                                              (_model.selectedVarient == 0
+                                                      ? getJsonField(
+                                                          QuickartGroup
+                                                              .productDetailCall
+                                                              .productDetailData(
+                                                            productDetailsScreenProductDetailResponse
+                                                                .jsonBody,
+                                                          ),
+                                                          r'''$.varients[0].varient_id''',
+                                                        )
+                                                      : _model.selectedVarient!)
+                                                  .toString()),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -3996,7 +4028,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             ),
                             child: Container(
                               width: double.infinity,
-                              height: 500.0,
+                              height: (_model.datePicked != null) == true
+                                  ? 550.0
+                                  : 410.0,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
@@ -5362,7 +5396,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           _model.apiResultTimeSlot =
                                               await QuickartGroup.timeslotCall
                                                   .call(
-                                            storeID: FFAppState().storeID,
+                                            storeID: getJsonField(
+                                              FFAppState().zoneInfo,
+                                              r'''$.store_id''',
+                                            ).toString(),
                                             selectedDate: dateTimeFormat(
                                                 "yyyy-MM-dd",
                                                 _model.datePicked),
@@ -5376,6 +5413,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                     FFAppState().isFriSelected,
                                                     FFAppState().isSatSelected),
                                             platform: isiOS ? 'ios' : 'android',
+                                            zoneID: getJsonField(
+                                              FFAppState().zoneInfo,
+                                              r'''$.zone_id''',
+                                            ).toString(),
                                             variantID: getJsonField(
                                               _model.selectedVariantDataJson,
                                               r'''$.varient_id''',
@@ -5797,7 +5838,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                   context)
                                                               .width *
                                                           1.0,
-                                                      height: 50.0,
+                                                      height: 90.0,
                                                       decoration:
                                                           BoxDecoration(),
                                                       child: Padding(
@@ -5830,116 +5871,365 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                 final timeSlotModelItem =
                                                                     timeSlotModel[
                                                                         timeSlotModelIndex];
-                                                                return Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
+                                                                return Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
                                                                             0.0,
                                                                             10.0,
                                                                             0.0),
-                                                                    child:
-                                                                        InkWell(
-                                                                      splashColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      focusColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      hoverColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      highlightColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      onTap:
-                                                                          () async {
-                                                                        logFirebaseEvent(
-                                                                            'PRODUCT_DETAILS_SCREEN_Container_fqfwqtn');
-                                                                        logFirebaseEvent(
-                                                                            'Container_update_app_state');
-                                                                        FFAppState().isDeliveryTimeSlotSelected =
-                                                                            getJsonField(
-                                                                          timeSlotModelItem,
-                                                                          r'''$.timeslot''',
-                                                                        ).toString();
-                                                                        safeSetState(
-                                                                            () {});
-                                                                        logFirebaseEvent(
-                                                                            'Container_google_analytics_event');
-                                                                        logFirebaseEvent(
-                                                                          'Selection',
-                                                                          parameters: {
-                                                                            'Screen Name':
-                                                                                'Product Detail Screen',
-                                                                            'Selected':
-                                                                                'Time',
-                                                                          },
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        width:
-                                                                            150.0,
-                                                                        height:
-                                                                            30.0,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color: functions.setbackgroundColor(
-                                                                              FFAppState().isDeliveryTimeSlotSelected,
+                                                                        child:
+                                                                            InkWell(
+                                                                          splashColor:
+                                                                              Colors.transparent,
+                                                                          focusColor:
+                                                                              Colors.transparent,
+                                                                          hoverColor:
+                                                                              Colors.transparent,
+                                                                          highlightColor:
+                                                                              Colors.transparent,
+                                                                          onTap:
+                                                                              () async {
+                                                                            logFirebaseEvent('PRODUCT_DETAILS_SCREEN_Container_fqfwqtn');
+                                                                            logFirebaseEvent('Container_custom_action');
+                                                                            await actions.facebookEventClass(
+                                                                              FFAppState().userID,
+                                                                              _model.subscriptionDate!,
                                                                               getJsonField(
                                                                                 timeSlotModelItem,
                                                                                 r'''$.timeslot''',
                                                                               ).toString(),
+                                                                              0.0,
                                                                               0,
-                                                                              0),
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(14.0),
-                                                                          border:
-                                                                              Border.all(
-                                                                            color:
-                                                                                Color(0xFFE0E0E0),
-                                                                            width:
-                                                                                1.0,
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.max,
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Padding(
-                                                                              padding: EdgeInsetsDirectional.fromSTEB(2.0, 2.0, 2.0, 2.0),
-                                                                              child: Text(
+                                                                              0.0,
+                                                                              FFAppState().isDeliveryTimeSlotSelected != null && FFAppState().isDeliveryTimeSlotSelected != '' ? 'timeSlotChanges' : 'timeSlotSelected',
+                                                                              FFAppState().emptyJson,
+                                                                              '0',
+                                                                              'subcriptionCart',
+                                                                              '0',
+                                                                              '0',
+                                                                              '0',
+                                                                            );
+                                                                            logFirebaseEvent('Container_update_app_state');
+                                                                            FFAppState().isDeliveryTimeSlotSelected =
                                                                                 getJsonField(
-                                                                                  timeSlotModelItem,
-                                                                                  r'''$.timeslot''',
-                                                                                ).toString(),
-                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                      font: GoogleFonts.readexPro(
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                      ),
-                                                                                      color: FFAppConstants.blackColor0A0A0A,
-                                                                                      fontSize: 10.0,
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FontWeight.normal,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
-                                                                                    ),
+                                                                              timeSlotModelItem,
+                                                                              r'''$.timeslot''',
+                                                                            ).toString();
+                                                                            safeSetState(() {});
+                                                                            logFirebaseEvent('Container_google_analytics_event');
+                                                                            logFirebaseEvent(
+                                                                              'Selection',
+                                                                              parameters: {
+                                                                                'Screen Name': 'Product Detail Screen',
+                                                                                'Selected': 'Time',
+                                                                              },
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            width:
+                                                                                150.0,
+                                                                            height:
+                                                                                30.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: functions.setbackgroundColor(
+                                                                                  FFAppState().isDeliveryTimeSlotSelected,
+                                                                                  getJsonField(
+                                                                                    timeSlotModelItem,
+                                                                                    r'''$.timeslot''',
+                                                                                  ).toString(),
+                                                                                  0,
+                                                                                  0),
+                                                                              borderRadius: BorderRadius.circular(14.0),
+                                                                              border: Border.all(
+                                                                                color: Color(0xFFE0E0E0),
+                                                                                width: 1.0,
                                                                               ),
                                                                             ),
-                                                                          ],
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(2.0, 2.0, 2.0, 2.0),
+                                                                                  child: Text(
+                                                                                    getJsonField(
+                                                                                      timeSlotModelItem,
+                                                                                      r'''$.timeslot''',
+                                                                                    ).toString(),
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.readexPro(
+                                                                                            fontWeight: FontWeight.normal,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          color: FFAppConstants.blackColor0A0A0A,
+                                                                                          fontSize: 12.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.normal,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  ),
+                                                                    if (functions
+                                                                            .isDiscountEmpty(getJsonField(
+                                                                          timeSlotModelItem,
+                                                                          r'''$.value''',
+                                                                        ).toString()) ==
+                                                                        true)
+                                                                      Align(
+                                                                        alignment: AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              5.0,
+                                                                              10.0,
+                                                                              0.0),
+                                                                          child:
+                                                                              Container(
+                                                                            width:
+                                                                                150.0,
+                                                                            height:
+                                                                                40.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: _model.surgeCharge ==
+                                                                                      getJsonField(
+                                                                                        timeSlotModelItem,
+                                                                                        r'''$.pricing_type''',
+                                                                                      ).toString()
+                                                                                  ? FFAppConstants.redLightBG
+                                                                                  : FFAppConstants.greenLightBG,
+                                                                              borderRadius: BorderRadius.circular(20.0),
+                                                                              shape: BoxShape.rectangle,
+                                                                              border: Border.all(
+                                                                                color: Colors.white,
+                                                                                width: 0.0,
+                                                                              ),
+                                                                            ),
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(9.0, 3.0, 9.0, 0.0),
+                                                                                    child: RichText(
+                                                                                      textScaler: MediaQuery.of(context).textScaler,
+                                                                                      text: TextSpan(
+                                                                                        children: [
+                                                                                          TextSpan(
+                                                                                            text: FFAppConstants.zeroValue ==
+                                                                                                    getJsonField(
+                                                                                                      timeSlotModelItem,
+                                                                                                      r'''$.value_type''',
+                                                                                                    )
+                                                                                                ? 'Flat ${FFAppConstants.currancyAED}'
+                                                                                                : (_model.surgeCharge ==
+                                                                                                        getJsonField(
+                                                                                                          timeSlotModelItem,
+                                                                                                          r'''$.pricing_type''',
+                                                                                                        ).toString()
+                                                                                                    ? ''
+                                                                                                    : 'Get '),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  font: GoogleFonts.montserrat(
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                  ),
+                                                                                                  color: _model.surgeCharge ==
+                                                                                                          getJsonField(
+                                                                                                            timeSlotModelItem,
+                                                                                                            r'''$.pricing_type''',
+                                                                                                          ).toString()
+                                                                                                      ? FFAppConstants.redDF3F56
+                                                                                                      : FFAppConstants.darkGreen,
+                                                                                                  fontSize: 10.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                  fontWeight: FontWeight.w500,
+                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                ),
+                                                                                          ),
+                                                                                          TextSpan(
+                                                                                            text: '${getJsonField(
+                                                                                              timeSlotModelItem,
+                                                                                              r'''$.value''',
+                                                                                            ).toString()}${FFAppConstants.zeroValue == getJsonField(
+                                                                                                  timeSlotModelItem,
+                                                                                                  r'''$.value_type''',
+                                                                                                ) ? ' ' : ' % '}',
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  font: GoogleFonts.montserrat(
+                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                  ),
+                                                                                                  color: _model.surgeCharge ==
+                                                                                                          getJsonField(
+                                                                                                            timeSlotModelItem,
+                                                                                                            r'''$.pricing_type''',
+                                                                                                          ).toString()
+                                                                                                      ? FFAppConstants.redDF3F56
+                                                                                                      : FFAppConstants.darkGreen,
+                                                                                                  fontSize: 10.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                ),
+                                                                                          ),
+                                                                                          TextSpan(
+                                                                                            text: _model.surgeCharge ==
+                                                                                                    getJsonField(
+                                                                                                      timeSlotModelItem,
+                                                                                                      r'''$.pricing_type''',
+                                                                                                    ).toString()
+                                                                                                ? 'surge charge applied'
+                                                                                                : getJsonField(
+                                                                                                    timeSlotModelItem,
+                                                                                                    r'''$.pricing_type''',
+                                                                                                  ).toString(),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  font: GoogleFonts.montserrat(
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                  ),
+                                                                                                  color: _model.surgeCharge ==
+                                                                                                          getJsonField(
+                                                                                                            timeSlotModelItem,
+                                                                                                            r'''$.pricing_type''',
+                                                                                                          ).toString()
+                                                                                                      ? FFAppConstants.redDF3F56
+                                                                                                      : FFAppConstants.darkGreen,
+                                                                                                  fontSize: 10.0,
+                                                                                                  letterSpacing: 0.0,
+                                                                                                  fontWeight: FontWeight.w500,
+                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                ),
+                                                                                          )
+                                                                                        ],
+                                                                                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                              font: GoogleFonts.montserrat(
+                                                                                                fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                              ),
+                                                                                              letterSpacing: 0.0,
+                                                                                              fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                            ),
+                                                                                      ),
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 7.0, 0.0),
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(),
+                                                                                      child: Visibility(
+                                                                                        visible: (getJsonField(
+                                                                                                  timeSlotModelItem,
+                                                                                                  r'''$.max_cap''',
+                                                                                                ) !=
+                                                                                                null) &&
+                                                                                            (_model.surgeCharge !=
+                                                                                                getJsonField(
+                                                                                                  timeSlotModelItem,
+                                                                                                  r'''$.pricing_type''',
+                                                                                                ).toString()),
+                                                                                        child: Align(
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                                                                                            child: RichText(
+                                                                                              textScaler: MediaQuery.of(context).textScaler,
+                                                                                              text: TextSpan(
+                                                                                                children: [
+                                                                                                  TextSpan(
+                                                                                                    text: 'up to  ',
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          font: GoogleFonts.montserrat(
+                                                                                                            fontWeight: FontWeight.w500,
+                                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                          ),
+                                                                                                          color: FFAppConstants.blackColor0A0A0A,
+                                                                                                          fontSize: 10.0,
+                                                                                                          letterSpacing: 0.0,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                  TextSpan(
+                                                                                                    text: '${FFAppConstants.zeroValue == getJsonField(
+                                                                                                          timeSlotModelItem,
+                                                                                                          r'''$.max_cap''',
+                                                                                                        ) ? '' : FFAppConstants.currancyAED}${FFAppConstants.zeroValue == getJsonField(
+                                                                                                          timeSlotModelItem,
+                                                                                                          r'''$.max_cap''',
+                                                                                                        ) ? '' : getJsonField(
+                                                                                                        timeSlotModelItem,
+                                                                                                        r'''$.max_cap''',
+                                                                                                      ).toString()}',
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          font: GoogleFonts.montserrat(
+                                                                                                            fontWeight: FontWeight.bold,
+                                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                          ),
+                                                                                                          color: FFAppConstants.blackColor0A0A0A,
+                                                                                                          fontSize: 10.0,
+                                                                                                          letterSpacing: 0.0,
+                                                                                                          fontWeight: FontWeight.bold,
+                                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                        ),
+                                                                                                  )
+                                                                                                ],
+                                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                      font: GoogleFonts.montserrat(
+                                                                                                        fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                      ),
+                                                                                                      letterSpacing: 0.0,
+                                                                                                      fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                    ),
+                                                                                              ),
+                                                                                              textAlign: TextAlign.center,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                  ],
                                                                 );
                                                               },
                                                             );
@@ -6191,8 +6481,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                           userid: FFAppState()
                                                               .userID,
                                                           qty: '1',
-                                                          storeid: FFAppState()
-                                                              .storeID,
+                                                          storeid: getJsonField(
+                                                            FFAppState()
+                                                                .zoneInfo,
+                                                            r'''$.store_id''',
+                                                          ).toString(),
                                                           varientid:
                                                               getJsonField(
                                                             _model

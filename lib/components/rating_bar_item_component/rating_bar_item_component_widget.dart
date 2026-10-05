@@ -230,11 +230,12 @@ class _RatingBarItemComponentWidgetState
                                     getJsonField(
                                       widget!.productJson,
                                       r'''$.review''',
-                                    ).toString()) || (FFAppState().emptyString ==
-                          getJsonField(
-                            widget!.productJson,
-                            r'''$.review''',
-                          ).toString()) ) ==
+                                    ).toString()) ||
+                                (FFAppState().emptyString ==
+                                    getJsonField(
+                                      widget!.productJson,
+                                      r'''$.review''',
+                                    ).toString())) ==
                             false,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -336,11 +337,12 @@ class _RatingBarItemComponentWidgetState
                           getJsonField(
                             widget!.productJson,
                             r'''$.review''',
-                          ).toString()) || (FFAppState().emptyString ==
+                          ).toString()) ||
+                      (FFAppState().emptyString ==
                           getJsonField(
                             widget!.productJson,
                             r'''$.review''',
-                          ).toString()) )
+                          ).toString()))
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 5.0, 0.0),

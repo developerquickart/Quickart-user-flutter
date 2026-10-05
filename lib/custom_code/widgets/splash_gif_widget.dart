@@ -93,7 +93,7 @@ class _SplashGifWidgetState extends State<SplashGifWidget> {
       height: widget.height ?? double.infinity,
       fit: BoxFit.fill,
       placeholder: (_, __) => Image.asset(
-        "assets/images/QuicKart_New_Final.png",
+        "assets/images/splash_logon.png",
         fit: BoxFit.fill,
       ),
       errorWidget: (_, __, ___) => Image.asset(

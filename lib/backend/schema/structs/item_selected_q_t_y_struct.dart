@@ -135,7 +135,7 @@ Map<String, dynamic> getItemSelectedQTYFirestoreData(
   final firestoreData = mapToFirestore(itemSelectedQTY.toMap());
 
   // Add any Firestore field values
-  itemSelectedQTY.firestoreUtilData.fieldValues
+  mapToFirestore(itemSelectedQTY.firestoreUtilData.fieldValues)
       .forEach((k, v) => firestoreData[k] = v);
 
   return forFieldValue ? mergeNestedFields(firestoreData) : firestoreData;

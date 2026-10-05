@@ -1,3 +1,5 @@
+import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_width_action_call_back/custom_alert_width_action_call_back_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -7,6 +9,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'payment_screen_model.dart';
@@ -19,12 +22,14 @@ class PaymentScreenWidget extends StatefulWidget {
     required this.screenPName,
     required this.mrp,
     required this.orderType,
+    required this.groupID,
   });
 
   final String? redirectURl;
   final String? screenPName;
   final double? mrp;
   final String? orderType;
+  final String? groupID;
 
   static String routeName = 'PaymentScreen';
   static String routePath = '/paymentScreen';
@@ -42,7 +47,7 @@ class _PaymentScreenWidgetState extends State<PaymentScreenWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PaymentScreenModel());
-
+print("g1---111-->${widget.redirectURl}");
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'PaymentScreen'});
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
@@ -72,22 +77,118 @@ class _PaymentScreenWidgetState extends State<PaymentScreenWidget> {
           child: AppBar(
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
             automaticallyImplyLeading: false,
-            leading: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 9.0, 0.0, 0.0),
-              child: FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderWidth: 1.0,
-                buttonSize: 40.0,
-                icon: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  size: 30.0,
+            leading: Builder(
+              builder: (context) => Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 9.0, 0.0, 0.0),
+                child: FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderWidth: 1.0,
+                  buttonSize: 40.0,
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    size: 30.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent(
+                        'PAYMENT_SCREEN_arrow_back_ios_new_ICN_ON');
+                    logFirebaseEvent('IconButton_alert_dialog');
+                    await showDialog(
+                      context: context,
+                      builder: (dialogContext) {
+                        return Dialog(
+                          elevation: 0,
+                          insetPadding: EdgeInsets.zero,
+                          backgroundColor: Colors.transparent,
+                          alignment: AlignmentDirectional(0.0, 0.0)
+                              .resolve(Directionality.of(context)),
+                          child: GestureDetector(
+                            onTap: () {
+                              FocusScope.of(dialogContext).unfocus();
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
+                            child: CustomAlertWidthActionCallBackWidget(
+                              des: FFAppConstants.cancelMsg,
+                              height: 120.0,
+                              callAPI: () async {
+                                if (widget!.screenPName == 'addCard') {
+                                  logFirebaseEvent('_navigate_back');
+                                  context.pop();
+                                } else {
+                                  logFirebaseEvent('_custom_action');
+                                  _model.myconnectivityResult =
+                                      await actions.checkInternetConnection();
+                                  if (_model.myconnectivityResult == true) {
+                                    logFirebaseEvent('_haptic_feedback');
+                                    HapticFeedback.heavyImpact();
+                                    logFirebaseEvent('_backend_call');
+                                    _model.apiResultco2Copy =
+                                        await QuickartGroup.paymentabandonCall
+                                            .call(
+                                      userID: FFAppState().userID,
+                                      groupID: widget!.groupID,
+                                    );
+
+                                    if ((_model.apiResultco2Copy?.succeeded ??
+                                        true)) {
+                                      logFirebaseEvent('_navigate_back');
+                                      context.pop();
+                                    } else {
+                                      logFirebaseEvent('_show_snack_bar');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            QuickartGroup.paymentabandonCall
+                                                .message(
+                                              (_model.apiResultco2Copy
+                                                      ?.jsonBody ??
+                                                  ''),
+                                            )!,
+                                            style: GoogleFonts.montserrat(
+                                              color: FFAppConstants
+                                                  .blackColor0A0A0A,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 12.0,
+                                            ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor: FFAppConstants
+                                              .NeutralBlack50Color,
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    logFirebaseEvent('_show_snack_bar');
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          FFAppConstants.internetString,
+                                          style: GoogleFonts.montserrat(
+                                            color:
+                                                FFAppConstants.blackColor0A0A0A,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12.0,
+                                          ),
+                                        ),
+                                        duration: Duration(milliseconds: 4000),
+                                        backgroundColor:
+                                            FFAppConstants.NeutralBlack50Color,
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
+
+                    safeSetState(() {});
+                  },
                 ),
-                onPressed: () async {
-                  logFirebaseEvent('PAYMENT_SCREEN_arrow_back_ios_new_ICN_ON');
-                  logFirebaseEvent('IconButton_navigate_back');
-                  context.pop();
-                },
               ),
             ),
             title: Padding(
@@ -223,16 +324,16 @@ class _PaymentScreenWidgetState extends State<PaymentScreenWidget> {
                           logFirebaseEvent(
                               'WebViewWithUrlChangeHandler_custom_actio');
                           await actions.facebookEventClass(
-                            '0',
-                            '0',
+                            FFAppState().groupID,
+                            FFAppState().userID,
                             'product',
                             0.0,
                             0,
                             widget!.mrp!,
                             'purchase',
                             FFAppState().emptyJson,
-                            '',
-                            ' ',
+                            widget!.orderType,
+                            FFAppState().groupID,
                             ' ',
                             ' ',
                             ' ',
@@ -247,10 +348,11 @@ class _PaymentScreenWidgetState extends State<PaymentScreenWidget> {
                           FFAppState().screenName = widget!.screenPName!;
                           FFAppState().selectedCardID = '';
                           FFAppState().deleteSelectedAddresID();
-                          FFAppState().couponDiscount = 0.0;
-                          FFAppState().selectedCardID = '';
+                          FFAppState().selectedAddresID = '';
+
                           FFAppState().selectedCardNumber = '';
                           FFAppState().selectedAddress1 = '';
+                          FFAppState().couponDiscount = 0.0;
                           FFAppState().update(() {});
                         } else {
                           logFirebaseEvent(
@@ -273,6 +375,23 @@ class _PaymentScreenWidgetState extends State<PaymentScreenWidget> {
                             },
                           );
                           logFirebaseEvent(
+                              'WebViewWithUrlChangeHandler_custom_actio');
+                          await actions.facebookEventClass(
+                            FFAppState().groupID,
+                            FFAppState().userID,
+                            'product',
+                            0.0,
+                            0,
+                            widget!.mrp!,
+                            'paymentFailed',
+                            FFAppState().emptyJson,
+                            widget!.orderType,
+                            FFAppState().groupID,
+                            ' Your payment could not be processed. Please try again or use a different payment method.',
+                            ' ',
+                            ' ',
+                          );
+                          logFirebaseEvent(
                               'WebViewWithUrlChangeHandler_navigate_bac');
                           context.safePop();
                         }
@@ -280,6 +399,7 @@ class _PaymentScreenWidgetState extends State<PaymentScreenWidget> {
                     },
                   ),
                 ),
+          
               ],
             ),
           ),

@@ -81,25 +81,14 @@ class _CustomRetryAlertWidgetState extends State<CustomRetryAlertWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      'assets/images/Quickart_Icon.png',
-                      width: 60.0,
-                      height: 60.0,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
                   child: Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 12.0, 20.0),
+                        EdgeInsetsDirectional.fromSTEB(12.0, 15.0, 12.0, 10.0),
                     child: Text(
                       widget!.des!,
                       textAlign: TextAlign.center,

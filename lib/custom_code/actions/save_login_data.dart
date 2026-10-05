@@ -1,16 +1,16 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/flutter_flow/ff_builtin_enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 Future saveLoginData(
   String userid,
@@ -44,7 +44,7 @@ Future saveLoginData(
     // if (storeid != "0") {
     //   await prefs.setString('storeID', storeid);
     // }
-     await prefs.setString('storeID', "7");
+    await prefs.setString('storeID', "7");
 
     if (jsonData != null) {
       String jsonString = jsonEncode(jsonData);
@@ -79,8 +79,7 @@ Future saveLoginData(
     FFAppState().dashboardBanner = prefs.getString('dashboardBanner') ?? "";
     FFAppState().trialPackBannerImage =
         prefs.getString('trialPackBannerImage') ?? "";
-    FFAppState().usserType =
-    (prefs.getString('usserType') ?? "").toLowerCase();
+    FFAppState().usserType = (prefs.getString('usserType') ?? "").toLowerCase();
 
     print(
         "Store id ----->${FFAppState().storeID} && Login---->${FFAppState().isUserLogin} && userID---->${FFAppState().userID}");

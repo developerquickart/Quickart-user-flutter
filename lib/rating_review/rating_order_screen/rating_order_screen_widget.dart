@@ -430,6 +430,23 @@ class _RatingOrderScreenWidgetState extends State<RatingOrderScreenWidget> {
                                                   .NeutralBlack50Color,
                                             ),
                                           );
+                                          logFirebaseEvent(
+                                              'Button_custom_action');
+                                          await actions.facebookEventClass(
+                                            widget!.cartId!,
+                                            FFAppState().userID,
+                                            'all order rating',
+                                            _model.ratingBarOrderValue!,
+                                            0,
+                                            0.0,
+                                            'productRating',
+                                            FFAppState().emptyJson,
+                                            '0',
+                                            '0',
+                                            '0',
+                                            '0',
+                                            '0',
+                                          );
                                         } else {
                                           logFirebaseEvent(
                                               'Button_show_snack_bar');
@@ -622,10 +639,10 @@ class _RatingOrderScreenWidgetState extends State<RatingOrderScreenWidget> {
                                   ),
                                   child: RatingBarItemComponentWidget(
                                     key: Key(
-                                        'Keybei_${productModelIndex}_of_${productModel.length}'),
-                                    productJson: productModelItem,
+                                        'Keylhw_${productModelIndex}_of_${productModel.length}'),
                                     screenName: widget!.screenName!,
                                     cratid: widget!.cartId!,
+                                    productJson: productModelItem,
                                   ),
                                 ),
                               );

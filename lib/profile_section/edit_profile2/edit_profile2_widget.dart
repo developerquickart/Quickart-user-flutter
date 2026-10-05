@@ -8,6 +8,7 @@ import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -214,10 +215,10 @@ class _EditProfile2WidgetState extends State<EditProfile2Widget> {
                                                 1.0,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(8.0),
-                                            bottomRight: Radius.circular(8.0),
                                             topLeft: Radius.circular(8.0),
                                             topRight: Radius.circular(8.0),
+                                            bottomLeft: Radius.circular(8.0),
+                                            bottomRight: Radius.circular(8.0),
                                           ),
                                         ),
                                         child: Container(
@@ -505,10 +506,10 @@ class _EditProfile2WidgetState extends State<EditProfile2Widget> {
                                           color:
                                               FFAppConstants.neutralWhiteF5F5F5,
                                           borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(5.0),
-                                            bottomRight: Radius.circular(5.0),
                                             topLeft: Radius.circular(5.0),
                                             topRight: Radius.circular(5.0),
+                                            bottomLeft: Radius.circular(5.0),
+                                            bottomRight: Radius.circular(5.0),
                                           ),
                                           border: Border.all(
                                             color: FFAppConstants
@@ -1060,6 +1061,9 @@ class _EditProfile2WidgetState extends State<EditProfile2Widget> {
                                 obscureText: false,
                                 hintCharacter: '●',
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
                                 pinTheme: PinTheme(
                                   fieldHeight: 44.0,
                                   fieldWidth: 44.0,
@@ -1079,10 +1083,6 @@ class _EditProfile2WidgetState extends State<EditProfile2Widget> {
                                 ),
                                 controller: _model.pinCodeController,
                                 onChanged: (_) {},
-                                onCompleted: (_) async {
-                                  logFirebaseEvent(
-                                      'EDIT_PROFILE2_PinCode_ll58d26n_ON_PINCOD');
-                                },
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 validator: _model.pinCodeControllerValidator
@@ -1803,10 +1803,10 @@ class _EditProfile2WidgetState extends State<EditProfile2Widget> {
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(6.0),
-                                  bottomRight: Radius.circular(6.0),
                                   topLeft: Radius.circular(6.0),
                                   topRight: Radius.circular(6.0),
+                                  bottomLeft: Radius.circular(6.0),
+                                  bottomRight: Radius.circular(6.0),
                                 ),
                                 hoverColor: FFAppConstants.indigoColor,
                                 hoverTextColor: FFAppConstants.whiteColor,

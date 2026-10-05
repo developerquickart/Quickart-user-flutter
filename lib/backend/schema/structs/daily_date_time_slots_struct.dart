@@ -181,7 +181,7 @@ Map<String, dynamic> getDailyDateTimeSlotsFirestoreData(
   final firestoreData = mapToFirestore(dailyDateTimeSlots.toMap());
 
   // Add any Firestore field values
-  dailyDateTimeSlots.firestoreUtilData.fieldValues
+  mapToFirestore(dailyDateTimeSlots.firestoreUtilData.fieldValues)
       .forEach((k, v) => firestoreData[k] = v);
 
   return forFieldValue ? mergeNestedFields(firestoreData) : firestoreData;

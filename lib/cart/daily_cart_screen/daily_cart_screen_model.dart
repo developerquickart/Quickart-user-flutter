@@ -4,6 +4,7 @@ import '/backend/schema/structs/index.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/date_time_slot_bottom_sheet/date_time_slot_bottom_sheet_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
+import '/components/products_list_view/products_list_view_widget.dart';
 import '/components/save_letterproducts_list/save_letterproducts_list_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
@@ -85,6 +86,8 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
 
   String? isRefWalletCheckBoxSelected = 'remove';
 
+  double totalValue = 0.0;
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (userbankdetails)] action in dailyCartScreen widget.
@@ -97,10 +100,6 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
       tabBarController != null ? tabBarController!.previousIndex : 0;
 
   Completer<ApiCallResponse>? apiRequestCompleter;
-  // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
-  bool? internetCheck;
-  // Stores action output result for [Backend Call - API (upquickordertimeslot)] action in Container widget.
-  ApiCallResponse? apiResultsqz;
   // Stores action output result for [Backend Call - API (addtosubcart)] action in Container widget.
   ApiCallResponse? apiResultAddSubc;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
@@ -111,10 +110,18 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   bool? internetCheckdc;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtoCartAPIDC;
+  // Stores action output result for [Backend Call - API (addtrailpack)] action in Button widget.
+  ApiCallResponse? apiResultp09;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? internetCheckcp;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
-  ApiCallResponse? addtoCartAPIDCP;
+  ApiCallResponse? addtoCartAPIDCP1;
+  // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
+  bool? internetCheckdcC;
+  // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
+  ApiCallResponse? remoevtoCartAPIDC;
+  // Stores action output result for [Backend Call - API (addtrailpack)] action in Button widget.
+  ApiCallResponse? apiResultp099;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? isInternet4;
   // Stores action output result for [Backend Call - API (updatecart)] action in Container widget.
@@ -123,6 +130,8 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   bool? internetCheckcp1;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtoCartAPID;
+  // Model for productsListView component.
+  late ProductsListViewModel productsListViewModel;
   // State field(s) for CheckboxWallet widget.
   bool? checkboxWalletValue1;
   // State field(s) for CheckboxWallet widget.
@@ -194,6 +203,7 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
 
   @override
   void initState(BuildContext context) {
+    productsListViewModel = createModel(context, () => ProductsListViewModel());
     saveLetterproductsListModel =
         createModel(context, () => SaveLetterproductsListModel());
     emptyDataTwoLineComponentModel =
@@ -203,6 +213,7 @@ class DailyCartScreenModel extends FlutterFlowModel<DailyCartScreenWidget> {
   @override
   void dispose() {
     tabBarController?.dispose();
+    productsListViewModel.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();
 

@@ -71,10 +71,11 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
   void dispose() {
     _model.dispose();
     WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
   }
 
-//Page Load bacome in foreground...G1
+  //Page Load bacome in foreground...G1
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -326,7 +327,10 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                   ApiCallResponse>()
                                 ..complete(
                                     QuickartGroup.additionalCatSearchCall.call(
-                                  storeid: FFAppState().storeID,
+                                  storeid: getJsonField(
+                                    FFAppState().zoneInfo,
+                                    r'''$.store_id''',
+                                  ).toString(),
                                   userid: FFAppState().userID,
                                   byName:
                                       widget!.name != null && widget!.name != ''
@@ -360,6 +364,10 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                   page: FFAppState().page,
                                   perpage: 50,
                                   platform: isiOS ? 'ios' : 'android',
+                                  zoneid: getJsonField(
+                                    FFAppState().zoneInfo,
+                                    r'''$.zone_id''',
+                                  ).toString(),
                                 )))
                               .future,
                           builder: (context, snapshot) {
@@ -714,7 +722,10 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                                                                   _model.cartAdd = await QuickartGroup.addToCartCall.call(
                                                                                     userid: FFAppState().userID,
                                                                                     qty: '1',
-                                                                                    storeid: FFAppState().storeID,
+                                                                                    storeid: getJsonField(
+                                                                                      FFAppState().zoneInfo,
+                                                                                      r'''$.store_id''',
+                                                                                    ).toString(),
                                                                                     varientid: getJsonField(
                                                                                       productModelItem,
                                                                                       r'''$.varient_id''',
@@ -984,7 +995,10 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                                                                         logFirebaseEvent('Button_backend_call');
                                                                                         _model.addtoCartAPI1 = await QuickartGroup.addToCartCall.call(
                                                                                           userid: FFAppState().userID,
-                                                                                          storeid: FFAppState().storeID,
+                                                                                          storeid: getJsonField(
+                                                                                            FFAppState().zoneInfo,
+                                                                                            r'''$.store_id''',
+                                                                                          ).toString(),
                                                                                           deviceid: FFAppState().deviceID,
                                                                                           qty: functions.addRemoveQTY(
                                                                                               getJsonField(
@@ -1248,7 +1262,10 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                                                                                   r'''$.cart_qty''',
                                                                                                 ),
                                                                                                 'add'),
-                                                                                            storeid: FFAppState().storeID,
+                                                                                            storeid: getJsonField(
+                                                                                              FFAppState().zoneInfo,
+                                                                                              r'''$.store_id''',
+                                                                                            ).toString(),
                                                                                             varientid: getJsonField(
                                                                                               productModelItem,
                                                                                               r'''$.varient_id''',
@@ -2829,8 +2846,11 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                                                     FFAppState()
                                                                         .userID,
                                                                 storeID:
-                                                                    FFAppState()
-                                                                        .storeID,
+                                                                    getJsonField(
+                                                                  FFAppState()
+                                                                      .zoneInfo,
+                                                                  r'''$.store_id''',
+                                                                ).toString(),
                                                                 varientID:
                                                                     getJsonField(
                                                                   productModelItem,
@@ -3032,8 +3052,11 @@ class _AdditionalCatScreenWidgetState extends State<AdditionalCatScreenWidget>
                                                                     FFAppState()
                                                                         .userID,
                                                                 storeID:
-                                                                    FFAppState()
-                                                                        .storeID,
+                                                                    getJsonField(
+                                                                  FFAppState()
+                                                                      .zoneInfo,
+                                                                  r'''$.store_id''',
+                                                                ).toString(),
                                                                 varientID:
                                                                     getJsonField(
                                                                   productModelItem,

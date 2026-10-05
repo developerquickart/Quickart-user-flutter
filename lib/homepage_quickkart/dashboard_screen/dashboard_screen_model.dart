@@ -5,6 +5,7 @@ import '/components/custom_alert_signup_dailog/custom_alert_signup_dailog_widget
 import '/components/order_again_list_view/order_again_list_view_widget.dart';
 import '/components/products_list_view/products_list_view_widget.dart';
 import '/components/top_category_widget/top_category_widget_widget.dart';
+import '/flutter_flow/ff_builtin_enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_timer.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -55,6 +56,10 @@ class DashboardScreenModel extends FlutterFlowModel<DashboardScreenWidget> {
   ApiCallResponse? apiResultso1IOS;
   // Stores action output result for [Backend Call - API (appinfo)] action in DashboardScreen widget.
   ApiCallResponse? apiResultso;
+  // Stores action output result for [Custom Action - generateReferralLink] action in DashboardScreen widget.
+  String? refCodew;
+  // Stores action output result for [Custom Action - getAddressFormLatLng] action in DashboardScreen widget.
+  String? selectedAddressNew;
   // State field(s) for Carousel widget.
   CarouselSliderController? carouselController;
   int carouselCurrentIndex = 0;
@@ -66,8 +71,7 @@ class DashboardScreenModel extends FlutterFlowModel<DashboardScreenWidget> {
   // State field(s) for Carouselsecond widget.
   CarouselSliderController? carouselsecondController;
   int carouselsecondCurrentIndex = 1;
-  String? refCodew;
-  String? refCoder;
+
   // Model for productsListView component.
   late ProductsListViewModel productsListViewModel4;
   // Model for brandWidget component.

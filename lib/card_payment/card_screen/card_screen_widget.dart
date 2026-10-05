@@ -228,6 +228,10 @@ class _CardScreenWidgetState extends State<CardScreenWidget> {
                                   'add card',
                                   ParamType.String,
                                 ),
+                                'groupID': serializeParam(
+                                  '0',
+                                  ParamType.String,
+                                ),
                               }.withoutNulls,
                             );
 
@@ -934,8 +938,8 @@ class _CardScreenWidgetState extends State<CardScreenWidget> {
                                                                                   (_model.apiResulttj7?.jsonBody ?? ''),
                                                                                   r'''$.message''',
                                                                                 ).toString(),
-                                                                                height: 150.0,
-                                                                                title: "",
+                                                                                height: 130.0,
+                                                                                title: ' ',
                                                                               ),
                                                                             ),
                                                                           );
@@ -1029,8 +1033,8 @@ class _CardScreenWidgetState extends State<CardScreenWidget> {
                                                                                 (_model.apiResulttj7?.jsonBody ?? ''),
                                                                                 r'''$.message''',
                                                                               ).toString(),
-                                                                              height: 150.0,
-                                                                              title:"",
+                                                                              height: 120.0,
+                                                                              title: ' ',
                                                                             ),
                                                                           ),
                                                                         );

@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:quic_kart/custom_code/actions/initialize_push_notification.dart';
-import 'package:quic_kart/custom_code/appsflyer_service.dart';
 
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/custom_retry_alert/custom_retry_alert_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -12,8 +11,8 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'quickartsplash_screen_model.dart';
 export 'quickartsplash_screen_model.dart';
 
+///
 class QuickartsplashScreenWidget extends StatefulWidget {
   const QuickartsplashScreenWidget({super.key});
 
@@ -37,12 +37,14 @@ class _QuickartsplashScreenWidgetState
   late QuickartsplashScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
   late String imageVersion;
 
   @override
   void initState() {
     super.initState();
     print("G1---->splash load----->${DateTime.now()}");
+
     _model = createModel(context, () => QuickartsplashScreenModel());
     imageVersion = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -50,13 +52,21 @@ class _QuickartsplashScreenWidgetState
         parameters: {'screen_name': 'QuickartsplashScreen'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(milliseconds: 300));
-      // print("G1---->splash load---111-->${DateTime.now()}");
-      if (!mounted) return;
-
+      if (RootPageContext.isInactiveRootPage(context)) {
+        return;
+      }
       _initializeBackgroundServices();
       await _initializeApp();
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
   }
 
   Future<void> _initializeBackgroundServices() async {
@@ -67,13 +77,14 @@ class _QuickartsplashScreenWidgetState
 
       final fcmToken = await FirebaseMessaging.instance.getToken();
       print("FCM Token = $fcmToken");
-
-      await Future.wait([
-        actions.lockOrientation(),
-        actions.initializeAppsflyer(),
-        actions.setFBEvent(),
-        actions.initReferrerDetails(),
-      ]);
+FFAppState().fcmToken = "$fcmToken";
+      // await Future.wait([
+      //   actions.initializeAmplitude(),
+      //   actions.lockOrientation(),
+      //   actions.initializeAppsflyer(),
+      //   actions.setFBEvent(),
+      //   actions.initReferrerDetails(),
+      // ]);
 
       print("Background Init Complete : ${DateTime.now()}");
     } catch (e, s) {
@@ -81,14 +92,11 @@ class _QuickartsplashScreenWidgetState
       debugPrint("$s");
     }
   }
-
+  
   Future<void> _initializeApp() async {
-    if (RootPageContext.isInactiveRootPage(context)) {
-      return;
-    }
     logFirebaseEvent('QUICKARTSPLASH_SCREEN_QuickartsplashScre');
-    logFirebaseEvent('QuickartsplashScreen_custom_action');
-    _model.connectivityResultCopy = await actions.checkInternetConnection();
+    currentUserLocationValue =
+        await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
     logFirebaseEvent('QuickartsplashScreen_custom_action');
     await actions.saveLoginData(
       '0',
@@ -101,68 +109,97 @@ class _QuickartsplashScreenWidgetState
       ' ',
       ' ',
     );
-    print("G1---->splash load-1---->${DateTime.now()}");
+    logFirebaseEvent('QuickartsplashScreen_wait__delay');
+    await Future.delayed(
+      Duration(
+        milliseconds: 10,
+      ),
+    );
+    logFirebaseEvent('QuickartsplashScreen_custom_action');
+    _model.connectivityResultCopy = await actions.checkInternetConnection();
+    logFirebaseEvent('QuickartsplashScreen_custom_action');
+    // _model.fcmTokenNew = await actions.getFcmToken();
+    // logFirebaseEvent('QuickartsplashScreen_custom_action');
+    // await actions.getDeviceID();
     await Future.wait([
       actions.getFcmToken(),
       actions.getDeviceID(),
     ]);
     logFirebaseEvent('QuickartsplashScreen_custom_action');
-    //   print("G1---->splash load-2---->${DateTime.now()}");
-    // _model.fcmTokenNew = await actions.getFcmToken();
-    print("G1---->splash load-3---->${DateTime.now()}");
+    // await actions.requestAppTracking();
+        unawaited(actions.requestAppTracking());
     if (_model.connectivityResultCopy == true) {
-      // logFirebaseEvent('QuickartsplashScreen_custom_action');
-      // await actions.getDeviceID();
-      // logFirebaseEvent('QuickartsplashScreen_custom_action');
+      if (FFAppState().isUserLogin == true) {
+        logFirebaseEvent('QuickartsplashScreen_backend_call');
+                print("G1---->splash load-api start---->${DateTime.now()}");
+        _model.getZoneIDResult = await QuickartZoneGroup.getZoneIDCall.call(
+          lat: functions
+              .getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat')
+              .toString(),
+          lng: functions
+              .getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng')
+              .toString(),
+          userid: FFAppState().userID,
+          addressID: '',
+        );
 
-      // await actions.requestAppTracking();
-      unawaited(actions.requestAppTracking());
-      print("G1---->splash load-5---->${DateTime.now()}");
-      if (isiOS) {
-        logFirebaseEvent('QuickartsplashScreen_update_app_state');
-        FFAppState().platform = 'ios';
-        // FFAppState().fcmToken =
-        //     _model.fcmTokenNew != null && _model.fcmTokenNew != ''
-        //         ? _model.fcmTokenNew!
-        //         : ' ';
-        safeSetState(() {});
-        print("G1---->splash load-6---->${DateTime.now()}");
-        if (FFAppState().isUserLogin == true) {
+        if (!(_model.getZoneIDResult?.succeeded ?? true)) {
+          logFirebaseEvent('QuickartsplashScreen_alert_dialog');
+          await showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return Dialog(
+                elevation: 0,
+                insetPadding: EdgeInsets.zero,
+                backgroundColor: Colors.transparent,
+                alignment: AlignmentDirectional(0.0, 0.0)
+                    .resolve(Directionality.of(context)),
+                child: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(dialogContext).unfocus();
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: CustomAlertDailogWidget(
+                    des: 'Something went wrong. Please try again',
+                    height: 150.0,
+                    title: ' ',
+                  ),
+                ),
+              );
+            },
+          );
+        }
+        if (isiOS) {
+          logFirebaseEvent('QuickartsplashScreen_update_app_state');
+          FFAppState().platform = 'ios';
+          FFAppState().fcmToken =
+              _model.fcmTokenNew != null && _model.fcmTokenNew != ''
+                  ? _model.fcmTokenNew!
+                  : ' ';
+          FFAppState().zoneInfo = getJsonField(
+            (_model.getZoneIDResult?.jsonBody ?? ''),
+            r'''$.data''',
+          );
+          safeSetState(() {});
           logFirebaseEvent('QuickartsplashScreen_backend_call');
-          print("G1---->splash load-61---->${DateTime.now()}");
           _model.apiResultzwxIOS = await QuickartGroup.appinfoCall.call(
             userid: FFAppState().userID,
-            stroreid: FFAppState().storeID,
+            stroreid: getJsonField(
+              (_model.getZoneIDResult?.jsonBody ?? ''),
+              r'''$.data.store_id''',
+            ).toString(),
             platform: 'ios',
-            fcmToken: FFAppState().fcmToken,
+            fcmToken: _model.fcmTokenNew,
             deviceid: FFAppState().deviceID,
           );
+
           if ((_model.apiResultzwxIOS?.succeeded ?? true)) {
+             print("G1---->splash load-api success ios---->${DateTime.now()}");
             if (FFAppConstants.appVersioniOS !=
                 getJsonField(
                   (_model.apiResultzwxIOS?.jsonBody ?? ''),
                   r'''$.data.version''',
                 ).toString()) {
-              logFirebaseEvent('QuickartsplashScreen_update_app_state');
-              FFAppState().appInfo = getJsonField(
-                (_model.apiResultzwxIOS?.jsonBody ?? ''),
-                r'''$.data''',
-              );
-              FFAppState().updateContainer = true;
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultzwxIOS?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultzwxIOS?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultzwxIOS?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().isPopUpShow = true;
-              FFAppState().update(() {});
               logFirebaseEvent('QuickartsplashScreen_custom_action');
               await actions.saveLoginData(
                 '0',
@@ -184,32 +221,44 @@ class _QuickartsplashScreenWidgetState
                 '0',
                 '0',
               );
+              logFirebaseEvent('QuickartsplashScreen_update_app_state');
+              FFAppState().appInfo = getJsonField(
+                (_model.apiResultzwxIOS?.jsonBody ?? ''),
+                r'''$.data''',
+              );
+              FFAppState().updateContainer = true;
+              FFAppState().userWalletstr = getJsonField(
+                (_model.apiResultzwxIOS?.jsonBody ?? ''),
+                r'''$.data.userwallet''',
+              ).toString();
+              FFAppState().dashboardBanner = getJsonField(
+                (_model.apiResultzwxIOS?.jsonBody ?? ''),
+                r'''$.oneapi_bg_first_image''',
+              ).toString();
+              FFAppState().trialPackBannerImage = getJsonField(
+                (_model.apiResultzwxIOS?.jsonBody ?? ''),
+                r'''$.trailpackimage''',
+              ).toString();
+              FFAppState().isPopUpShow = true;
+              FFAppState().platform = 'ios';
+              FFAppState().fcmToken =
+                  _model.fcmTokenNew != null && _model.fcmTokenNew != ''
+                      ? _model.fcmTokenNew!
+                      : ' ';
+              FFAppState().update(() {});
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
-              print("G1---->splash load-8---->${DateTime.now()}");
+              print("G1---->splash load-1---->${DateTime.now()}");
+
               await Future.delayed(
                 Duration(
                   milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
-              print("G1---->splash load-9---->${DateTime.now()}");
+              print("G1---->splash load-2---->${DateTime.now()}");
 
-              final data =
-                  await NotificationService.instance.initialNotification;
-
-              if (data != null) {
-                NotificationService.instance.clear();
-
-                AppsflyerService().navigateFromNotification(
-                  data["deep_link_value"],
-                  data,
-                );
-                return;
-              }
-              // print("G1---->splash load-62---->${DateTime.now()}");
               context.goNamed(DashboardScreenWidget.routeName);
             } else {
-              // print("G1---->splash load-10---->${DateTime.now()}");
               logFirebaseEvent('QuickartsplashScreen_update_app_state');
               FFAppState().appInfo = getJsonField(
                 (_model.apiResultzwxIOS?.jsonBody ?? ''),
@@ -226,6 +275,11 @@ class _QuickartsplashScreenWidgetState
               ).toString();
               FFAppState().trialPackBannerImage = '';
               FFAppState().isPopUpShow = true;
+              FFAppState().platform = 'ios';
+              FFAppState().fcmToken =
+                  _model.fcmTokenNew != null && _model.fcmTokenNew != ''
+                      ? _model.fcmTokenNew!
+                      : ' ';
               FFAppState().update(() {});
               logFirebaseEvent('QuickartsplashScreen_custom_action');
               await actions.saveLoginData(
@@ -249,37 +303,16 @@ class _QuickartsplashScreenWidgetState
                 '0',
               );
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
-              // print("G1---->splash load-11---->${DateTime.now()}");
+              print("G1---->splash load-3---->${DateTime.now()}");
+
               await Future.delayed(
                 Duration(
                   milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
-              // if (NotificationManager.pendingNotification != null) {
-              //     final data = NotificationManager.pendingNotification!;
+              print("G1---->splash load-4---->${DateTime.now()}");
 
-              //     NotificationManager.pendingNotification = null;
-
-              //     AppsflyerService().navigateFromNotification(
-              //       data["deep_link_value"],
-              //       data,
-              //     );
-
-              //     return;
-              //   }
-              final data =
-                  await NotificationService.instance.initialNotification;
-
-              if (data != null) {
-                NotificationService.instance.clear();
-
-                AppsflyerService().navigateFromNotification(
-                  data["deep_link_value"],
-                  data,
-                );
-                return;
-              }
               context.goNamed(DashboardScreenWidget.routeName);
             }
           } else {
@@ -299,7 +332,7 @@ class _QuickartsplashScreenWidgetState
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
                     child: CustomRetryAlertWidget(
-                      height: 200.0,
+                      height: 130.0,
                       des: 'Something went wrong. Please try again',
                     ),
                   ),
@@ -308,132 +341,24 @@ class _QuickartsplashScreenWidgetState
             );
           }
         } else {
-          // print("G1---->splash load-12---->${DateTime.now()}");
-          logFirebaseEvent('QuickartsplashScreen_backend_call');
-          _model.apiResultso1IOS = await QuickartGroup.appinfoCall.call(
-            userid: FFAppState().userID,
-            stroreid: FFAppState().storeID,
-            platform: 'ios',
-            fcmToken: FFAppState().fcmToken,
-            deviceid: FFAppState().deviceID,
-          );
-
-          if ((_model.apiResultso1IOS?.succeeded ?? true)) {
-            // print("G1---->splash load-13---->${DateTime.now()}");
-            if (FFAppConstants.appVersioniOS !=
-                getJsonField(
-                  (_model.apiResultso1IOS?.jsonBody ?? ''),
-                  r'''$.data.version''',
-                ).toString()) {
-              logFirebaseEvent('QuickartsplashScreen_update_app_state');
-              FFAppState().appInfo = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.data''',
-              );
-              FFAppState().updateContainer = true;
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().isPopUpShow = true;
-              FFAppState().update(() {});
-              logFirebaseEvent('QuickartsplashScreen_wait__delay');
-              // print("G1---->splash load-14---->${DateTime.now()}");
-              await Future.delayed(
-                Duration(
-                  milliseconds: 2000,
-                ),
-              );
-              logFirebaseEvent('QuickartsplashScreen_navigate_to');
-
-              context.goNamed(IntroScreenWidget.routeName);
-            } else {
-              // print("G1---->splash load-15---->${DateTime.now()}");
-              logFirebaseEvent('QuickartsplashScreen_update_app_state');
-              FFAppState().appInfo = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.data''',
-              );
-              FFAppState().updateContainer = false;
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().isPopUpShow = true;
-              FFAppState().update(() {});
-              logFirebaseEvent('QuickartsplashScreen_wait__delay');
-              await Future.delayed(
-                Duration(
-                  milliseconds: 2000,
-                ),
-              );
-              logFirebaseEvent('QuickartsplashScreen_navigate_to');
-
-              context.goNamed(IntroScreenWidget.routeName);
-            }
-          } else {
-            logFirebaseEvent('QuickartsplashScreen_alert_dialog');
-            await showDialog(
-              context: context,
-              builder: (dialogContext) {
-                return Dialog(
-                  elevation: 0,
-                  insetPadding: EdgeInsets.zero,
-                  backgroundColor: Colors.transparent,
-                  alignment: AlignmentDirectional(0.0, 0.0)
-                      .resolve(Directionality.of(context)),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(dialogContext).unfocus();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    child: CustomRetryAlertWidget(
-                      height: 200.0,
-                      des: 'Something went wrong. Please try again',
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        }
-      } else {
-        print("G1---->splash load-51---->${DateTime.now()}");
-        if (isAndroid) {
-          print("G1---->splash load-52---->${DateTime.now()}");
           logFirebaseEvent('QuickartsplashScreen_update_app_state');
           FFAppState().platform = 'android';
-          // FFAppState().fcmToken = _model.fcmTokenNew!;
+          FFAppState().fcmToken =
+              _model.fcmTokenNew != null && _model.fcmTokenNew != ''
+                  ? _model.fcmTokenNew!
+                  : ' ';
+          FFAppState().zoneInfo = getJsonField(
+            (_model.getZoneIDResult?.jsonBody ?? ''),
+            r'''$.data''',
+          );
           safeSetState(() {});
-        } else {
-          logFirebaseEvent('QuickartsplashScreen_update_app_state');
-          FFAppState().platform = 'web';
-          // FFAppState().fcmToken = _model.fcmTokenNew!;
-          safeSetState(() {});
-        }
-        print("G1---->splash load-53---->${DateTime.now()}");
-        if ((FFAppState().isUserLogin == true) &&
-            (FFAppState().userID != null && FFAppState().userID != '')) {
           logFirebaseEvent('QuickartsplashScreen_backend_call');
           _model.apiResultAppInfo3 = await QuickartGroup.appinfoCall.call(
             userid: FFAppState().userID,
-            stroreid: FFAppState().storeID,
+            stroreid: getJsonField(
+              (_model.getZoneIDResult?.jsonBody ?? ''),
+              r'''$.data.store_id''',
+            ).toString(),
             platform: FFAppState().platform,
             deviceid: FFAppState().deviceID,
             fcmToken: FFAppState().fcmToken,
@@ -490,36 +415,15 @@ class _QuickartsplashScreenWidgetState
                 '0',
               );
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
+              print("G1---->splash load-5---->${DateTime.now()}");
+
               await Future.delayed(
                 Duration(
                   milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
-              // if (NotificationManager.pendingNotification != null) {
-              //     final data = NotificationManager.pendingNotification!;
-
-              //     NotificationManager.pendingNotification = null;
-
-              //     AppsflyerService().navigateFromNotification(
-              //       data["deep_link_value"],
-              //       data,
-              //     );
-
-              //     return;
-              //   }
-              final data =
-                  await NotificationService.instance.initialNotification;
-
-              if (data != null) {
-                NotificationService.instance.clear();
-
-                AppsflyerService().navigateFromNotification(
-                  data["deep_link_value"],
-                  data,
-                );
-                return;
-              }
+              print("G1---->splash load-6---->${DateTime.now()}");
 
               context.goNamed(DashboardScreenWidget.routeName);
             } else {
@@ -567,36 +471,16 @@ class _QuickartsplashScreenWidgetState
                 '0',
               );
               logFirebaseEvent('QuickartsplashScreen_wait__delay');
+              print("G1---->splash load-7---->${DateTime.now()}");
+
               await Future.delayed(
                 Duration(
                   milliseconds: 2000,
                 ),
               );
               logFirebaseEvent('QuickartsplashScreen_navigate_to');
-              // if (NotificationManager.pendingNotification != null) {
-              //     final data = NotificationManager.pendingNotification!;
+              print("G1---->splash load-8---->${DateTime.now()}");
 
-              //     NotificationManager.pendingNotification = null;
-
-              //     AppsflyerService().navigateFromNotification(
-              //       data["deep_link_value"],
-              //       data,
-              //     );
-
-              //     return;
-              //   }
-              final data =
-                  await NotificationService.instance.initialNotification;
-
-              if (data != null) {
-                NotificationService.instance.clear();
-
-                AppsflyerService().navigateFromNotification(
-                  data["deep_link_value"],
-                  data,
-                );
-                return;
-              }
               context.goNamed(DashboardScreenWidget.routeName);
             }
           } else {
@@ -616,115 +500,117 @@ class _QuickartsplashScreenWidgetState
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
                     child: CustomRetryAlertWidget(
-                      height: 200.0,
+                      height: 130.0,
                       des: 'Something went wrong. Please try again',
                     ),
                   ),
                 );
               },
             );
+          }
+        }
+      } else {
+        logFirebaseEvent('QuickartsplashScreen_backend_call');
+        _model.apiResultAppInfo4 = await QuickartGroup.appinfoCall.call(
+          userid: FFAppState().userID,
+          stroreid: FFAppState().storeID,
+          platform: isiOS == true ? 'ios' : 'android',
+          deviceid: FFAppState().deviceID,
+          fcmToken: FFAppState().fcmToken,
+        );
+
+        if ((_model.apiResultAppInfo4?.succeeded ?? true)) {
+          if (FFAppConstants.appVersionAndroid !=
+              getJsonField(
+                (_model.apiResultAppInfo4?.jsonBody ?? ''),
+                r'''$.data.version''',
+              ).toString()) {
+            logFirebaseEvent('QuickartsplashScreen_update_app_state');
+            FFAppState().appInfo = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.data''',
+            );
+            FFAppState().updateContainer = true;
+            FFAppState().userWalletstr = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.data.userwallet''',
+            ).toString();
+            FFAppState().dashboardBanner = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.oneapi_bg_first_image''',
+            ).toString();
+            FFAppState().trialPackBannerImage = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.trailpackimage''',
+            ).toString();
+            FFAppState().isPopUpShow = true;
+            FFAppState().platform = isiOS == true ? 'ios' : 'android';
+            FFAppState().update(() {});
+            logFirebaseEvent('QuickartsplashScreen_wait__delay');
+            await Future.delayed(
+              Duration(
+                milliseconds: 2000,
+              ),
+            );
+            logFirebaseEvent('QuickartsplashScreen_navigate_to');
+
+            context.goNamed(IntroScreenWidget.routeName);
+          } else {
+            logFirebaseEvent('QuickartsplashScreen_update_app_state');
+            FFAppState().appInfo = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.data''',
+            );
+            FFAppState().updateContainer = false;
+            FFAppState().userWalletstr = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.data.userwallet''',
+            ).toString();
+            FFAppState().dashboardBanner = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.oneapi_bg_first_image''',
+            ).toString();
+            FFAppState().trialPackBannerImage = getJsonField(
+              (_model.apiResultAppInfo4?.jsonBody ?? ''),
+              r'''$.trailpackimage''',
+            ).toString();
+            FFAppState().isPopUpShow = true;
+            FFAppState().platform = isiOS == true ? 'ios' : 'android';
+            FFAppState().update(() {});
+            logFirebaseEvent('QuickartsplashScreen_wait__delay');
+            await Future.delayed(
+              Duration(
+                milliseconds: 2000,
+              ),
+            );
+            logFirebaseEvent('QuickartsplashScreen_navigate_to');
+
+            context.goNamed(IntroScreenWidget.routeName);
           }
         } else {
-          logFirebaseEvent('QuickartsplashScreen_backend_call');
-          _model.apiResultAppInfo4 = await QuickartGroup.appinfoCall.call(
-            userid: FFAppState().userID,
-            stroreid: FFAppState().storeID,
-            platform: FFAppState().platform,
-            deviceid: FFAppState().deviceID,
-            fcmToken: FFAppState().fcmToken,
-          );
-
-          if ((_model.apiResultAppInfo4?.succeeded ?? true)) {
-            if (FFAppConstants.appVersionAndroid !=
-                getJsonField(
-                  (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                  r'''$.data.version''',
-                ).toString()) {
-              logFirebaseEvent('QuickartsplashScreen_update_app_state');
-              FFAppState().appInfo = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.data''',
-              );
-              FFAppState().updateContainer = true;
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().isPopUpShow = true;
-              FFAppState().update(() {});
-              logFirebaseEvent('QuickartsplashScreen_wait__delay');
-              await Future.delayed(
-                Duration(
-                  milliseconds: 2000,
-                ),
-              );
-              logFirebaseEvent('QuickartsplashScreen_navigate_to');
-
-              context.goNamed(IntroScreenWidget.routeName);
-            } else {
-              logFirebaseEvent('QuickartsplashScreen_update_app_state');
-              FFAppState().appInfo = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.data''',
-              );
-              FFAppState().updateContainer = false;
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultAppInfo4?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().isPopUpShow = true;
-              FFAppState().update(() {});
-              logFirebaseEvent('QuickartsplashScreen_wait__delay');
-              await Future.delayed(
-                Duration(
-                  milliseconds: 2000,
-                ),
-              );
-              logFirebaseEvent('QuickartsplashScreen_navigate_to');
-
-              context.goNamed(IntroScreenWidget.routeName);
-            }
-          } else {
-            logFirebaseEvent('QuickartsplashScreen_alert_dialog');
-            await showDialog(
-              context: context,
-              builder: (dialogContext) {
-                return Dialog(
-                  elevation: 0,
-                  insetPadding: EdgeInsets.zero,
-                  backgroundColor: Colors.transparent,
-                  alignment: AlignmentDirectional(0.0, 0.0)
-                      .resolve(Directionality.of(context)),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(dialogContext).unfocus();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    child: CustomRetryAlertWidget(
-                      height: 200.0,
-                      des: 'Something went wrong. Please try again',
-                    ),
+          logFirebaseEvent('QuickartsplashScreen_alert_dialog');
+          await showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return Dialog(
+                elevation: 0,
+                insetPadding: EdgeInsets.zero,
+                backgroundColor: Colors.transparent,
+                alignment: AlignmentDirectional(0.0, 0.0)
+                    .resolve(Directionality.of(context)),
+                child: GestureDetector(
+                  onTap: () {
+                    FocusScope.of(dialogContext).unfocus();
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: CustomRetryAlertWidget(
+                    height: 130.0,
+                    des: 'Something went wrong. Please try again',
                   ),
-                );
-              },
-            );
-          }
+                ),
+              );
+            },
+          );
         }
       }
     } else {
@@ -744,7 +630,7 @@ class _QuickartsplashScreenWidgetState
                 FocusManager.instance.primaryFocus?.unfocus();
               },
               child: CustomRetryAlertWidget(
-                height: 210.0,
+                height: 150.0,
                 des: FFAppConstants.internetString,
               ),
             ),
@@ -752,13 +638,23 @@ class _QuickartsplashScreenWidgetState
         },
       );
     }
-  }
 
-  @override
-  void dispose() {
-    _model.dispose();
-
-    super.dispose();
+    logFirebaseEvent('QuickartsplashScreen_custom_action');
+    await actions.facebookEventClass(
+      isiOS ? FFAppConstants.appVersioniOS : FFAppConstants.appVersionAndroid,
+      FFAppState().userID,
+      FFAppState().fcmToken,
+      0.0,
+      0,
+      0.0,
+      'appOpen',
+      FFAppState().emptyJson,
+      '0',
+      '0',
+      '0',
+      '0',
+      '0',
+    );
   }
 
   @override
@@ -773,7 +669,7 @@ class _QuickartsplashScreenWidgetState
         },
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: FFAppConstants.indigoColor,
+          backgroundColor: Colors.white,
           body: Stack(
             children: [
               // Align(
@@ -809,7 +705,6 @@ class _QuickartsplashScreenWidgetState
               //           ),
               //         ),
               //       ),
-                   
               //       Container(
               //         width: MediaQuery.sizeOf(context).width * 1.0,
               //         height: 100.0,
@@ -825,30 +720,18 @@ class _QuickartsplashScreenWidgetState
               //     ],
               //   ),
               // ),
-
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(8.0),
-              //   child: Image.network(
-              //     'https://quickart.b-cdn.net/images/app-home-loadernew.gif?v=$imageVersion',
-              //     // 'https://quickart.b-cdn.net/images/app-home-splash-screeneid.gif?v=$imageVersion',
-              //     width: MediaQuery.sizeOf(context).width,
-              //     height: MediaQuery.sizeOf(context).height,
-              //     fit: BoxFit.fill,
-              //     errorBuilder: (context, error, stackTrace) {
-              //       return Image.network(
-              //         'https://quickart.b-cdn.net/images/app-home-loaderne.gif?v=$imageVersion',
-              //         //  'https://quickart.b-cdn.net/images/app-home-splash-screeneid.gif?v=$imageVersion',
-              //         width: MediaQuery.sizeOf(context).width,
-              //         height: MediaQuery.sizeOf(context).height,
-              //         fit: BoxFit.fill,
-              //       );
-              //     },
-              //     loadingBuilder: (context, child, loadingProgress) {
-              //       if (loadingProgress == null) return child;
-              //       return child; // removes loader delay
-              //     },
+              // Align(
+              //   alignment: AlignmentDirectional(0.0, 0.0),
+              //   child: ClipRRect(
+              //     borderRadius: BorderRadius.circular(8.0),
+              //     child: Image.network(
+              //       'https://quickart.b-cdn.net/images/app-home-splash-screeneid1.gif',
+              //       width: MediaQuery.sizeOf(context).width * 1.0,
+              //       height: MediaQuery.sizeOf(context).height * 1.0,
+              //       fit: BoxFit.fill,
+              //     ),
               //   ),
-              // )
+              // ),
               Container(
                 width: MediaQuery.sizeOf(context).width * 1.0,
                 height: MediaQuery.sizeOf(context).height * 1.0,
@@ -863,7 +746,7 @@ class _QuickartsplashScreenWidgetState
               ),
             ],
           ),
-        ), 
+        ),
       ),
     );
   }

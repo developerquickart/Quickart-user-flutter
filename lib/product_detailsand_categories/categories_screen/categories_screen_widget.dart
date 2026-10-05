@@ -183,8 +183,15 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                 ..complete(QuickartGroup.cateeCall.call(
                                   latest: 'null',
                                   byname: 'null',
-                                  storeID: '7',
+                                  storeID: getJsonField(
+                                    FFAppState().zoneInfo,
+                                    r'''$.store_id''',
+                                  ).toString(),
                                   platform: isiOS ? 'ios' : 'android',
+                                  zoneID: getJsonField(
+                                    FFAppState().zoneInfo,
+                                    r'''$.zone_id''',
+                                  ).toString(),
                                 )))
                           .future,
                       builder: (context, snapshot) {
@@ -199,7 +206,7 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                           );
                         }
                         final gridViewCateeResponse = snapshot.data!;
-        
+
                         return Builder(
                           builder: (context) {
                             final catteeData = getJsonField(
@@ -213,7 +220,7 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                 ),
                               );
                             }
-        
+
                             return RefreshIndicator(
                               onRefresh: () async {
                                 logFirebaseEvent(
@@ -254,14 +261,17 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                       onTap: () async {
                                         logFirebaseEvent(
                                             'CATEGORIES_SCREEN_Container_hc604m3b_ON_');
-                                        logFirebaseEvent('Container_navigate_to');
-        
+                                        logFirebaseEvent(
+                                            'Container_navigate_to');
+
                                         context.pushNamed(
-                                            SubCategoriesScreenWidget.routeName);
-        
+                                            SubCategoriesScreenWidget
+                                                .routeName);
+
                                         logFirebaseEvent(
                                             'Container_update_app_state');
-                                        FFAppState().categoryName = getJsonField(
+                                        FFAppState().categoryName =
+                                            getJsonField(
                                           catteeDataItem,
                                           r'''$.title''',
                                         ).toString();
@@ -305,8 +315,9 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                           color: Colors.white,
                                         ),
                                         child: Padding(
-                                          padding: EdgeInsetsDirectional.fromSTEB(
-                                              5.0, 5.0, 5.0, 5.0),
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  5.0, 5.0, 5.0, 5.0),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
                                             mainAxisAlignment:
@@ -316,12 +327,14 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                             children: [
                                               Expanded(
                                                 child: Align(
-                                                  alignment: AlignmentDirectional(
-                                                      0.0, -1.0),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
                                                   child: Padding(
-                                                    padding: EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                            0.0, 0.0, 0.0, 5.0),
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 5.0),
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -337,8 +350,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                         width: 120.0,
                                                         height: 120.0,
                                                         fit: BoxFit.contain,
-                                                        alignment:
-                                                            Alignment(0.0, -1.0),
+                                                        alignment: Alignment(
+                                                            0.0, -1.0),
                                                         errorBuilder: (context,
                                                                 error,
                                                                 stackTrace) =>
@@ -357,39 +370,40 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                               ),
                                               Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(0.0, 5.0, 0.0, 0.0),
+                                                    .fromSTEB(
+                                                        0.0, 5.0, 0.0, 0.0),
                                                 child: Text(
                                                   getJsonField(
                                                     catteeDataItem,
                                                     r'''$.title''',
                                                   ).toString(),
                                                   textAlign: TextAlign.center,
-                                                  style:
-                                                      FlutterFlowTheme.of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FFAppConstants
-                                                                .blackColor0A0A0A,
-                                                            fontSize: 10.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color: FFAppConstants
+                                                            .blackColor0A0A0A,
+                                                        fontSize: 10.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -477,11 +491,13 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                       width: 20.0,
                                       height: 20.0,
                                       decoration: BoxDecoration(
-                                        color: FFAppConstants.NeutralBlack50Color,
+                                        color:
+                                            FFAppConstants.NeutralBlack50Color,
                                         shape: BoxShape.circle,
                                       ),
                                       child: Align(
-                                        alignment: AlignmentDirectional(0.0, 0.0),
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
                                         child: Text(
                                           functions
                                               .additionFunctionInt(
@@ -494,7 +510,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                 font: GoogleFonts.montserrat(
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
-                                                      FlutterFlowTheme.of(context)
+                                                      FlutterFlowTheme.of(
+                                                              context)
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),
@@ -530,10 +547,10 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                         decoration: BoxDecoration(
                           color: FFAppConstants.indigoColor,
                           borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
                             topLeft: Radius.circular(10.0),
                             topRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
                           ),
                         ),
                         child: Padding(
@@ -549,10 +566,10 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                   'CATEGORIES_SCREEN_Row_s8nir6lb_ON_TAP');
                               if (FFAppState().cartTotalCount < 1) {
                                 logFirebaseEvent('Row_navigate_to');
-        
+
                                 context.pushNamed(
                                     CartSubscriptionScreenWidget.routeName);
-        
+
                                 logFirebaseEvent('Row_update_app_state');
                                 FFAppState().isCartShow = false;
                                 FFAppState().screenName = 'cartSubscription';
@@ -575,10 +592,10 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                 );
                               } else {
                                 logFirebaseEvent('Row_navigate_to');
-        
+
                                 context
                                     .pushNamed(DailyCartScreenWidget.routeName);
-        
+
                                 logFirebaseEvent('Row_update_app_state');
                                 FFAppState().isCartShow = false;
                                 FFAppState().screenName = 'dailyCart';
@@ -612,7 +629,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                   children: [
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         RichText(
                                           textScaler:
@@ -622,59 +640,61 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                               TextSpan(
                                                 text:
                                                     'Congratulations !  You\'ve got ',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.montserrat(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      color: FFAppConstants
-                                                          .neutralWhiteF5F5F5,
-                                                      fontSize: 12.0,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FFAppConstants
+                                                              .neutralWhiteF5F5F5,
+                                                          fontSize: 12.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
                                               ),
                                               TextSpan(
                                                 text: 'FREE DELIVERY.',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      font:
-                                                          GoogleFonts.montserrat(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                      color: FFAppConstants
-                                                          .neutralWhiteF5F5F5,
-                                                      fontSize: 12.0,
-                                                      letterSpacing: 0.0,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FFAppConstants
+                                                              .neutralWhiteF5F5F5,
+                                                          fontSize: 12.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
                                               )
                                             ],
                                             style: FlutterFlowTheme.of(context)
@@ -694,7 +714,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.bold,
                                                   fontStyle:
-                                                      FlutterFlowTheme.of(context)
+                                                      FlutterFlowTheme.of(
+                                                              context)
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),
@@ -713,8 +734,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           RichText(
-                                            textScaler:
-                                                MediaQuery.of(context).textScaler,
+                                            textScaler: MediaQuery.of(context)
+                                                .textScaler,
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
@@ -725,32 +746,32 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                           FFAppState()
                                                               .subCartTotalItem)
                                                       .toString(),
-                                                  style:
-                                                      FlutterFlowTheme.of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FFAppConstants
-                                                                .yellowColor,
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color: FFAppConstants
+                                                            .yellowColor,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
                                                 ),
                                                 TextSpan(
                                                   text: ' item',
@@ -762,10 +783,12 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                   ),
                                                 )
                                               ],
-                                              style: FlutterFlowTheme.of(context)
+                                              style: FlutterFlowTheme.of(
+                                                      context)
                                                   .bodyMedium
                                                   .override(
-                                                    font: GoogleFonts.montserrat(
+                                                    font:
+                                                        GoogleFonts.montserrat(
                                                       fontWeight:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -799,42 +822,42 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                             ),
                                           ),
                                           RichText(
-                                            textScaler:
-                                                MediaQuery.of(context).textScaler,
+                                            textScaler: MediaQuery.of(context)
+                                                .textScaler,
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
                                                   text: 'AED ',
-                                                  style:
-                                                      FlutterFlowTheme.of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FFAppConstants
-                                                                .yellowColor,
-                                                            fontSize: 16.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color: FFAppConstants
+                                                            .yellowColor,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
                                                 ),
                                                 TextSpan(
-                                                  text: functions.setDecimalValue(
-                                                      functions
+                                                  text: functions
+                                                      .setDecimalValue(functions
                                                           .additionFunction(
                                                               FFAppState()
                                                                   .cartTotalPrice,
@@ -849,7 +872,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                   ),
                                                 )
                                               ],
-                                              style: FlutterFlowTheme.of(context)
+                                              style: FlutterFlowTheme.of(
+                                                      context)
                                                   .bodyMedium
                                                   .override(
                                                     font: GoogleFonts.readexPro(
@@ -888,51 +912,51 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                             (FFAppState().subCartSavingAmount >
                                                 0.00)) {
                                           return RichText(
-                                            textScaler:
-                                                MediaQuery.of(context).textScaler,
+                                            textScaler: MediaQuery.of(context)
+                                                .textScaler,
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
                                                   text: 'You have saved ',
-                                                  style:
-                                                      FlutterFlowTheme.of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FFAppConstants
-                                                                .neutralWhiteF5F5F5,
-                                                            fontSize: 10.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color: FFAppConstants
+                                                            .neutralWhiteF5F5F5,
+                                                        fontSize: 10.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
                                                 ),
                                                 TextSpan(
                                                   text: 'AED ',
                                                   style: GoogleFonts.montserrat(
-                                                    color:
-                                                        FFAppConstants.whiteColor,
+                                                    color: FFAppConstants
+                                                        .whiteColor,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 13.0,
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: functions.setDecimalValue(
-                                                      functions
+                                                  text: functions
+                                                      .setDecimalValue(functions
                                                           .additionFunction(
                                                               FFAppState()
                                                                   .cartSavingPrice,
@@ -940,8 +964,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                                   .subCartSavingAmount)
                                                           ?.toString())!,
                                                   style: GoogleFonts.montserrat(
-                                                    color:
-                                                        FFAppConstants.whiteColor,
+                                                    color: FFAppConstants
+                                                        .whiteColor,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 13.0,
                                                   ),
@@ -956,7 +980,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                   ),
                                                 )
                                               ],
-                                              style: FlutterFlowTheme.of(context)
+                                              style: FlutterFlowTheme.of(
+                                                      context)
                                                   .bodyMedium
                                                   .override(
                                                     font: GoogleFonts.readexPro(
@@ -1005,7 +1030,8 @@ class _CategoriesScreenWidgetState extends State<CategoriesScreenWidget> {
                                                   letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
-                                                      FlutterFlowTheme.of(context)
+                                                      FlutterFlowTheme.of(
+                                                              context)
                                                           .bodyMedium
                                                           .fontStyle,
                                                 ),

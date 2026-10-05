@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/custom_o_t_p_alert_dailog/custom_o_t_p_alert_dailog_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -10,6 +11,7 @@ import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'otp_screen_widget.dart' show OtpScreenWidget;
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/gestures.dart';
@@ -52,6 +54,8 @@ class OtpScreenModel extends FlutterFlowModel<OtpScreenWidget> {
   bool? connectivityOtpResultbutton;
   // Stores action output result for [Backend Call - API (Verify OTP)] action in Button widget.
   ApiCallResponse? apiResultVerifyOTPbutton;
+  // Stores action output result for [Backend Call - API (getZoneID)] action in Button widget.
+  ApiCallResponse? getZoneIDResult;
   // Stores action output result for [Backend Call - API (appinfo)] action in Button widget.
   ApiCallResponse? apiResultzwxIOS1button;
   // Stores action output result for [Backend Call - API (appinfo)] action in Button widget.

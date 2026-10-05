@@ -1,9 +1,11 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -32,6 +34,7 @@ class _LoginOnBoardScreenWidgetState extends State<LoginOnBoardScreenWidget> {
   late LoginOnBoardScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
@@ -86,19 +89,6 @@ class _LoginOnBoardScreenWidgetState extends State<LoginOnBoardScreenWidget> {
             ),
             child: Stack(
               children: [
-                // Align(
-                //   alignment: AlignmentDirectional(0.0, 1.0),
-                //   child: ClipRRect(
-                //     borderRadius: BorderRadius.circular(8.0),
-                //     child: Image.asset(
-                //       'assets/images/2vqf7_',
-                //       width: MediaQuery.sizeOf(context).width * 0.85,
-                //       height: MediaQuery.sizeOf(context).height * 0.35,
-                //       fit: BoxFit.cover,
-                //       alignment: Alignment(0.0, 1.0),
-                //     ),
-                //   ),
-                // ),
                 SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -279,184 +269,254 @@ class _LoginOnBoardScreenWidgetState extends State<LoginOnBoardScreenWidget> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 20.0, 0.0, 10.0),
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            logFirebaseEvent(
-                                'LOGIN_ON_BOARD_SCREEN_GUEST_LOGIN_BTN_ON');
-                            logFirebaseEvent('Button_custom_action');
-                            _model.internetCheck =
-                                await actions.checkInternetConnection();
-                            logFirebaseEvent('Button_custom_action');
-                            await actions.getDeviceID();
-                            if (_model.internetCheck == true) {
-                              logFirebaseEvent('Button_backend_call');
-                              _model.apiResulte9m =
-                                  await QuickartGroup.guestloginCall.call(
-                                deviceid: FFAppState().deviceID,
-                                fcmToken: FFAppState().fcmToken,
-                                uuid: FFAppState().userGUUID,
-                              );
+                      Builder(
+                        builder: (context) => Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 10.0),
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              logFirebaseEvent(
+                                  'LOGIN_ON_BOARD_SCREEN_GUEST_LOGIN_BTN_ON');
+                              currentUserLocationValue =
+                                  await getCurrentUserLocation(
+                                      defaultLocation: LatLng(0.0, 0.0));
+                              logFirebaseEvent('Button_custom_action');
+                              _model.internetCheck =
+                                  await actions.checkInternetConnection();
+                              logFirebaseEvent('Button_custom_action');
+                              await actions.getDeviceID();
+                              if (_model.internetCheck == true) {
+                                logFirebaseEvent('Button_backend_call');
+                                _model.apiResulte9m =
+                                    await QuickartGroup.guestloginCall.call(
+                                  deviceid: FFAppState().deviceID,
+                                  fcmToken: FFAppState().fcmToken,
+                                  uuid: FFAppState().userGUUID,
+                                );
 
-                              if ((_model.apiResulte9m?.succeeded ?? true)) {
-                                logFirebaseEvent('Button_update_app_state');
-                                FFAppState().deleteUserGUUID();
-                                FFAppState().userGUUID = '';
+                                if ((_model.apiResulte9m?.succeeded ?? true)) {
+                                  logFirebaseEvent('Button_update_app_state');
+                                  FFAppState().deleteUserGUUID();
+                                  FFAppState().userGUUID = '';
 
-                                safeSetState(() {});
-                                logFirebaseEvent('Button_update_app_state');
-                                FFAppState().userName = 'Guest';
-                                FFAppState().countryCode = '971';
-                                FFAppState().isUserLogin = true;
-                                FFAppState().deleteUserEmail();
-                                FFAppState().userEmail = '';
+                                  safeSetState(() {});
+                                  logFirebaseEvent('Button_update_app_state');
+                                  FFAppState().userName = 'Guest';
+                                  FFAppState().countryCode = '971';
+                                  FFAppState().isUserLogin = true;
+                                  FFAppState().deleteUserEmail();
+                                  FFAppState().userEmail = '';
 
-                                FFAppState().userID = getJsonField(
-                                  (_model.apiResulte9m?.jsonBody ?? ''),
-                                  r'''$.data.id''',
-                                ).toString();
-                                FFAppState().usserType = 'guest';
-                                FFAppState().userGUUID = getJsonField(
-                                  (_model.apiResulte9m?.jsonBody ?? ''),
-                                  r'''$.data.uuid''',
-                                ).toString();
-                                safeSetState(() {});
-                                logFirebaseEvent('Button_custom_action');
-                                await actions.facebookEventClass(
-                                  getJsonField(
+                                  FFAppState().userID = getJsonField(
                                     (_model.apiResulte9m?.jsonBody ?? ''),
                                     r'''$.data.id''',
-                                  ).toString(),
-                                  'guest',
-                                  getJsonField(
+                                  ).toString();
+                                  FFAppState().usserType = 'guest';
+                                  FFAppState().userGUUID = getJsonField(
                                     (_model.apiResulte9m?.jsonBody ?? ''),
                                     r'''$.data.uuid''',
-                                  ).toString(),
-                                  0.0,
-                                  0,
-                                  0.0,
-                                  'guest',
-                                  FFAppState().emptyJson,
-                                  ' ',
-                                  ' ',
-                                  ' ',
-                                  ' ',
-                                  ' ',
-                                );
-                                logFirebaseEvent('Button_backend_call');
-                                _model.appinfoGuest =
-                                    await QuickartGroup.appinfoCall.call(
-                                  userid: FFAppState().userID,
-                                  stroreid: FFAppState().storeID,
-                                  platform: FFAppState().platform,
-                                  fcmToken: FFAppState().fcmToken,
-                                  deviceid: FFAppState().deviceID,
-                                );
+                                  ).toString();
+                                  safeSetState(() {});
+                                  logFirebaseEvent('Button_backend_call');
+                                  _model.getZoneIDResultGuest =
+                                      await QuickartZoneGroup.getZoneIDCall
+                                          .call(
+                                    lat: functions
+                                        .getCurrentLatitudeLogitude(
+                                            currentUserLocationValue!, 'lat')
+                                        .toString(),
+                                    lng: functions
+                                        .getCurrentLatitudeLogitude(
+                                            currentUserLocationValue!, 'lng')
+                                        .toString(),
+                                    userid: getJsonField(
+                                      (_model.apiResulte9m?.jsonBody ?? ''),
+                                      r'''$.data.id''',
+                                    ).toString(),
+                                  );
 
-                                if ((_model.appinfoGuest?.succeeded ?? true)) {
+                                  if ((_model.getZoneIDResultGuest?.succeeded ??
+                                      true)) {
+                                    logFirebaseEvent('Button_update_app_state');
+                                    FFAppState().zoneInfo =
+                                        QuickartZoneGroup.getZoneIDCall.data(
+                                      (_model.getZoneIDResultGuest?.jsonBody ??
+                                          ''),
+                                    );
+                                    safeSetState(() {});
+                                  } else {
+                                    logFirebaseEvent('Button_alert_dialog');
+                                    await showDialog(
+                                      context: context,
+                                      builder: (dialogContext) {
+                                        return Dialog(
+                                          elevation: 0,
+                                          insetPadding: EdgeInsets.zero,
+                                          backgroundColor: Colors.transparent,
+                                          alignment: AlignmentDirectional(
+                                                  0.0, 0.0)
+                                              .resolve(
+                                                  Directionality.of(context)),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              FocusScope.of(dialogContext)
+                                                  .unfocus();
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                            },
+                                            child: CustomAlertDailogWidget(
+                                              des:
+                                                  'Something went wrong. Please try again',
+                                              height: 150.0,
+                                              title: ' ',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+
                                   logFirebaseEvent('Button_custom_action');
-                                  await actions.saveLoginData(
+                                  await actions.facebookEventClass(
                                     getJsonField(
                                       (_model.apiResulte9m?.jsonBody ?? ''),
                                       r'''$.data.id''',
                                     ).toString(),
-                                    true,
-                                    'yes',
-                                    '7',
+                                    'guest',
                                     getJsonField(
-                                      (_model.appinfoGuest?.jsonBody ?? ''),
-                                      r'''$.data''',
-                                    ),
-                                    '0',
-                                    '0',
-                                    '0',
-                                    'Guest',
+                                      (_model.apiResulte9m?.jsonBody ?? ''),
+                                      r'''$.data.uuid''',
+                                    ).toString(),
+                                    0.0,
+                                    0,
+                                    0.0,
+                                    'guest',
+                                    FFAppState().emptyJson,
+                                    ' ',
+                                    ' ',
+                                    ' ',
+                                    ' ',
+                                    ' ',
                                   );
-                                  logFirebaseEvent('Button_navigate_to');
+                                  logFirebaseEvent('Button_backend_call');
+                                  _model.appinfoGuest =
+                                      await QuickartGroup.appinfoCall.call(
+                                    userid: FFAppState().userID,
+                                    stroreid: FFAppState().storeID,
+                                    platform: FFAppState().platform,
+                                    fcmToken: FFAppState().fcmToken,
+                                    deviceid: FFAppState().deviceID,
+                                  );
 
-                                  context
-                                      .goNamed(DashboardScreenWidget.routeName);
+                                  if ((_model.appinfoGuest?.succeeded ??
+                                      true)) {
+                                    logFirebaseEvent('Button_custom_action');
+                                    await actions.saveLoginData(
+                                      getJsonField(
+                                        (_model.apiResulte9m?.jsonBody ?? ''),
+                                        r'''$.data.id''',
+                                      ).toString(),
+                                      true,
+                                      'yes',
+                                      getJsonField(
+                                        (_model.getZoneIDResultGuest
+                                                ?.jsonBody ??
+                                            ''),
+                                        r'''$.data.store_id''',
+                                      ).toString(),
+                                      getJsonField(
+                                        (_model.appinfoGuest?.jsonBody ?? ''),
+                                        r'''$.data''',
+                                      ),
+                                      '0',
+                                      '0',
+                                      '0',
+                                      'Guest',
+                                    );
+                                    logFirebaseEvent('Button_navigate_to');
 
-                                  logFirebaseEvent(
-                                      'Button_google_analytics_event');
-                                  logFirebaseEvent(
-                                      'LoginAsGuestButtonAnalytics');
+                                    context.goNamed(
+                                        DashboardScreenWidget.routeName);
+
+                                    logFirebaseEvent(
+                                        'Button_google_analytics_event');
+                                    logFirebaseEvent(
+                                        'LoginAsGuestButtonAnalytics');
+                                  }
+                                } else {
+                                  logFirebaseEvent('Button_show_snack_bar');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        getJsonField(
+                                          (_model.apiResulte9m?.jsonBody ?? ''),
+                                          r'''$.message''',
+                                        ).toString(),
+                                        style: GoogleFonts.montserrat(
+                                          color: FFAppConstants.indigoColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.0,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 950),
+                                      backgroundColor:
+                                          FFAppConstants.primaryPurpleE4D8F5,
+                                    ),
+                                  );
                                 }
                               } else {
                                 logFirebaseEvent('Button_show_snack_bar');
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      getJsonField(
-                                        (_model.apiResulte9m?.jsonBody ?? ''),
-                                        r'''$.message''',
-                                      ).toString(),
+                                      _model.internetCheck!.toString(),
                                       style: GoogleFonts.montserrat(
                                         color: FFAppConstants.indigoColor,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12.0,
                                       ),
                                     ),
-                                    duration: Duration(milliseconds: 950),
+                                    duration: Duration(milliseconds: 1500),
                                     backgroundColor:
                                         FFAppConstants.primaryPurpleE4D8F5,
                                   ),
                                 );
                               }
-                            } else {
-                              logFirebaseEvent('Button_show_snack_bar');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    _model.internetCheck!.toString(),
-                                    style: GoogleFonts.montserrat(
-                                      color: FFAppConstants.indigoColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 1500),
-                                  backgroundColor:
-                                      FFAppConstants.primaryPurpleE4D8F5,
-                                ),
-                              );
-                            }
 
-                            safeSetState(() {});
-                          },
-                          text: 'Guest Login',
-                          options: FFButtonOptions(
-                            width: 320.0,
-                            height: 48.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: Color(0xFFF1F0ED),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  font: GoogleFonts.montserrat(
+                              safeSetState(() {});
+                            },
+                            text: 'Guest Login',
+                            options: FFButtonOptions(
+                              width: 320.0,
+                              height: 48.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Color(0xFFF1F0ED),
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    font: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                    color: FFAppConstants.indigoColor,
+                                    letterSpacing: 0.0,
                                     fontWeight: FontWeight.bold,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                                  color: FFAppConstants.indigoColor,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .fontStyle,
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: FFAppConstants.indigoColor,
-                              width: 1.0,
+                              elevation: 0.0,
+                              borderSide: BorderSide(
+                                color: FFAppConstants.indigoColor,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                       ),

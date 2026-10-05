@@ -12,6 +12,7 @@ import '/index.dart';
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'subscription_order_products_model.dart';
@@ -44,7 +45,15 @@ class _SubscriptionOrderProductsWidgetState
   @override
   void initState() {
     super.initState();
-          _reloadPage();
+    _reloadPage();
+  }
+  //Page Load setup...G1
+  void _reloadPage() {
+_model = createModel(context, () => SubscriptionOrderProductsModel());
+
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'SubscriptionOrderProducts'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -53,15 +62,6 @@ class _SubscriptionOrderProductsWidgetState
 
     super.dispose();
   }
-   _reloadPage(){
-    _model = createModel(context, () => SubscriptionOrderProductsModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'SubscriptionOrderProducts'});
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
-  
-
-   }
 
   @override
   Widget build(BuildContext context) {
@@ -221,31 +221,6 @@ class _SubscriptionOrderProductsWidgetState
                               fontWeight: FontWeight.w500,
                               fontSize: 12.0,
                             ),
-                          ),
-                          TextSpan(
-                            text: ' | ',
-                            style: GoogleFonts.montserrat(
-                              color: FFAppConstants.indigoColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12.0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'AED ',
-                            style: GoogleFonts.montserrat(
-                              color: FFAppConstants.indigoColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12.0,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                                functions.setDecimalValue(widget!.orderPrice)!,
-                            style: GoogleFonts.montserrat(
-                              color: FFAppConstants.indigoColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12.0,
-                            ),
                           )
                         ],
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -282,6 +257,115 @@ class _SubscriptionOrderProductsWidgetState
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                10.0, 10.0, 10.0, 0.0),
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              height: 30.0,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    textScaler:
+                                        MediaQuery.of(context).textScaler,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Item  Total: ',
+                                          style: TextStyle(),
+                                        ),
+                                        TextSpan(
+                                          text: FFAppConstants.currancyAED,
+                                          style: GoogleFonts.montserrat(
+                                            color: FFAppConstants.indigoColor,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: functions.setDecimalValue(
+                                              widget!.orderPrice)!,
+                                          style: GoogleFonts.montserrat(
+                                            color: FFAppConstants.indigoColor,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16.0,
+                                          ),
+                                        )
+                                      ],
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.readexPro(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            fontSize: 12.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      logFirebaseEvent(
+                                          'SUBSCRIPTION_ORDER_PRODUCTS_Text_xdfnvqs');
+                                      logFirebaseEvent(
+                                          'Text_update_page_state');
+                                      _model.isViewBillDetail = true;
+                                      safeSetState(() {});
+                                      logFirebaseEvent('Text_haptic_feedback');
+                                      HapticFeedback.mediumImpact();
+                                    },
+                                    child: Text(
+                                      'View Bill  Detail  >',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.montserrat(
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FFAppConstants.indigoColor,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 10.0, 20.0, 10.0, 0.0),
@@ -1093,7 +1177,8 @@ class _SubscriptionOrderProductsWidgetState
                                                                           2.0,
                                                                           0.0),
                                                               child: Text(
-                                                                'AED',
+                                                                FFAppConstants
+                                                                    .currancyAED,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
@@ -1251,24 +1336,24 @@ class _SubscriptionOrderProductsWidgetState
                                                         logFirebaseEvent(
                                                             'Button_navigate_to');
 
-                                    
-                                                        await context.pushNamed(
-                                                        SubscriptionOrderProductsInfoWidget
-                                                            .routeName,
-                                                        queryParameters: {
-                                                          'orderPrice':
-                                                              serializeParam(
-                                                            widget!.orderPrice,
-                                                            ParamType.String,
-                                                          ),
-                                                          'orderDate':
-                                                              serializeParam(
-                                                            widget!.orderDate,
-                                                            ParamType.String,
-                                                          ),
-                                                        }.withoutNulls,
-                                                      );
-                                                      setState(() {
+                                                        context.pushNamed(
+                                                          SubscriptionOrderProductsInfoWidget
+                                                              .routeName,
+                                                          queryParameters: {
+                                                            'orderPrice':
+                                                                serializeParam(
+                                                              widget!
+                                                                  .orderPrice,
+                                                              ParamType.String,
+                                                            ),
+                                                            'orderDate':
+                                                                serializeParam(
+                                                              widget!.orderDate,
+                                                              ParamType.String,
+                                                            ),
+                                                          }.withoutNulls,
+                                                        );
+                                                         setState(() {
                                                         // reload your API / data here
                                                         print("reloading data---->g1");
                                                         _reloadPage();
@@ -1709,19 +1794,19 @@ class _SubscriptionOrderProductsWidgetState
                                           _model.productData,
                                           r'''$.order_status''',
                                         ).toString()) {
-                                      return 500.0;
+                                      return 370.0;
                                     } else if (FFAppConstants
                                             .orderStatusCompleted ==
                                         getJsonField(
                                           _model.productData,
                                           r'''$.order_status''',
                                         ).toString()) {
-                                      return 630.0;
+                                      return 500.0;
                                     } else {
-                                      return 630.0;
+                                      return 500.0;
                                     }
                                   }(),
-                                  630.0,
+                                  530.0,
                                 ),
                                 decoration: BoxDecoration(
                                   color: FlutterFlowTheme.of(context)
@@ -2729,7 +2814,7 @@ class _SubscriptionOrderProductsWidgetState
                                                     children: [
                                                       TextSpan(
                                                         text:
-                                                            'PauseDeliveries - ',
+                                                            'Pause Deliveries - ',
                                                         style: FlutterFlowTheme
                                                                 .of(context)
                                                             .bodyMedium
@@ -2811,7 +2896,7 @@ class _SubscriptionOrderProductsWidgetState
                                                     children: [
                                                       TextSpan(
                                                         text:
-                                                            'CancelledDeliveries - ',
+                                                            'Cancelled Deliveries - ',
                                                         style: FlutterFlowTheme
                                                                 .of(context)
                                                             .bodyMedium
@@ -3239,7 +3324,7 @@ class _SubscriptionOrderProductsWidgetState
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 10.0, 0.0, 10.0),
+                                            0.0, 15.0, 0.0, 0.0),
                                         child: Container(
                                           width: double.infinity,
                                           height: 0.5,
@@ -3250,540 +3335,7 @@ class _SubscriptionOrderProductsWidgetState
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            5.0, 0.0, 0.0, 0.0),
-                                        child: Text(
-                                          'Bill Details',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                                color: FFAppConstants
-                                                    .blackColor0A0A0A,
-                                                fontSize: 14.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w500,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            5.0, 10.0, 0.0, 0.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Item Total',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FFAppConstants
-                                                        .blackColor0A0A0A,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                            RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'AED ',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .blackColor0A0A0A,
-                                                          fontSize: 13.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        valueOrDefault<String>(
-                                                      functions.setDecimalValue(
-                                                          getJsonField(
-                                                        _model.productData,
-                                                        r'''$.price_without_delivery''',
-                                                      ).toString()),
-                                                      '0.00',
-                                                    ),
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .blackColor0A0A0A,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 13.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            5.0, 5.0, 0.0, 0.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Delivery Charges',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FFAppConstants
-                                                        .blackColor0A0A0A,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                            RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'AED ',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .blackColor0A0A0A,
-                                                          fontSize: 13.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        valueOrDefault<String>(
-                                                      functions.setDecimalValue(
-                                                          getJsonField(
-                                                        _model.productData,
-                                                        r'''$.deliver_charge''',
-                                                      ).toString()),
-                                                      '0.00',
-                                                    ),
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .blackColor0A0A0A,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 13.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .primaryPurpleE4D8F5,
-                                                          fontSize: 10.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            5.0, 5.0, 0.0, 0.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Wallet Applied',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(5.0, 0.0, 0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(5.0, 0.0,
-                                                                0.0, 0.0),
-                                                    child: Text(
-                                                      'AED ',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color:
-                                                                FFAppConstants
-                                                                    .darkGreen,
-                                                            fontSize: 13.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    valueOrDefault<String>(
-                                                      functions.setDecimalValue(
-                                                          getJsonField(
-                                                        _model.productData,
-                                                        r'''$.paid_by_wallet''',
-                                                      ).toString()),
-                                                      '0.00',
-                                                    ),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .darkGreen,
-                                                          fontSize: 13.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 10.0, 0.0, 10.0),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 0.5,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF929AA3),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            5.0, 5.0, 0.0, 0.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Total Bill',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FFAppConstants
-                                                        .blackColor0A0A0A,
-                                                    fontSize: 14.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                            RichText(
-                                              textScaler: MediaQuery.of(context)
-                                                  .textScaler,
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: 'AED ',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .blackColor0A0A0A,
-                                                          fontSize: 13.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: functions.setDecimalValue(
-                                                        (double.parse(
-                                                                    getJsonField(
-                                                                  _model
-                                                                      .productData,
-                                                                  r'''$.price_without_delivery''',
-                                                                ).toString()) -
-                                                                double.parse(
-                                                                    getJsonField(
-                                                                  _model
-                                                                      .productData,
-                                                                  r'''$.paid_by_wallet''',
-                                                                ).toString()))
-                                                            .toString())!,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      color: FFAppConstants
-                                                          .blackColor0A0A0A,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 13.0,
-                                                    ),
-                                                  )
-                                                ],
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .primaryPurpleE4D8F5,
-                                                          fontSize: 10.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 25.0, 0.0, 5.0),
+                                            0.0, 20.0, 0.0, 5.0),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -4662,6 +4214,775 @@ class _SubscriptionOrderProductsWidgetState
                                 width: 200.0,
                                 height: 200.0,
                                 fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (_model.isViewBillDetail == true)
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          logFirebaseEvent(
+                              'SUBSCRIPTION_ORDER_PRODUCTS_BillDetailCo');
+                          logFirebaseEvent(
+                              'BillDetailContainer_update_page_state');
+                          _model.orderInfo = false;
+                          _model.productData = null;
+                          _model.isViewBillDetail = false;
+                          safeSetState(() {});
+                        },
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width * 1.0,
+                          height: MediaQuery.sizeOf(context).height * 1.0,
+                          decoration: BoxDecoration(
+                            color: Color(0x5114181B),
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                logFirebaseEvent(
+                                    'SUBSCRIPTION_ORDER_PRODUCTS_Container_2j');
+                                logFirebaseEvent('Container_update_page_state');
+                                _model.orderInfo = false;
+                                safeSetState(() {});
+                              },
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width * 0.95,
+                                height: 400.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      10.0, 5.0, 10.0, 0.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    5.0, 5.0, 0.0, 0.0),
+                                            child: Text(
+                                              'Bill Details',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    color: FFAppConstants
+                                                        .blackColor0A0A0A,
+                                                    fontSize: 20.0,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(1.0, -1.0),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 10.0, 5.0, 0.0),
+                                              child: InkWell(
+                                                splashColor: Colors.transparent,
+                                                focusColor: Colors.transparent,
+                                                hoverColor: Colors.transparent,
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                onTap: () async {
+                                                  logFirebaseEvent(
+                                                      'SUBSCRIPTION_ORDER_PRODUCTS_Icon_w8n3i2q');
+                                                  logFirebaseEvent(
+                                                      'Icon_update_page_state');
+                                                  _model.productData = null;
+                                                  _model.isViewBillDetail =
+                                                      false;
+                                                  safeSetState(() {});
+                                                  logFirebaseEvent(
+                                                      'Icon_haptic_feedback');
+                                                  HapticFeedback.mediumImpact();
+                                                },
+                                                child: Icon(
+                                                  Icons.cancel_outlined,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryText,
+                                                  size: 28.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5.0, 8.0, 2.0, 0.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Address :',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    color: FFAppConstants
+                                                        .blackColor0A0A0A,
+                                                    fontSize: 13.0,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5.0, 2.0, 0.0, 0.0),
+                                        child: Text(
+                                          getJsonField(
+                                            subscriptionOrderProductsSubscriptionMergedResponse
+                                                .jsonBody,
+                                            r'''$.data[0].delivery_address''',
+                                          ).toString(),
+                                          maxLines: 2,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                font: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                                color: FFAppConstants
+                                                    .blackColor0A0A0A,
+                                                fontSize: 10.0,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.normal,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 10.0, 0.0, 10.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 0.5,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF929AA3),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5.0, 10.0, 0.0, 0.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Item Total',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    color: FFAppConstants
+                                                        .blackColor0A0A0A,
+                                                    fontSize: 12.0,
+                                                    letterSpacing: 0.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
+                                                  ),
+                                            ),
+                                            RichText(
+                                              textScaler: MediaQuery.of(context)
+                                                  .textScaler,
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'AED ',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FFAppConstants
+                                                              .blackColor0A0A0A,
+                                                          fontSize: 13.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        valueOrDefault<String>(
+                                                      functions.setDecimalValue(
+                                                          getJsonField(
+                                                        subscriptionOrderProductsSubscriptionMergedResponse
+                                                            .jsonBody,
+                                                        r'''$.data[0].total_order_value''',
+                                                      ).toString()),
+                                                      '0.00',
+                                                    ),
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      color: FFAppConstants
+                                                          .blackColor0A0A0A,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 13.0,
+                                                    ),
+                                                  )
+                                                ],
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
+                                                            fontWeight:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontWeight,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5.0, 5.0, 0.0, 2.0),
+                                        child: Builder(
+                                          builder: (context) {
+                                            final billModel = getJsonField(
+                                              subscriptionOrderProductsSubscriptionMergedResponse
+                                                  .jsonBody,
+                                              r'''$.bill_details''',
+                                            ).toList();
+
+                                            return ListView.separated(
+                                              padding: EdgeInsets.zero,
+                                              primary: false,
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.vertical,
+                                              itemCount: billModel.length,
+                                              separatorBuilder: (_, __) =>
+                                                  SizedBox(height: 5.0),
+                                              itemBuilder:
+                                                  (context, billModelIndex) {
+                                                final billModelItem =
+                                                    billModel[billModelIndex];
+                                                return Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    if (_model.totalPrice !=
+                                                        getJsonField(
+                                                          billModelItem,
+                                                          r'''$.charge_type''',
+                                                        ).toString())
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    2.0,
+                                                                    0.0,
+                                                                    2.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              getJsonField(
+                                                                billModelItem,
+                                                                r'''$.display_name''',
+                                                              ).toString(),
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    font: GoogleFonts
+                                                                        .montserrat(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .fontStyle,
+                                                                    ),
+                                                                    fontSize:
+                                                                        12.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                              child: Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    () {
+                                                                      if (_model
+                                                                              .discount ==
+                                                                          getJsonField(
+                                                                            billModelItem,
+                                                                            r'''$.charge_type''',
+                                                                          ).toString()) {
+                                                                        return '-';
+                                                                      } else if (_model.walletUsed ==
+                                                                          getJsonField(
+                                                                            billModelItem,
+                                                                            r'''$.charge_type''',
+                                                                          ).toString()) {
+                                                                        return '-';
+                                                                      } else {
+                                                                        return '+';
+                                                                      }
+                                                                    }(),
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              () {
+                                                                            if (_model.discount ==
+                                                                                getJsonField(
+                                                                                  billModelItem,
+                                                                                  r'''$.charge_type''',
+                                                                                ).toString()) {
+                                                                              return FFAppConstants.darkGreen;
+                                                                            } else if (_model.walletUsed ==
+                                                                                getJsonField(
+                                                                                  billModelItem,
+                                                                                  r'''$.charge_type''',
+                                                                                ).toString()) {
+                                                                              return FFAppConstants.darkGreen;
+                                                                            } else {
+                                                                              return FFAppConstants.redDF3F56;
+                                                                            }
+                                                                          }(),
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    FFAppConstants
+                                                                        .currancyAED,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              () {
+                                                                            if (_model.discount ==
+                                                                                getJsonField(
+                                                                                  billModelItem,
+                                                                                  r'''$.charge_type''',
+                                                                                ).toString()) {
+                                                                              return FFAppConstants.darkGreen;
+                                                                            } else if (_model.walletUsed ==
+                                                                                getJsonField(
+                                                                                  billModelItem,
+                                                                                  r'''$.charge_type''',
+                                                                                ).toString()) {
+                                                                              return FFAppConstants.darkGreen;
+                                                                            } else {
+                                                                              return FFAppConstants.redDF3F56;
+                                                                            }
+                                                                          }(),
+                                                                          fontSize:
+                                                                              12.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    functions.setDecimalValueWithCount(
+                                                                        getJsonField(
+                                                                          billModelItem,
+                                                                          r'''$.price_effect''',
+                                                                        ).toString(),
+                                                                        2,
+                                                                        false),
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              () {
+                                                                            if (_model.discount ==
+                                                                                getJsonField(
+                                                                                  billModelItem,
+                                                                                  r'''$.charge_type''',
+                                                                                ).toString()) {
+                                                                              return FFAppConstants.darkGreen;
+                                                                            } else if (_model.walletUsed ==
+                                                                                getJsonField(
+                                                                                  billModelItem,
+                                                                                  r'''$.charge_type''',
+                                                                                ).toString()) {
+                                                                              return FFAppConstants.darkGreen;
+                                                                            } else {
+                                                                              return FFAppConstants.redDF3F56;
+                                                                            }
+                                                                          }(),
+                                                                          fontSize:
+                                                                              12.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    if (_model.totalPrice ==
+                                                        getJsonField(
+                                                          billModelItem,
+                                                          r'''$.charge_type''',
+                                                        ).toString())
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    10.0,
+                                                                    0.0,
+                                                                    10.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 0.5,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0xFF929AA3),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (_model.totalPrice ==
+                                                        getJsonField(
+                                                          billModelItem,
+                                                          r'''$.charge_type''',
+                                                        ).toString())
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    5.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              getJsonField(
+                                                                billModelItem,
+                                                                r'''$.display_name''',
+                                                              ).toString(),
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    font: GoogleFonts
+                                                                        .montserrat(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .fontStyle,
+                                                                    ),
+                                                                    color: FFAppConstants
+                                                                        .blackColor0A0A0A,
+                                                                    fontSize:
+                                                                        14.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                            ),
+                                                            RichText(
+                                                              textScaler:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .textScaler,
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text: FFAppConstants
+                                                                        .currancyAED,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          font:
+                                                                              GoogleFonts.montserrat(
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                            fontStyle:
+                                                                                FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                          ),
+                                                                          color:
+                                                                              FFAppConstants.blackColor0A0A0A,
+                                                                          fontSize:
+                                                                              13.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontStyle: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .fontStyle,
+                                                                        ),
+                                                                  ),
+                                                                  TextSpan(
+                                                                    text: functions.setDecimalValueWithCount(
+                                                                        getJsonField(
+                                                                          billModelItem,
+                                                                          r'''$.price_effect''',
+                                                                        ).toString(),
+                                                                        2,
+                                                                        false),
+                                                                    style: GoogleFonts
+                                                                        .montserrat(
+                                                                      color: FFAppConstants
+                                                                          .blackColor0A0A0A,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize:
+                                                                          13.0,
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .override(
+                                                                      font: GoogleFonts
+                                                                          .montserrat(
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                        fontStyle: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .fontStyle,
+                                                                      ),
+                                                                      color: FFAppConstants
+                                                                          .primaryPurpleE4D8F5,
+                                                                      fontSize:
+                                                                          10.0,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal,
+                                                                      fontStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .fontStyle,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),

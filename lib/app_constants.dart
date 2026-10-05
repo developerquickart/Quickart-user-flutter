@@ -99,11 +99,11 @@ abstract class FFAppConstants {
   static const Color green77ac43 = Color(4286032963);
   static const String orderOutForDelivery = 'Out_For_Delivery';
   static const String isCompletedOrderStatus = 'Completed';
-  static const String errorMessage = 'Internal Server Error';
+  static const String errorMessage = 'c';
   static const String forcefullyUpdate = '0';
   static const String appVersion = '1.0.20';
-  static const String appVersioniOS = '3.3';
-  static const String appVersionAndroid = '3.3';
+  static const String appVersioniOS = '3.5';
+  static const String appVersionAndroid = '3.4';
   static const Color textFieldBorderColor = Color(4292927712);
   static const String isOrderConfirmed = 'Confirmed';
   static const String productNotFound =
@@ -142,4 +142,12 @@ abstract class FFAppConstants {
   static const Color borderColor = Color(4292667864);
   static const String vpnMSG =
       'VPN Detected\nPlease turn off your VPN connection before placing your order.';
+  static const String currancyAED = ' AED ';
+  static const Color redLightBG = Color(4294569453);
+  static const Color greenLightBG = Color(4293721584);
+  static const String trailMsg =
+      'You can purchase only one Trail Pack at a time.';
+  static const String cancelMsg =
+      'Are you sure you want to go back? Your payment process will be cancelled.';
+  static const String userStatus = 'deactivate';
 }

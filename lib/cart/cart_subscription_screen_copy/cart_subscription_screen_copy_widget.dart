@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/components/products_list_view/products_list_view_widget.dart';
+import '/components/save_letterproducts_list/save_letterproducts_list_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -169,9 +170,9 @@ class _CartSubscriptionScreenCopyWidgetState
         canPop: false,
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: FFAppConstants.whiteColor,
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
           appBar: AppBar(
-            backgroundColor: FFAppConstants.appBarColor,
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
             automaticallyImplyLeading: false,
             leading: FlutterFlowIconButton(
               borderColor: Colors.transparent,
@@ -252,6 +253,10 @@ class _CartSubscriptionScreenCopyWidgetState
                                   userid: FFAppState().userID,
                                   deviceid: FFAppState().deviceID,
                                   platform: isiOS ? 'ios' : 'android',
+                                  zoneID: getJsonField(
+                                    FFAppState().zoneInfo,
+                                    r'''$.zone_id''',
+                                  ).toString(),
                                 )))
                           .future,
                       builder: (context, snapshot) {
@@ -316,7 +321,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                   [
                                     () async {
                                       logFirebaseEvent(
-                                          'CART_SUBSCRIPTION_SCREEN_COPY_Tab_lgx017');
+                                          'CART_SUBSCRIPTION_SCREEN_COPY_Tab_hwk0bf');
                                       logFirebaseEvent('Tab_update_app_state');
                                       FFAppState().cartNavigation = 'subCart';
                                       FFAppState().screenName =
@@ -341,7 +346,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                     },
                                     () async {
                                       logFirebaseEvent(
-                                          'CART_SUBSCRIPTION_SCREEN_COPY_Tab_4rqrno');
+                                          'CART_SUBSCRIPTION_SCREEN_COPY_Tab_b6wm0m');
                                       logFirebaseEvent('Tab_update_app_state');
                                       FFAppState()
                                           .isDeliveryPartnerTipSelected = '0';
@@ -372,12 +377,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                     decoration: BoxDecoration(),
                                     child: Builder(
                                       builder: (context) {
-                                        if (getJsonField(
-                                              tabBarShowsubcartResponse
-                                                  .jsonBody,
-                                              r'''$.data''',
-                                            ) !=
-                                            null) {
+                                        if ((getJsonField(
+                                                  tabBarShowsubcartResponse
+                                                      .jsonBody,
+                                                  r'''$.data''',
+                                                ) !=
+                                                null) &&
+                                            ((getJsonField(
+                                                  tabBarShowsubcartResponse
+                                                      .jsonBody,
+                                                  r'''$.data.data''',
+                                                )
+                                                            .toList()
+                                                            .map<ProductCountStruct?>(
+                                                                ProductCountStruct
+                                                                    .maybeFromMap)
+                                                            .toList()
+                                                        as Iterable<
+                                                            ProductCountStruct?>)
+                                                    .withoutNulls
+                                                    .length >
+                                                0)) {
                                           return Stack(
                                             children: [
                                               Container(
@@ -421,12 +441,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                             bottomRight:
                                                                 Radius.circular(
                                                                     12.0),
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    0.0),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    0.0),
                                                           ),
                                                           border: Border.all(
                                                             color: FFAppConstants
@@ -601,14 +615,14 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
                                                                               Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 5.0, 0.0),
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 9.0, 0.0),
                                                                                 child: InkWell(
                                                                                   splashColor: Colors.transparent,
                                                                                   focusColor: Colors.transparent,
                                                                                   hoverColor: Colors.transparent,
                                                                                   highlightColor: Colors.transparent,
                                                                                   onTap: () async {
-                                                                                    logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Row_3rszat');
+                                                                                    logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Row_bw9bzv');
                                                                                     logFirebaseEvent('Row_update_app_state');
                                                                                     FFAppState().varientID = getJsonField(
                                                                                       productSubModelItem,
@@ -723,10 +737,16 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       ).toString();
                                                                                       safeSetState(() {});
                                                                                       logFirebaseEvent('Row_update_page_state');
-                                                                                      _model.autorenewProduct = getJsonField(
-                                                                                        productSubModelItem,
-                                                                                        r'''$.isautorenew''',
-                                                                                      ).toString();
+                                                                                      _model.autorenewProduct = FFAppState().emptyString ==
+                                                                                              getJsonField(
+                                                                                                productSubModelItem,
+                                                                                                r'''$.isautorenew''',
+                                                                                              ).toString()
+                                                                                          ? 'no'
+                                                                                          : getJsonField(
+                                                                                              productSubModelItem,
+                                                                                              r'''$.isautorenew''',
+                                                                                            ).toString();
                                                                                       _model.isCheckedAutoRenew = _model.isAutoRenewChecked !=
                                                                                               getJsonField(
                                                                                                 productSubModelItem,
@@ -813,7 +833,10 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                           null) {
                                                                                         logFirebaseEvent('Row_backend_call');
                                                                                         _model.apiResultTimeSlot1 = await QuickartGroup.timeslotCall.call(
-                                                                                          storeID: FFAppState().storeID,
+                                                                                          storeID: getJsonField(
+                                                                                            FFAppState().zoneInfo,
+                                                                                            r'''$.store_id''',
+                                                                                          ).toString(),
                                                                                           selectedDate: _model.selectedDeliveryDateN,
                                                                                           repeatedDays: functions.getRepeatdays(FFAppState().isSunSelected, FFAppState().isMonSelected, FFAppState().isTueSelected, FFAppState().isWedSelected, FFAppState().isThuSelected, FFAppState().isFriSelected, FFAppState().isSatSelected),
                                                                                           platform: isiOS ? 'ios' : 'android',
@@ -840,7 +863,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                   },
                                                                                   child: Row(
                                                                                     mainAxisSize: MainAxisSize.max,
-                                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                     crossAxisAlignment: CrossAxisAlignment.end,
                                                                                     children: [
                                                                                       Column(
@@ -862,7 +885,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                     hoverColor: Colors.transparent,
                                                                                                     highlightColor: Colors.transparent,
                                                                                                     onTap: () async {
-                                                                                                      logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Image_1yeh');
+                                                                                                      logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Image_w3cf');
                                                                                                       logFirebaseEvent('Image_navigate_to');
 
                                                                                                       context.pushNamed(ProductDetailsScreenWidget.routeName);
@@ -1030,6 +1053,122 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                           ),
                                                                                                         ),
                                                                                                       ),
+                                                                                                      Align(
+                                                                                                        alignment: AlignmentDirectional(1.0, 1.0),
+                                                                                                        child: Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
+                                                                                                          child: FFButtonWidget(
+                                                                                                            onPressed: () async {
+                                                                                                              logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_SAVE_FOR_L');
+                                                                                                              logFirebaseEvent('Button_custom_action');
+                                                                                                              _model.networkCheck1 = await actions.checkInternetConnection();
+                                                                                                              if (_model.networkCheck1 == true) {
+                                                                                                                logFirebaseEvent('Button_haptic_feedback');
+                                                                                                                HapticFeedback.heavyImpact();
+                                                                                                                logFirebaseEvent('Button_backend_call');
+                                                                                                                _model.addtoSaveLetter = await QuickartGroup.addtosavesubcartCall.call(
+                                                                                                                  userID: FFAppState().userID,
+                                                                                                                  variantID: getJsonField(
+                                                                                                                    productSubModelItem,
+                                                                                                                    r'''$.varient_id''',
+                                                                                                                  ).toString(),
+                                                                                                                  orderCartID: 'savelater',
+                                                                                                                  platform: FFAppState().platform,
+                                                                                                                );
+
+                                                                                                                if ((_model.addtoSaveLetter?.succeeded ?? true)) {
+                                                                                                                  if (FFAppConstants.checkStatus ==
+                                                                                                                      QuickartGroup.addtosavesubcartCall.status(
+                                                                                                                        (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                      )) {
+                                                                                                                    logFirebaseEvent('Button_refresh_database_request');
+                                                                                                                    safeSetState(() => _model.apiRequestCompleter = null);
+                                                                                                                    await _model.waitForApiRequestCompleted();
+                                                                                                                  } else {
+                                                                                                                    logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                      SnackBar(
+                                                                                                                        content: Text(
+                                                                                                                          QuickartGroup.addtosavesubcartCall.message(
+                                                                                                                            (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                          )!,
+                                                                                                                          style: GoogleFonts.montserrat(
+                                                                                                                            color: FFAppConstants.indigoColor,
+                                                                                                                            fontWeight: FontWeight.w500,
+                                                                                                                            fontSize: 15.0,
+                                                                                                                          ),
+                                                                                                                        ),
+                                                                                                                        duration: Duration(milliseconds: 1500),
+                                                                                                                        backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                      ),
+                                                                                                                    );
+                                                                                                                  }
+                                                                                                                } else {
+                                                                                                                  logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                    SnackBar(
+                                                                                                                      content: Text(
+                                                                                                                        QuickartGroup.addtosavesubcartCall.message(
+                                                                                                                          (_model.addtoSaveLetter?.jsonBody ?? ''),
+                                                                                                                        )!,
+                                                                                                                        style: GoogleFonts.montserrat(
+                                                                                                                          color: FFAppConstants.indigoColor,
+                                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                                          fontSize: 15.0,
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                      duration: Duration(milliseconds: 1500),
+                                                                                                                      backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                    ),
+                                                                                                                  );
+                                                                                                                }
+                                                                                                              } else {
+                                                                                                                logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                  SnackBar(
+                                                                                                                    content: Text(
+                                                                                                                      FFAppConstants.internetString,
+                                                                                                                      style: GoogleFonts.montserrat(
+                                                                                                                        color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                        fontSize: 12.0,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    duration: Duration(milliseconds: 4000),
+                                                                                                                    backgroundColor: FFAppConstants.NeutralBlack50Color,
+                                                                                                                  ),
+                                                                                                                );
+                                                                                                              }
+
+                                                                                                              safeSetState(() {});
+                                                                                                            },
+                                                                                                            text: 'Save for later',
+                                                                                                            options: FFButtonOptions(
+                                                                                                              width: MediaQuery.sizeOf(context).width < 370.0 ? 130.0 : 145.0,
+                                                                                                              height: 30.0,
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                              color: FFAppConstants.whiteColor,
+                                                                                                              textStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                    font: GoogleFonts.montserrat(
+                                                                                                                      fontWeight: FontWeight.w500,
+                                                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                                    ),
+                                                                                                                    color: FFAppConstants.blackColor0A0A0A,
+                                                                                                                    fontSize: 12.0,
+                                                                                                                    letterSpacing: 0.0,
+                                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                                  ),
+                                                                                                              elevation: 0.0,
+                                                                                                              borderSide: BorderSide(
+                                                                                                                color: FFAppConstants.greyBgd6d2d3,
+                                                                                                                width: 0.7,
+                                                                                                              ),
+                                                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ),
                                                                                                     ],
                                                                                                   ),
                                                                                                 ),
@@ -1168,10 +1307,10 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                 height: 35.0,
                                                                                                 decoration: BoxDecoration(
                                                                                                   borderRadius: BorderRadius.only(
-                                                                                                    bottomLeft: Radius.circular(5.0),
-                                                                                                    bottomRight: Radius.circular(5.0),
                                                                                                     topLeft: Radius.circular(5.0),
                                                                                                     topRight: Radius.circular(5.0),
+                                                                                                    bottomLeft: Radius.circular(5.0),
+                                                                                                    bottomRight: Radius.circular(5.0),
                                                                                                   ),
                                                                                                   border: Border.all(
                                                                                                     color: FFAppConstants.calculatorColor,
@@ -1339,10 +1478,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                 ),
                                                                                                             elevation: 0.0,
                                                                                                             borderRadius: BorderRadius.only(
-                                                                                                              bottomLeft: Radius.circular(5.0),
-                                                                                                              bottomRight: Radius.circular(0.0),
                                                                                                               topLeft: Radius.circular(5.0),
-                                                                                                              topRight: Radius.circular(0.0),
+                                                                                                              bottomLeft: Radius.circular(5.0),
                                                                                                             ),
                                                                                                           ),
                                                                                                         ),
@@ -1409,8 +1546,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                           },
                                                                                                                           child: CustomAlertDailogWidget(
                                                                                                                             des: FFAppConstants.noStock,
-                                                                                                                            height: 250.0,
-                                                                                                                            title: FFAppState().AppName,
+                                                                                                                            height: 120.0,
+                                                                                                                            title: ' ',
                                                                                                                           ),
                                                                                                                         ),
                                                                                                                       );
@@ -1464,57 +1601,90 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                   );
 
                                                                                                                   if ((_model.apiResultAddsubCart12?.succeeded ?? true)) {
-                                                                                                                    logFirebaseEvent('Button_update_app_state');
-                                                                                                                    FFAppState().subCartSavingAmount = QuickartGroup.addtosubcartCall.savingPrice(
-                                                                                                                      (_model.apiResultAddsubCart12?.jsonBody ?? ''),
-                                                                                                                    )!;
-                                                                                                                    FFAppState().subCartTotalPrice = QuickartGroup.addtosubcartCall.totalPrice(
-                                                                                                                      (_model.apiResultAddsubCart12?.jsonBody ?? ''),
-                                                                                                                    )!;
-                                                                                                                    FFAppState().subCartTotalItem = QuickartGroup.addtosubcartCall.totalItems(
-                                                                                                                      (_model.apiResultAddsubCart12?.jsonBody ?? ''),
-                                                                                                                    )!;
-                                                                                                                    FFAppState().refreshTrigger = true;
-                                                                                                                    safeSetState(() {});
-                                                                                                                    logFirebaseEvent('Button_refresh_database_request');
-                                                                                                                    safeSetState(() => _model.apiRequestCompleter = null);
-                                                                                                                    await _model.waitForApiRequestCompleted();
-                                                                                                                    logFirebaseEvent('Button_google_analytics_event');
-                                                                                                                    logFirebaseEvent(
-                                                                                                                      'Add To Sub Cart',
-                                                                                                                      parameters: {
-                                                                                                                        'Screen Name': 'Subscription Cart Screen',
-                                                                                                                        'API Name': 'Add To SubCart',
-                                                                                                                      },
-                                                                                                                    );
-                                                                                                                    logFirebaseEvent('Button_custom_action');
-                                                                                                                    await actions.facebookEventClass(
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.varient_id''',
-                                                                                                                      ).toString(),
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.product_name''',
-                                                                                                                      ).toString(),
-                                                                                                                      'subscription product',
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.price''',
-                                                                                                                      ),
-                                                                                                                      1,
-                                                                                                                      getJsonField(
-                                                                                                                        productSubModelItem,
-                                                                                                                        r'''$.mrp''',
-                                                                                                                      ),
-                                                                                                                      'add',
-                                                                                                                      FFAppState().emptyJson,
-                                                                                                                      'emptyjons',
-                                                                                                                      ' ',
-                                                                                                                      ' ',
-                                                                                                                      ' ',
-                                                                                                                      ' ',
-                                                                                                                    );
+                                                                                                                    if (FFAppConstants.statusAPI1 ==
+                                                                                                                        getJsonField(
+                                                                                                                          (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                          r'''$.status''',
+                                                                                                                        ).toString()) {
+                                                                                                                      logFirebaseEvent('Button_update_app_state');
+                                                                                                                      FFAppState().subCartSavingAmount = QuickartGroup.addtosubcartCall.savingPrice(
+                                                                                                                        (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                      )!;
+                                                                                                                      FFAppState().subCartTotalPrice = QuickartGroup.addtosubcartCall.totalPrice(
+                                                                                                                        (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                      )!;
+                                                                                                                      FFAppState().subCartTotalItem = QuickartGroup.addtosubcartCall.totalItems(
+                                                                                                                        (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                      )!;
+                                                                                                                      FFAppState().refreshTrigger = true;
+                                                                                                                      safeSetState(() {});
+                                                                                                                      logFirebaseEvent('Button_refresh_database_request');
+                                                                                                                      safeSetState(() => _model.apiRequestCompleter = null);
+                                                                                                                      await _model.waitForApiRequestCompleted();
+                                                                                                                      logFirebaseEvent('Button_google_analytics_event');
+                                                                                                                      logFirebaseEvent(
+                                                                                                                        'Add To Sub Cart',
+                                                                                                                        parameters: {
+                                                                                                                          'Screen Name': 'Subscription Cart Screen',
+                                                                                                                          'API Name': 'Add To SubCart',
+                                                                                                                        },
+                                                                                                                      );
+                                                                                                                      logFirebaseEvent('Button_custom_action');
+                                                                                                                      await actions.facebookEventClass(
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.varient_id''',
+                                                                                                                        ).toString(),
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.product_name''',
+                                                                                                                        ).toString(),
+                                                                                                                        'subscription product',
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.price''',
+                                                                                                                        ),
+                                                                                                                        1,
+                                                                                                                        getJsonField(
+                                                                                                                          productSubModelItem,
+                                                                                                                          r'''$.mrp''',
+                                                                                                                        ),
+                                                                                                                        'add',
+                                                                                                                        FFAppState().emptyJson,
+                                                                                                                        'emptyjons',
+                                                                                                                        ' ',
+                                                                                                                        ' ',
+                                                                                                                        ' ',
+                                                                                                                        ' ',
+                                                                                                                      );
+                                                                                                                    } else {
+                                                                                                                      logFirebaseEvent('Button_alert_dialog');
+                                                                                                                      await showDialog(
+                                                                                                                        context: context,
+                                                                                                                        builder: (dialogContext) {
+                                                                                                                          return Dialog(
+                                                                                                                            elevation: 0,
+                                                                                                                            insetPadding: EdgeInsets.zero,
+                                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                            child: GestureDetector(
+                                                                                                                              onTap: () {
+                                                                                                                                FocusScope.of(dialogContext).unfocus();
+                                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                              },
+                                                                                                                              child: CustomAlertDailogWidget(
+                                                                                                                                des: getJsonField(
+                                                                                                                                  (_model.apiResultAddsubCart12?.jsonBody ?? ''),
+                                                                                                                                  r'''$.message''',
+                                                                                                                                ).toString(),
+                                                                                                                                height: 120.0,
+                                                                                                                                title: ' ',
+                                                                                                                              ),
+                                                                                                                            ),
+                                                                                                                          );
+                                                                                                                        },
+                                                                                                                      );
+                                                                                                                    }
                                                                                                                   } else {
                                                                                                                     logFirebaseEvent('Button_show_snack_bar');
                                                                                                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -1579,10 +1749,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                 width: 0.0,
                                                                                                               ),
                                                                                                               borderRadius: BorderRadius.only(
-                                                                                                                bottomLeft: Radius.circular(0.0),
-                                                                                                                bottomRight: Radius.circular(5.0),
-                                                                                                                topLeft: Radius.circular(0.0),
                                                                                                                 topRight: Radius.circular(5.0),
+                                                                                                                bottomRight: Radius.circular(5.0),
                                                                                                               ),
                                                                                                             ),
                                                                                                           ),
@@ -1594,140 +1762,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                               ),
                                                                                             ],
                                                                                           ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Align(
-                                                                                        alignment: AlignmentDirectional(0.0, 1.0),
-                                                                                        child: FlutterFlowIconButton(
-                                                                                          borderColor: Colors.transparent,
-                                                                                          buttonSize: 40.0,
-                                                                                          icon: Icon(
-                                                                                            Icons.delete_outline,
-                                                                                            color: FFAppConstants.redDF3F56,
-                                                                                            size: 25.0,
-                                                                                          ),
-                                                                                          onPressed: () async {
-                                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_delete_out');
-                                                                                            logFirebaseEvent('IconButton_custom_action');
-                                                                                            _model.internetsubcart = await actions.checkInternetConnection();
-                                                                                            if (_model.internetsubcart!) {
-                                                                                              logFirebaseEvent('IconButton_haptic_feedback');
-                                                                                              HapticFeedback.mediumImpact();
-                                                                                              logFirebaseEvent('IconButton_backend_call');
-                                                                                              _model.addtosubCart1 = await QuickartGroup.addtosubcartCall.call(
-                                                                                                userid: FFAppState().userID,
-                                                                                                qty: functions.addRemoveQTY(0, 'remove'),
-                                                                                                storeid: FFAppState().storeID,
-                                                                                                varientid: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.varient_id''',
-                                                                                                ).toString(),
-                                                                                                deviceid: FFAppState().deviceID,
-                                                                                                repeatOrder: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.repeat_orders''',
-                                                                                                ).toString(),
-                                                                                                timeSlot: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.sub_time_slot''',
-                                                                                                ).toString(),
-                                                                                                subTotalDelivery: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.sub_total_delivery''',
-                                                                                                ).toString(),
-                                                                                                subTotalDate: getJsonField(
-                                                                                                  productSubModelItem,
-                                                                                                  r'''$.sub_delivery_date''',
-                                                                                                ).toString(),
-                                                                                                platform: isiOS ? 'ios' : 'android',
-                                                                                              );
-
-                                                                                              if ((_model.addtosubCart1?.succeeded ?? true)) {
-                                                                                                logFirebaseEvent('IconButton_update_app_state');
-                                                                                                FFAppState().subCartSavingAmount = functions.stringToDouble(QuickartGroup.addtosubcartCall
-                                                                                                    .savingPrice(
-                                                                                                      (_model.addtosubCart1?.jsonBody ?? ''),
-                                                                                                    )!
-                                                                                                    .toString());
-                                                                                                FFAppState().subCartTotalPrice = functions.stringToDouble(QuickartGroup.addtosubcartCall
-                                                                                                    .totalPrice(
-                                                                                                      (_model.addtosubCart1?.jsonBody ?? ''),
-                                                                                                    )!
-                                                                                                    .toString());
-                                                                                                FFAppState().subCartTotalItem = QuickartGroup.addtosubcartCall.totalItems(
-                                                                                                  (_model.addtosubCart1?.jsonBody ?? ''),
-                                                                                                )!;
-                                                                                                FFAppState().update(() {});
-                                                                                                logFirebaseEvent('IconButton_google_analytics_event');
-                                                                                                logFirebaseEvent(
-                                                                                                  'Remove From Sub Cart',
-                                                                                                  parameters: {
-                                                                                                    'Screen Name': 'Subscription Cart Screen',
-                                                                                                    'API Name': 'Add To SubCart',
-                                                                                                  },
-                                                                                                );
-                                                                                                logFirebaseEvent('IconButton_refresh_database_request');
-                                                                                                safeSetState(() => _model.apiRequestCompleter = null);
-                                                                                                await _model.waitForApiRequestCompleted();
-                                                                                                logFirebaseEvent('IconButton_custom_action');
-                                                                                                await actions.facebookEventClass(
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.varient_id''',
-                                                                                                  ).toString(),
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.product_name''',
-                                                                                                  ).toString(),
-                                                                                                  'subscription product',
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.price''',
-                                                                                                  ),
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.cart_qty''',
-                                                                                                  ),
-                                                                                                  getJsonField(
-                                                                                                    productSubModelItem,
-                                                                                                    r'''$.mrp''',
-                                                                                                  ),
-                                                                                                  'remove',
-                                                                                                  FFAppState().emptyJson,
-                                                                                                  'emptyjons',
-                                                                                                  ' ',
-                                                                                                  ' ',
-                                                                                                  ' ',
-                                                                                                  ' ',
-                                                                                                );
-                                                                                              } else {
-                                                                                                logFirebaseEvent('IconButton_show_snack_bar');
-                                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                  SnackBar(
-                                                                                                    content: Text(
-                                                                                                      getJsonField(
-                                                                                                        (_model.addtosubCart?.jsonBody ?? ''),
-                                                                                                        r'''$.message''',
-                                                                                                      ).toString(),
-                                                                                                      style: GoogleFonts.montserrat(
-                                                                                                        color: FFAppConstants.indigoColor,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                        fontSize: 12.0,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    duration: Duration(milliseconds: 1200),
-                                                                                                    backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
-                                                                                                  ),
-                                                                                                );
-                                                                                              }
-                                                                                            } else {
-                                                                                              logFirebaseEvent('IconButton_update_app_state');
-
-                                                                                              safeSetState(() {});
-                                                                                            }
-
-                                                                                            safeSetState(() {});
-                                                                                          },
                                                                                         ),
                                                                                       ),
                                                                                     ],
@@ -1968,7 +2002,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                 hoverColor: Colors.transparent,
                                                                                                 highlightColor: Colors.transparent,
                                                                                                 onTap: () async {
-                                                                                                  logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Column_0hv');
+                                                                                                  logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Column_sfn');
                                                                                                   logFirebaseEvent('Column_update_app_state');
                                                                                                   FFAppState().varientID = getJsonField(
                                                                                                     productSubModelItem,
@@ -2077,10 +2111,16 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                       productSubModelItem,
                                                                                                       r'''$.cart_qty''',
                                                                                                     );
-                                                                                                    _model.autorenewProduct = getJsonField(
-                                                                                                      productSubModelItem,
-                                                                                                      r'''$.isautorenew''',
-                                                                                                    ).toString();
+                                                                                                    _model.autorenewProduct = FFAppState().emptyString ==
+                                                                                                            getJsonField(
+                                                                                                              productSubModelItem,
+                                                                                                              r'''$.isautorenew''',
+                                                                                                            ).toString()
+                                                                                                        ? 'no'
+                                                                                                        : getJsonField(
+                                                                                                            productSubModelItem,
+                                                                                                            r'''$.isautorenew''',
+                                                                                                          ).toString();
                                                                                                     _model.isCheckedAutoRenew = _model.isAutoRenewChecked !=
                                                                                                             getJsonField(
                                                                                                               productSubModelItem,
@@ -2371,7 +2411,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                 hoverColor: Colors.transparent,
                                                                                                 highlightColor: Colors.transparent,
                                                                                                 onTap: () async {
-                                                                                                  logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Column_9lr');
+                                                                                                  logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Column_csd');
                                                                                                   logFirebaseEvent('Column_update_app_state');
                                                                                                   FFAppState().varientID = getJsonField(
                                                                                                     productSubModelItem,
@@ -2480,10 +2520,16 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                       productSubModelItem,
                                                                                                       r'''$.cart_qty''',
                                                                                                     );
-                                                                                                    _model.autorenewProduct = getJsonField(
-                                                                                                      productSubModelItem,
-                                                                                                      r'''$.isautorenew''',
-                                                                                                    ).toString();
+                                                                                                    _model.autorenewProduct = FFAppState().emptyString ==
+                                                                                                            getJsonField(
+                                                                                                              productSubModelItem,
+                                                                                                              r'''$.isautorenew''',
+                                                                                                            ).toString()
+                                                                                                        ? 'no'
+                                                                                                        : getJsonField(
+                                                                                                            productSubModelItem,
+                                                                                                            r'''$.isautorenew''',
+                                                                                                          ).toString();
                                                                                                     _model.isCheckedAutoRenew = _model.isAutoRenewChecked !=
                                                                                                             getJsonField(
                                                                                                               productSubModelItem,
@@ -2762,10 +2808,10 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               decoration: BoxDecoration(
                                                                                 color: FFAppConstants.whiteColor,
                                                                                 borderRadius: BorderRadius.only(
-                                                                                  bottomLeft: Radius.circular(8.0),
-                                                                                  bottomRight: Radius.circular(8.0),
                                                                                   topLeft: Radius.circular(8.0),
                                                                                   topRight: Radius.circular(8.0),
+                                                                                  bottomLeft: Radius.circular(8.0),
+                                                                                  bottomRight: Radius.circular(8.0),
                                                                                 ),
                                                                               ),
                                                                               alignment: AlignmentDirectional(0.0, 0.0),
@@ -2781,8 +2827,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       decoration: BoxDecoration(
                                                                                         color: FFAppConstants.whiteColor,
                                                                                         borderRadius: BorderRadius.only(
-                                                                                          bottomLeft: Radius.circular(0.0),
-                                                                                          bottomRight: Radius.circular(0.0),
                                                                                           topLeft: Radius.circular(10.0),
                                                                                           topRight: Radius.circular(10.0),
                                                                                         ),
@@ -2959,8 +3003,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                         borderRadius: BorderRadius.only(
                                                                                           bottomLeft: Radius.circular(10.0),
                                                                                           bottomRight: Radius.circular(10.0),
-                                                                                          topLeft: Radius.circular(0.0),
-                                                                                          topRight: Radius.circular(0.0),
                                                                                         ),
                                                                                       ),
                                                                                       child: Row(
@@ -3147,11 +3189,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               context)
                                                                       .width *
                                                                   1.0,
-                                                              height: FFAppState()
-                                                                          .usserType !=
-                                                                      'guest'
-                                                                  ? 240.0
-                                                                  : 200.0,
                                                               decoration:
                                                                   BoxDecoration(
                                                                 color: FFAppConstants
@@ -3163,7 +3200,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                         20.0,
                                                                         10.0,
                                                                         20.0,
-                                                                        0.0),
+                                                                        10.0),
                                                                 child: Column(
                                                                   mainAxisSize:
                                                                       MainAxisSize
@@ -3191,7 +3228,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                         onTap:
                                                                             () async {
                                                                           logFirebaseEvent(
-                                                                              'CART_SUBSCRIPTION_SCREEN_COPY_Text_bb53o');
+                                                                              'CART_SUBSCRIPTION_SCREEN_COPY_Text_842rf');
                                                                           logFirebaseEvent(
                                                                               'Text_navigate_to');
 
@@ -3634,19 +3671,329 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                             mainAxisAlignment:
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             children: [
-                                                                              Text(
-                                                                                'QuicKart  Wallet',
-                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                      font: GoogleFonts.montserrat(
-                                                                                        fontWeight: FontWeight.w600,
-                                                                                        fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    'Reward Wallet',
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          color: FFAppConstants.primaryPurple2,
+                                                                                          fontSize: 13.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  ),
+                                                                                  Builder(
+                                                                                    builder: (context) => Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                                                                                      child: InkWell(
+                                                                                        splashColor: Colors.transparent,
+                                                                                        focusColor: Colors.transparent,
+                                                                                        hoverColor: Colors.transparent,
+                                                                                        highlightColor: Colors.transparent,
+                                                                                        onTap: () async {
+                                                                                          logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Icon_3uqfc');
+                                                                                          logFirebaseEvent('Icon_alert_dialog');
+                                                                                          await showDialog(
+                                                                                            context: context,
+                                                                                            builder: (dialogContext) {
+                                                                                              return Dialog(
+                                                                                                elevation: 0,
+                                                                                                insetPadding: EdgeInsets.zero,
+                                                                                                backgroundColor: Colors.transparent,
+                                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                child: GestureDetector(
+                                                                                                  onTap: () {
+                                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                  },
+                                                                                                  child: CustomAlertDailogWidget(
+                                                                                                    des: 'Stores your earnings from cashback, referrals, and promotional offers.',
+                                                                                                    height: 160.0,
+                                                                                                    title: 'Reward Wallet',
+                                                                                                  ),
+                                                                                                ),
+                                                                                              );
+                                                                                            },
+                                                                                          );
+                                                                                        },
+                                                                                        child: Icon(
+                                                                                          Icons.info_outline,
+                                                                                          color: FFAppConstants.indigoColor,
+                                                                                          size: 20.0,
+                                                                                        ),
                                                                                       ),
-                                                                                      color: FFAppConstants.primaryPurple2,
-                                                                                      fontSize: 13.0,
-                                                                                      letterSpacing: 0.0,
-                                                                                      fontWeight: FontWeight.w600,
-                                                                                      fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                     ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    ' AED ',
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          color: FFAppConstants.primaryPurple2,
+                                                                                          fontSize: 13.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  ),
+                                                                                  Text(
+                                                                                    valueOrDefault<String>(
+                                                                                      functions.setDecimalValue(getJsonField(
+                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                        r'''$.data.referral_balance''',
+                                                                                      ).toString()),
+                                                                                      '0.00',
+                                                                                    ),
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          color: FFAppConstants.primaryPurple2,
+                                                                                          fontSize: 12.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  ),
+                                                                                  Theme(
+                                                                                    data: ThemeData(
+                                                                                      checkboxTheme: CheckboxThemeData(
+                                                                                        visualDensity: VisualDensity.compact,
+                                                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                                                        shape: RoundedRectangleBorder(
+                                                                                          borderRadius: BorderRadius.circular(4.0),
+                                                                                        ),
+                                                                                      ),
+                                                                                      unselectedWidgetColor: FFAppConstants.primaryPurple2,
+                                                                                    ),
+                                                                                    child: Checkbox(
+                                                                                      value: _model.checkboxWalletValue1 ??= false,
+                                                                                      onChanged: (newValue) async {
+                                                                                        safeSetState(() => _model.checkboxWalletValue1 = newValue!);
+                                                                                        if (newValue!) {
+                                                                                          logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_CheckboxWa');
+                                                                                          logFirebaseEvent('CheckboxWallet_update_page_state');
+                                                                                          _model.isRefSubWalletCheckBoxSelected = 'add';
+                                                                                          safeSetState(() {});
+                                                                                          logFirebaseEvent('CheckboxWallet_google_analytics_event');
+                                                                                          logFirebaseEvent(
+                                                                                            'Selection',
+                                                                                            parameters: {
+                                                                                              'Screen Name': 'Subscription Cart Screen',
+                                                                                              'Selection': 'Wallet On',
+                                                                                            },
+                                                                                          );
+                                                                                        } else {
+                                                                                          logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_CheckboxWa');
+                                                                                          logFirebaseEvent('CheckboxWallet_update_page_state');
+                                                                                          _model.isRefSubWalletCheckBoxSelected = 'remove';
+                                                                                          safeSetState(() {});
+                                                                                          logFirebaseEvent('CheckboxWallet_google_analytics_event');
+                                                                                          logFirebaseEvent(
+                                                                                            'Selection',
+                                                                                            parameters: {
+                                                                                              'Screen Name': 'Subscription Cart Screen',
+                                                                                              'Selection': 'Wallet Off',
+                                                                                            },
+                                                                                          );
+                                                                                        }
+                                                                                      },
+                                                                                      side: (FFAppConstants.primaryPurple2 != null)
+                                                                                          ? BorderSide(
+                                                                                              width: 2,
+                                                                                              color: FFAppConstants.primaryPurple2!,
+                                                                                            )
+                                                                                          : null,
+                                                                                      activeColor: FFAppConstants.indigoColor,
+                                                                                      checkColor: FlutterFlowTheme.of(context).info,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          if (_model.isRefSubWalletCheckBoxSelected ==
+                                                                              'add')
+                                                                            Builder(
+                                                                              builder: (context) {
+                                                                                if (_model.isRefSubWalletCheckBoxSelected == 'add') {
+                                                                                  return RichText(
+                                                                                    textScaler: MediaQuery.of(context).textScaler,
+                                                                                    text: TextSpan(
+                                                                                      children: [
+                                                                                        TextSpan(
+                                                                                          text: valueOrDefault<String>(
+                                                                                            functions.setDecimalValue(functions
+                                                                                                .checkWalletWithAction(
+                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                    functions
+                                                                                                        .updateTotalAmount(
+                                                                                                            '0',
+                                                                                                            '0',
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            _model.selectedPaymentMethod,
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            '')
+                                                                                                        .toString(),
+                                                                                                    functions.setDecimalValue(getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.referral_balance''',
+                                                                                                    ).toString()),
+                                                                                                    getJsonField(
+                                                                                                      FFAppState().appInfo,
+                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                    ).toString())
+                                                                                                .toString()),
+                                                                                            '0',
+                                                                                          ),
+                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                font: GoogleFonts.montserrat(
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                                ),
+                                                                                                color: FFAppConstants.darkGreen,
+                                                                                                fontSize: 12.0,
+                                                                                                letterSpacing: 0.0,
+                                                                                                fontWeight: FontWeight.bold,
+                                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                              ),
+                                                                                        ),
+                                                                                        TextSpan(
+                                                                                          text: ' AED',
+                                                                                          style: GoogleFonts.montserrat(
+                                                                                            color: FFAppConstants.darkGreen,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontSize: 12.0,
+                                                                                          ),
+                                                                                        ),
+                                                                                        TextSpan(
+                                                                                          text: ' Wallet applied',
+                                                                                          style: GoogleFonts.montserrat(
+                                                                                            color: FFAppConstants.blackColor0A0A0A,
+                                                                                            fontWeight: FontWeight.w500,
+                                                                                            fontSize: 12.0,
+                                                                                          ),
+                                                                                        )
+                                                                                      ],
+                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            font: GoogleFonts.montserrat(
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                            ),
+                                                                                            letterSpacing: 0.0,
+                                                                                            fontWeight: FontWeight.w500,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                    ),
+                                                                                  );
+                                                                                } else {
+                                                                                  return Text(
+                                                                                    '',
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.readexPro(
+                                                                                            fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FlutterFlowTheme.of(context).bodyMedium.fontWeight,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  );
+                                                                                }
+                                                                              },
+                                                                            ),
+                                                                          Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.max,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    'Refund Wallet',
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          font: GoogleFonts.montserrat(
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                            fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                          ),
+                                                                                          color: FFAppConstants.primaryPurple2,
+                                                                                          fontSize: 13.0,
+                                                                                          letterSpacing: 0.0,
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                          fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                        ),
+                                                                                  ),
+                                                                                  Builder(
+                                                                                    builder: (context) => Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                                                                                      child: InkWell(
+                                                                                        splashColor: Colors.transparent,
+                                                                                        focusColor: Colors.transparent,
+                                                                                        hoverColor: Colors.transparent,
+                                                                                        highlightColor: Colors.transparent,
+                                                                                        onTap: () async {
+                                                                                          logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Icon_t68a2');
+                                                                                          logFirebaseEvent('Icon_alert_dialog');
+                                                                                          await showDialog(
+                                                                                            context: context,
+                                                                                            builder: (dialogContext) {
+                                                                                              return Dialog(
+                                                                                                elevation: 0,
+                                                                                                insetPadding: EdgeInsets.zero,
+                                                                                                backgroundColor: Colors.transparent,
+                                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                child: GestureDetector(
+                                                                                                  onTap: () {
+                                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                  },
+                                                                                                  child: CustomAlertDailogWidget(
+                                                                                                    des: 'Stores your refunded amount from cancelled or returned orders.',
+                                                                                                    height: 160.0,
+                                                                                                    title: 'Refund Wallet',
+                                                                                                  ),
+                                                                                                ),
+                                                                                              );
+                                                                                            },
+                                                                                          );
+                                                                                        },
+                                                                                        child: Icon(
+                                                                                          Icons.info_outline,
+                                                                                          color: FFAppConstants.indigoColor,
+                                                                                          size: 20.0,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
                                                                               ),
                                                                               Row(
                                                                                 mainAxisSize: MainAxisSize.max,
@@ -3697,9 +4044,9 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       unselectedWidgetColor: FFAppConstants.primaryPurple2,
                                                                                     ),
                                                                                     child: Checkbox(
-                                                                                      value: _model.checkboxWalletValue ??= false,
+                                                                                      value: _model.checkboxWalletValue2 ??= false,
                                                                                       onChanged: (newValue) async {
-                                                                                        safeSetState(() => _model.checkboxWalletValue = newValue!);
+                                                                                        safeSetState(() => _model.checkboxWalletValue2 = newValue!);
                                                                                         if (newValue!) {
                                                                                           logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_CheckboxWa');
                                                                                           logFirebaseEvent('CheckboxWallet_update_page_state');
@@ -3754,22 +4101,21 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                         TextSpan(
                                                                                           text: valueOrDefault<String>(
                                                                                             functions.setDecimalValue(functions
-                                                                                                .checkWalletWithAction(
-                                                                                                    _model.isSubWalletCheckBoxSelected,
+                                                                                                .calculateFinalPayableForCashPayment(
                                                                                                     functions
                                                                                                         .updateTotalAmount(
-                                                                                                            '0',
-                                                                                                            '0',
+                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                            FFAppState().couponDiscount.toString(),
                                                                                                             getJsonField(
                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                               r'''$.data.total_price''',
                                                                                                             ).toString(),
                                                                                                             getJsonField(
                                                                                                               tabBarShowsubcartResponse.jsonBody,
-                                                                                                              r'''$.data.referral_balance''',
+                                                                                                              r'''$.data.wallet_balance''',
                                                                                                             ).toString(),
-                                                                                                            _model.isRefWalletCheckBoxSelected,
-                                                                                                            _model.selectedPaymentMethod,
+                                                                                                            'false',
+                                                                                                            '',
                                                                                                             getJsonField(
                                                                                                               FFAppState().appInfo,
                                                                                                               r'''$.codcharges''',
@@ -3777,14 +4123,44 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                             '',
                                                                                                             '')
                                                                                                         .toString(),
-                                                                                                    functions.setDecimalValue(getJsonField(
+                                                                                                    functions
+                                                                                                        .checkWalletWithAction(
+                                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                                            functions
+                                                                                                                .updateTotalAmount(
+                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    'false',
+                                                                                                                    '',
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.codcharges''',
+                                                                                                                    ).toString(),
+                                                                                                                    '',
+                                                                                                                    '')
+                                                                                                                .toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                            ).toString())
+                                                                                                        .toString(),
+                                                                                                    getJsonField(
                                                                                                       tabBarShowsubcartResponse.jsonBody,
                                                                                                       r'''$.data.wallet_balance''',
-                                                                                                    ).toString()),
-                                                                                                    getJsonField(
-                                                                                                      FFAppState().appInfo,
-                                                                                                      r'''$.wallet_deduction_percentage''',
-                                                                                                    ).toString())
+                                                                                                    ).toString(),
+                                                                                                    _model.isSubWalletCheckBoxSelected)
                                                                                                 .toString()),
                                                                                             '0',
                                                                                           ),
@@ -3852,7 +4228,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                       Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
-                                                                            0.0,
+                                                                            5.0,
                                                                             0.0,
                                                                             5.0),
                                                                         child:
@@ -3907,7 +4283,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                             ).toString(),
                                                                                             functions
                                                                                                 .checkWalletWithAction(
-                                                                                                    _model.isSubWalletCheckBoxSelected,
+                                                                                                    _model.isRefSubWalletCheckBoxSelected,
                                                                                                     functions
                                                                                                         .updateTotalAmount(
                                                                                                             '0',
@@ -3916,36 +4292,94 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                               r'''$.data.total_price''',
                                                                                                             ).toString(),
-                                                                                                            functions.setDecimalValue(getJsonField(
+                                                                                                            getJsonField(
                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                               r'''$.data.referral_balance''',
-                                                                                                            ).toString()),
-                                                                                                            _model.isRefWalletCheckBoxSelected,
+                                                                                                            ).toString(),
+                                                                                                            '',
                                                                                                             _model.selectedPaymentMethod,
                                                                                                             getJsonField(
                                                                                                               FFAppState().appInfo,
                                                                                                               r'''$.codcharges''',
                                                                                                             ).toString(),
-                                                                                                            getJsonField(
-                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                            ).toString(),
-                                                                                                            _model.isWalletCheckBoxSelected)
+                                                                                                            '',
+                                                                                                            '')
                                                                                                         .toString(),
                                                                                                     functions.setDecimalValue(getJsonField(
                                                                                                       tabBarShowsubcartResponse.jsonBody,
-                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                      r'''$.data.referral_balance''',
                                                                                                     ).toString()),
                                                                                                     getJsonField(
                                                                                                       FFAppState().appInfo,
                                                                                                       r'''$.wallet_deduction_percentage''',
                                                                                                     ).toString())
                                                                                                 .toString(),
-                                                                                            _model.isSubWalletCheckBoxSelected,
+                                                                                            _model.isRefSubWalletCheckBoxSelected,
                                                                                             _model.selectedPaymentMethod,
                                                                                             '0',
-                                                                                            '',
-                                                                                            '')
+                                                                                            functions
+                                                                                                .calculateFinalPayableForCashPayment(
+                                                                                                    functions
+                                                                                                        .updateTotalAmount(
+                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                            ).toString(),
+                                                                                                            'false',
+                                                                                                            '',
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            '')
+                                                                                                        .toString(),
+                                                                                                    functions
+                                                                                                        .checkWalletWithAction(
+                                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                                            functions
+                                                                                                                .updateTotalAmount(
+                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    'false',
+                                                                                                                    '',
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.codcharges''',
+                                                                                                                    ).toString(),
+                                                                                                                    '',
+                                                                                                                    '')
+                                                                                                                .toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                            ).toString())
+                                                                                                        .toString(),
+                                                                                                    getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                    ).toString(),
+                                                                                                    _model.isSubWalletCheckBoxSelected)
+                                                                                                .toString(),
+                                                                                            _model.isSubWalletCheckBoxSelected)
                                                                                         .toString(),
                                                                                     style: GoogleFonts.montserrat(
                                                                                       color: FFAppConstants.blackColor0A0A0A,
@@ -4136,7 +4570,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                               ),
                                                                                               color: FFAppConstants.neutralBlack3D3D3D,
-                                                                                              fontSize: 8.0,
+                                                                                              fontSize: 10.0,
                                                                                               letterSpacing: 0.0,
                                                                                               fontWeight: FontWeight.w600,
                                                                                               fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
@@ -4206,7 +4640,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                 ),
                                                                                                 color: FFAppConstants.neutralBlack3D3D3D,
-                                                                                                fontSize: 8.0,
+                                                                                                fontSize: 10.0,
                                                                                                 letterSpacing: 0.0,
                                                                                                 fontWeight: FontWeight.w600,
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
@@ -4277,7 +4711,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                   fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
                                                                                                 ),
                                                                                                 color: FFAppConstants.neutralBlack3D3D3D,
-                                                                                                fontSize: 8.0,
+                                                                                                fontSize: 10.0,
                                                                                                 letterSpacing: 0.0,
                                                                                                 fontWeight: FontWeight.w600,
                                                                                                 fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
@@ -4305,7 +4739,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                         0.0,
                                                                         5.0,
                                                                         0.0,
-                                                                        30.0),
+                                                                        10.0),
                                                             child: Container(
                                                               width: MediaQuery
                                                                           .sizeOf(
@@ -4456,6 +4890,113 @@ class _CartSubscriptionScreenCopyWidgetState
                                                               ),
                                                             ),
                                                           ),
+                                                          if ((getJsonField(
+                                                                tabBarShowsubcartResponse
+                                                                    .jsonBody,
+                                                                r'''$.data.savelater''',
+                                                              )
+                                                                      .toList()
+                                                                      .map<ProductCountStruct?>(
+                                                                          ProductCountStruct
+                                                                              .maybeFromMap)
+                                                                      .toList() as Iterable<ProductCountStruct?>)
+                                                                  .withoutNulls
+                                                                  .length >
+                                                              0)
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          50.0),
+                                                              child: Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: FFAppConstants
+                                                                      .neutralWhiteF5F5F5,
+                                                                ),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Align(
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              -1.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            20.0,
+                                                                            5.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Saved for later',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                font: GoogleFonts.montserrat(
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                                color: FFAppConstants.blackColor0A0A0A,
+                                                                                fontSize: 16.0,
+                                                                                letterSpacing: 0.0,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                                                          20.0,
+                                                                          5.0,
+                                                                          20.0,
+                                                                          5.0),
+                                                                      child:
+                                                                          Container(
+                                                                        width: MediaQuery.sizeOf(context).width *
+                                                                            1.0,
+                                                                        height:
+                                                                            279.0,
+                                                                        decoration:
+                                                                            BoxDecoration(),
+                                                                        child:
+                                                                            wrapWithModel(
+                                                                          model:
+                                                                              _model.saveLetterproductsListModel,
+                                                                          updateCallback: () =>
+                                                                              safeSetState(() {}),
+                                                                          child:
+                                                                              SaveLetterproductsListWidget(
+                                                                            isSubscription:
+                                                                                true,
+                                                                            productList:
+                                                                                getJsonField(
+                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                              r'''$.data.savelater''',
+                                                                            ),
+                                                                            isReload:
+                                                                                () async {
+                                                                              logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Container_');
+                                                                              logFirebaseEvent('saveLetterproductsList_refresh_database_');
+                                                                              safeSetState(() => _model.apiRequestCompleter = null);
+                                                                              await _model.waitForApiRequestCompleted();
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
                                                         ],
                                                       ),
                                                     ],
@@ -4482,7 +5023,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                         valueOrDefault<double>(
                                                       _model.subscritionPaymentMethod ==
                                                               'Pay Per${'\n'}Delivery'
-                                                          ? 120.0
+                                                          ? 130.0
                                                           : 155.0,
                                                       175.0,
                                                     ),
@@ -4491,12 +5032,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                           .whiteColor,
                                                       borderRadius:
                                                           BorderRadius.only(
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                0.0),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                0.0),
                                                         topLeft:
                                                             Radius.circular(
                                                                 20.0),
@@ -4747,7 +5282,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                         );
                                                                                       } else {
                                                                                         return Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(3.0, 0.0, 0.0, 0.0),
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(1.0, 0.0, 0.0, 0.0),
                                                                                           child: Column(
                                                                                             mainAxisSize: MainAxisSize.max,
                                                                                             children: [
@@ -4759,7 +5294,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                   hoverColor: Colors.transparent,
                                                                                                   highlightColor: Colors.transparent,
                                                                                                   onTap: () async {
-                                                                                                    logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_sqpmu');
+                                                                                                    logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_kbpyj');
                                                                                                     logFirebaseEvent('Text_navigate_to');
 
                                                                                                     context.pushNamed(CardScreenWidget.routeName);
@@ -4823,7 +5358,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                   return Padding(
                                                                                     padding: EdgeInsetsDirectional.fromSTEB(
                                                                                         valueOrDefault<double>(
-                                                                                          MediaQuery.sizeOf(context).width <= 395.0 ? 10.0 : 20.0,
+                                                                                          MediaQuery.sizeOf(context).width <= 395.0 ? 7.0 : 20.0,
                                                                                           0.0,
                                                                                         ),
                                                                                         0.0,
@@ -4835,7 +5370,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       hoverColor: Colors.transparent,
                                                                                       highlightColor: Colors.transparent,
                                                                                       onTap: () async {
-                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_lm6l6');
+                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_4cv2m');
                                                                                         logFirebaseEvent('Text_navigate_to');
 
                                                                                         context.pushNamed(CardScreenWidget.routeName);
@@ -4888,7 +5423,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       hoverColor: Colors.transparent,
                                                                                       highlightColor: Colors.transparent,
                                                                                       onTap: () async {
-                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_98io3');
+                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_ha0c2');
                                                                                         logFirebaseEvent('Text_navigate_to');
 
                                                                                         context.pushNamed(CardScreenWidget.routeName);
@@ -5086,7 +5621,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                           hoverColor: Colors.transparent,
                                                                                           highlightColor: Colors.transparent,
                                                                                           onTap: () async {
-                                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_s8xgr');
+                                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_j48lb');
                                                                                             logFirebaseEvent('Text_navigate_to');
 
                                                                                             context.pushNamed(CardScreenWidget.routeName);
@@ -5130,7 +5665,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                           hoverColor: Colors.transparent,
                                                                                           highlightColor: Colors.transparent,
                                                                                           onTap: () async {
-                                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_mpcg7');
+                                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_r31ou');
                                                                                             logFirebaseEvent('Text_navigate_to');
 
                                                                                             context.pushNamed(CardScreenWidget.routeName);
@@ -5222,33 +5757,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                             tabBarShowsubcartResponse.jsonBody,
                                                                                                             r'''$.data.lastadd[0].address_id''',
                                                                                                           ).toString();
-                                                                                                    if (functions.checkSubscriptionCartEmpty(getJsonField(
-                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                          r'''$.data.data''',
-                                                                                                        )) ==
-                                                                                                        true) {
-                                                                                                      if (functions.checkDateforOldOrCurrentDate(getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.data''',
-                                                                                                          )) ==
-                                                                                                          false) {
-                                                                                                        if (FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') {
-                                                                                                          logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                          _model.isLoadingIndicator = true;
-                                                                                                          safeSetState(() {});
-                                                                                                          logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                          _model.isPaymentDone = false;
-                                                                                                          safeSetState(() {});
-                                                                                                          logFirebaseEvent('AppleContainer_backend_call');
-                                                                                                          _model.apiResultapplePaynew = await QuickartGroup.subpaymentCall.call(
-                                                                                                            userid: FFAppState().userID,
-                                                                                                            addressid: FFAppState().selectedAddresID,
-                                                                                                            storeid: FFAppState().storeID,
-                                                                                                            paymentMethod: 'applepay',
-                                                                                                            wallet: _model.isSubWalletCheckBoxSelected == 'add' ? 'yes' : 'no',
-                                                                                                            deviceid: FFAppState().deviceID,
-                                                                                                            paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
-                                                                                                            orderTotal: functions.updateTotalAmount(
+                                                                                                    if (functions.stringToDouble(functions
+                                                                                                            .updateTotalAmount(
                                                                                                                 '0',
                                                                                                                 '0',
                                                                                                                 getJsonField(
@@ -5257,7 +5767,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                 ).toString(),
                                                                                                                 functions
                                                                                                                     .checkWalletWithAction(
-                                                                                                                        _model.isSubWalletCheckBoxSelected,
+                                                                                                                        _model.isRefSubWalletCheckBoxSelected,
                                                                                                                         functions
                                                                                                                             .updateTotalAmount(
                                                                                                                                 '0',
@@ -5268,9 +5778,9 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                 ).toString(),
                                                                                                                                 getJsonField(
                                                                                                                                   tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                  r'''$.data.wallet_balance''',
+                                                                                                                                  r'''$.data.referral_balance''',
                                                                                                                                 ).toString(),
-                                                                                                                                _model.isWalletCheckBoxSelected,
+                                                                                                                                '',
                                                                                                                                 _model.selectedPaymentMethod,
                                                                                                                                 getJsonField(
                                                                                                                                   FFAppState().appInfo,
@@ -5279,27 +5789,24 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                 '',
                                                                                                                                 '')
                                                                                                                             .toString(),
-                                                                                                                        getJsonField(
+                                                                                                                        functions.setDecimalValue(getJsonField(
                                                                                                                           tabBarShowsubcartResponse.jsonBody,
-                                                                                                                          r'''$.data.wallet_balance''',
-                                                                                                                        ).toString(),
+                                                                                                                          r'''$.data.referral_balance''',
+                                                                                                                        ).toString()),
                                                                                                                         getJsonField(
                                                                                                                           FFAppState().appInfo,
                                                                                                                           r'''$.wallet_deduction_percentage''',
                                                                                                                         ).toString())
                                                                                                                     .toString(),
-                                                                                                                _model.isSubWalletCheckBoxSelected,
+                                                                                                                _model.isRefSubWalletCheckBoxSelected,
                                                                                                                 _model.selectedPaymentMethod,
                                                                                                                 '0',
-                                                                                                                '',
-                                                                                                                ''),
-                                                                                                            totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
-                                                                                                                    ? functions.checkWalletWithAction(
-                                                                                                                        _model.isSubWalletCheckBoxSelected,
+                                                                                                                functions
+                                                                                                                    .calculateFinalPayableForCashPayment(
                                                                                                                         functions
                                                                                                                             .updateTotalAmount(
-                                                                                                                                '0',
-                                                                                                                                '0',
+                                                                                                                                FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                FFAppState().couponDiscount.toString(),
                                                                                                                                 getJsonField(
                                                                                                                                   tabBarShowsubcartResponse.jsonBody,
                                                                                                                                   r'''$.data.total_price''',
@@ -5309,7 +5816,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                   r'''$.data.wallet_balance''',
                                                                                                                                 ).toString(),
                                                                                                                                 'false',
-                                                                                                                                _model.selectedPaymentMethod,
+                                                                                                                                '',
                                                                                                                                 getJsonField(
                                                                                                                                   FFAppState().appInfo,
                                                                                                                                   r'''$.codcharges''',
@@ -5317,45 +5824,328 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                 '',
                                                                                                                                 '')
                                                                                                                             .toString(),
+                                                                                                                        functions
+                                                                                                                            .checkWalletWithAction(
+                                                                                                                                _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                functions
+                                                                                                                                    .updateTotalAmount(
+                                                                                                                                        FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                        FFAppState().couponDiscount.toString(),
+                                                                                                                                        getJsonField(
+                                                                                                                                          tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                          r'''$.data.total_price''',
+                                                                                                                                        ).toString(),
+                                                                                                                                        getJsonField(
+                                                                                                                                          tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                          r'''$.data.referral_balance''',
+                                                                                                                                        ).toString(),
+                                                                                                                                        'false',
+                                                                                                                                        '',
+                                                                                                                                        getJsonField(
+                                                                                                                                          FFAppState().appInfo,
+                                                                                                                                          r'''$.codcharges''',
+                                                                                                                                        ).toString(),
+                                                                                                                                        '',
+                                                                                                                                        '')
+                                                                                                                                    .toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                  r'''$.data.referral_balance''',
+                                                                                                                                ).toString(),
+                                                                                                                                getJsonField(
+                                                                                                                                  FFAppState().appInfo,
+                                                                                                                                  r'''$.wallet_deduction_percentage''',
+                                                                                                                                ).toString())
+                                                                                                                            .toString(),
                                                                                                                         getJsonField(
                                                                                                                           tabBarShowsubcartResponse.jsonBody,
                                                                                                                           r'''$.data.wallet_balance''',
                                                                                                                         ).toString(),
-                                                                                                                        getJsonField(
-                                                                                                                          FFAppState().appInfo,
-                                                                                                                          r'''$.wallet_deduction_percentage''',
-                                                                                                                        ).toString())
-                                                                                                                    : 0.0)
-                                                                                                                .toString(),
-                                                                                                            delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                                            orderInstruction: _model.textController.text,
-                                                                                                            platform: isiOS ? 'ios' : 'android',
-                                                                                                          );
-
-                                                                                                          if ((_model.apiResultapplePaynew?.succeeded ?? true)) {
+                                                                                                                        _model.isSubWalletCheckBoxSelected)
+                                                                                                                    .toString(),
+                                                                                                                _model.isSubWalletCheckBoxSelected)
+                                                                                                            .toString()) >
+                                                                                                        0.0) {
+                                                                                                      if (functions.checkSubscriptionCartEmpty(getJsonField(
+                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                            r'''$.data.data''',
+                                                                                                          )) ==
+                                                                                                          true) {
+                                                                                                        if (functions.checkDateforOldOrCurrentDate(getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.data''',
+                                                                                                            )) ==
+                                                                                                            false) {
+                                                                                                          if ((FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') && (FFAppState().selectedAddresID != 'null')) {
                                                                                                             logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                            _model.isLoadingIndicator = false;
+                                                                                                            _model.isLoadingIndicator = true;
                                                                                                             safeSetState(() {});
                                                                                                             logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                            _model.isPaymentDone = true;
+                                                                                                            _model.isPaymentDone = false;
                                                                                                             safeSetState(() {});
-                                                                                                            logFirebaseEvent('AppleContainer_navigate_to');
+                                                                                                            logFirebaseEvent('AppleContainer_custom_action');
+                                                                                                            _model.isVpnONAP = await actions.isVpnEnabled();
+                                                                                                            if (_model.isVpnONAP == false) {
+                                                                                                              logFirebaseEvent('AppleContainer_backend_call');
+                                                                                                              _model.apiResultapplePaynew = await QuickartGroup.subpaymentCall.call(
+                                                                                                                userid: FFAppState().userID,
+                                                                                                                addressid: FFAppState().selectedAddresID,
+                                                                                                                storeid: FFAppState().storeID,
+                                                                                                                paymentMethod: 'applepay',
+                                                                                                                wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                                                deviceid: FFAppState().deviceID,
+                                                                                                                paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
+                                                                                                                orderTotal: functions.updateTotalAmount(
+                                                                                                                    '0',
+                                                                                                                    '0',
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    functions
+                                                                                                                        .checkWalletWithAction(
+                                                                                                                            _model.isSubWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    '0',
+                                                                                                                                    '0',
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    '')
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        .toString(),
+                                                                                                                    _model.isSubWalletCheckBoxSelected,
+                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                    '0',
+                                                                                                                    '',
+                                                                                                                    ''),
+                                                                                                                totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
+                                                                                                                        ? functions.calculateFinalPayableForCashPayment(
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    'false',
+                                                                                                                                    '',
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    '')
+                                                                                                                                .toString(),
+                                                                                                                            functions
+                                                                                                                                .checkWalletWithAction(
+                                                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                    functions
+                                                                                                                                        .updateTotalAmount(
+                                                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                                                            getJsonField(
+                                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                              r'''$.data.total_price''',
+                                                                                                                                            ).toString(),
+                                                                                                                                            getJsonField(
+                                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                                            ).toString(),
+                                                                                                                                            'false',
+                                                                                                                                            '',
+                                                                                                                                            getJsonField(
+                                                                                                                                              FFAppState().appInfo,
+                                                                                                                                              r'''$.codcharges''',
+                                                                                                                                            ).toString(),
+                                                                                                                                            '',
+                                                                                                                                            '')
+                                                                                                                                        .toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                                                    ).toString())
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            _model.isSubWalletCheckBoxSelected)
+                                                                                                                        : 0.0)
+                                                                                                                    .toString(),
+                                                                                                                delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                                                orderInstruction: (String var1) {
+                                                                                                                  return var1.trim() ?? '';
+                                                                                                                }(_model.textController.text),
+                                                                                                                platform: isiOS ? 'ios' : 'android',
+                                                                                                                totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
+                                                                                                                        ? functions.checkWalletWithAction(
+                                                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    '0',
+                                                                                                                                    '0',
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    '',
+                                                                                                                                    '')
+                                                                                                                                .toString(),
+                                                                                                                            functions.setDecimalValue(getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.referral_balance''',
+                                                                                                                            ).toString()),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        : 0.0)
+                                                                                                                    .toString(),
+                                                                                                              );
 
-                                                                                                            context.pushNamed(
-                                                                                                              PaymentScreenWidget.routeName,
-                                                                                                              queryParameters: {
-                                                                                                                'redirectURl': serializeParam(
-                                                                                                                  getJsonField(
-                                                                                                                    (_model.apiResultapplePaynew?.jsonBody ?? ''),
-                                                                                                                    r'''$.data.redirect_url''',
-                                                                                                                  ).toString(),
-                                                                                                                  ParamType.String,
-                                                                                                                ),
-                                                                                                                'screenPName': serializeParam(
-                                                                                                                  'subscription',
-                                                                                                                  ParamType.String,
-                                                                                                                ),
-                                                                                                                'mrp': serializeParam(
+                                                                                                              if ((_model.apiResultapplePaynew?.succeeded ?? true)) {
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isLoadingIndicator = false;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isPaymentDone = true;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('AppleContainer_navigate_to');
+
+                                                                                                                context.pushNamed(
+                                                                                                                  PaymentScreenWidget.routeName,
+                                                                                                                  queryParameters: {
+                                                                                                                    'redirectURl': serializeParam(
+                                                                                                                      getJsonField(
+                                                                                                                        (_model.apiResultapplePaynew?.jsonBody ?? ''),
+                                                                                                                        r'''$.data.redirect_url''',
+                                                                                                                      ).toString(),
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                    'screenPName': serializeParam(
+                                                                                                                      'subscription',
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                    'mrp': serializeParam(
+                                                                                                                      functions.updateTotalAmount(
+                                                                                                                          '0',
+                                                                                                                          '0',
+                                                                                                                          getJsonField(
+                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                            r'''$.data.total_price''',
+                                                                                                                          ).toString(),
+                                                                                                                          functions
+                                                                                                                              .checkWalletWithAction(
+                                                                                                                                  _model.isSubWalletCheckBoxSelected,
+                                                                                                                                  functions
+                                                                                                                                      .updateTotalAmount(
+                                                                                                                                          '0',
+                                                                                                                                          '0',
+                                                                                                                                          getJsonField(
+                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                            r'''$.data.total_price''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          getJsonField(
+                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                          _model.selectedPaymentMethod,
+                                                                                                                                          getJsonField(
+                                                                                                                                            FFAppState().appInfo,
+                                                                                                                                            r'''$.codcharges''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          getJsonField(
+                                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                                          ).toString(),
+                                                                                                                                          _model.isSubWalletCheckBoxSelected)
+                                                                                                                                      .toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                    r'''$.data.wallet_balance''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    FFAppState().appInfo,
+                                                                                                                                    r'''$.wallet_deduction_percentage''',
+                                                                                                                                  ).toString())
+                                                                                                                              .toString(),
+                                                                                                                          _model.isSubWalletCheckBoxSelected,
+                                                                                                                          _model.selectedPaymentMethod,
+                                                                                                                          '0',
+                                                                                                                          '',
+                                                                                                                          ''),
+                                                                                                                      ParamType.double,
+                                                                                                                    ),
+                                                                                                                    'orderType': serializeParam(
+                                                                                                                      'subscription order apple pay',
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                    'groupID': serializeParam(
+                                                                                                                      '0',
+                                                                                                                      ParamType.String,
+                                                                                                                    ),
+                                                                                                                  }.withoutNulls,
+                                                                                                                );
+
+                                                                                                                logFirebaseEvent('AppleContainer_custom_action');
+                                                                                                                await actions.facebookEventClass(
+                                                                                                                  (List<String> var1) {
+                                                                                                                    return var1.join(', ');
+                                                                                                                  }(functions
+                                                                                                                      .getVarientIdsWithCartQty(
+                                                                                                                          getJsonField(
+                                                                                                                            tabBarShowsubcartResponse.jsonBody,
+                                                                                                                            r'''$.data.data''',
+                                                                                                                          ),
+                                                                                                                          'daily')
+                                                                                                                      .map((e) => e.toString())
+                                                                                                                      .toList()),
+                                                                                                                  '0',
+                                                                                                                  'subscription order',
+                                                                                                                  0.0,
+                                                                                                                  0,
                                                                                                                   functions.updateTotalAmount(
                                                                                                                       '0',
                                                                                                                       '0',
@@ -5374,11 +6164,11 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                         tabBarShowsubcartResponse.jsonBody,
                                                                                                                                         r'''$.data.total_price''',
                                                                                                                                       ).toString(),
-                                                                                                                                      getJsonField(
+                                                                                                                                      functions.setDecimalValue(getJsonField(
                                                                                                                                         tabBarShowsubcartResponse.jsonBody,
                                                                                                                                         r'''$.data.wallet_balance''',
-                                                                                                                                      ).toString(),
-                                                                                                                                      _model.isWalletCheckBoxSelected,
+                                                                                                                                      ).toString()),
+                                                                                                                                      _model.isRefSubWalletCheckBoxSelected,
                                                                                                                                       _model.selectedPaymentMethod,
                                                                                                                                       getJsonField(
                                                                                                                                         FFAppState().appInfo,
@@ -5388,12 +6178,12 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                         tabBarShowsubcartResponse.jsonBody,
                                                                                                                                         r'''$.data.wallet_balance''',
                                                                                                                                       ).toString(),
-                                                                                                                                      _model.isWalletCheckBoxSelected)
+                                                                                                                                      _model.isSubWalletCheckBoxSelected)
                                                                                                                                   .toString(),
-                                                                                                                              getJsonField(
+                                                                                                                              functions.setDecimalValue(getJsonField(
                                                                                                                                 tabBarShowsubcartResponse.jsonBody,
                                                                                                                                 r'''$.data.wallet_balance''',
-                                                                                                                              ).toString(),
+                                                                                                                              ).toString()),
                                                                                                                               getJsonField(
                                                                                                                                 FFAppState().appInfo,
                                                                                                                                 r'''$.wallet_deduction_percentage''',
@@ -5403,114 +6193,115 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                       _model.selectedPaymentMethod,
                                                                                                                       '0',
                                                                                                                       '',
-                                                                                                                      ''),
-                                                                                                                  ParamType.double,
-                                                                                                                ),
-                                                                                                                'orderType': serializeParam(
-                                                                                                                  'subscription order apple pay',
-                                                                                                                  ParamType.String,
-                                                                                                                ),
-                                                                                                              }.withoutNulls,
-                                                                                                            );
-
-                                                                                                            logFirebaseEvent('AppleContainer_custom_action');
-                                                                                                            await actions.facebookEventClass(
-                                                                                                              (List<String> var1) {
-                                                                                                                return var1.join(', ');
-                                                                                                              }(functions
-                                                                                                                  .getVarientIdsWithCartQty(
-                                                                                                                      getJsonField(
-                                                                                                                        tabBarShowsubcartResponse.jsonBody,
-                                                                                                                        r'''$.data.data''',
-                                                                                                                      ),
-                                                                                                                      'daily')
-                                                                                                                  .map((e) => e.toString())
-                                                                                                                  .toList()),
-                                                                                                              '0',
-                                                                                                              'subscription order',
-                                                                                                              0.0,
-                                                                                                              0,
-                                                                                                              functions.updateTotalAmount(
-                                                                                                                  '0',
-                                                                                                                  '0',
+                                                                                                                      '')!,
+                                                                                                                  'checkout',
                                                                                                                   getJsonField(
                                                                                                                     tabBarShowsubcartResponse.jsonBody,
-                                                                                                                    r'''$.data.total_price''',
-                                                                                                                  ).toString(),
-                                                                                                                  functions
-                                                                                                                      .checkWalletWithAction(
-                                                                                                                          _model.isSubWalletCheckBoxSelected,
-                                                                                                                          functions
-                                                                                                                              .updateTotalAmount(
-                                                                                                                                  '0',
-                                                                                                                                  '0',
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.total_price''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  functions.setDecimalValue(getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                                  ).toString()),
-                                                                                                                                  _model.isWalletCheckBoxSelected,
-                                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                                  getJsonField(
-                                                                                                                                    FFAppState().appInfo,
-                                                                                                                                    r'''$.codcharges''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  getJsonField(
-                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                                  ).toString(),
-                                                                                                                                  _model.isWalletCheckBoxSelected)
-                                                                                                                              .toString(),
-                                                                                                                          functions.setDecimalValue(getJsonField(
-                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString()),
-                                                                                                                          getJsonField(
-                                                                                                                            FFAppState().appInfo,
-                                                                                                                            r'''$.wallet_deduction_percentage''',
-                                                                                                                          ).toString())
-                                                                                                                      .toString(),
-                                                                                                                  _model.isSubWalletCheckBoxSelected,
-                                                                                                                  _model.selectedPaymentMethod,
-                                                                                                                  '0',
-                                                                                                                  '',
-                                                                                                                  '')!,
-                                                                                                              'checkout',
-                                                                                                              getJsonField(
-                                                                                                                tabBarShowsubcartResponse.jsonBody,
-                                                                                                                r'''$.data.data''',
-                                                                                                              ),
-                                                                                                              'subscription order apple pay',
-                                                                                                              ' ',
-                                                                                                              ' ',
-                                                                                                              ' ',
-                                                                                                              ' ',
-                                                                                                            );
+                                                                                                                    r'''$.data.data''',
+                                                                                                                  ),
+                                                                                                                  'subscription order apple pay',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                );
+                                                                                                              } else {
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isLoadingIndicator = false;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('AppleContainer_alert_dialog');
+                                                                                                                await showDialog(
+                                                                                                                  context: context,
+                                                                                                                  builder: (dialogContext) {
+                                                                                                                    return Dialog(
+                                                                                                                      elevation: 0,
+                                                                                                                      insetPadding: EdgeInsets.zero,
+                                                                                                                      backgroundColor: Colors.transparent,
+                                                                                                                      alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                      child: GestureDetector(
+                                                                                                                        onTap: () {
+                                                                                                                          FocusScope.of(dialogContext).unfocus();
+                                                                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                        },
+                                                                                                                        child: CustomAlertDailogWidget(
+                                                                                                                          des: getJsonField(
+                                                                                                                            (_model.apiResultapplePaynew?.jsonBody ?? ''),
+                                                                                                                            r'''$.message''',
+                                                                                                                          ).toString(),
+                                                                                                                          height: 150.0,
+                                                                                                                          title: ' ',
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    );
+                                                                                                                  },
+                                                                                                                );
+
+                                                                                                                logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                                _model.isPaymentDone = true;
+                                                                                                                safeSetState(() {});
+                                                                                                              }
+                                                                                                            } else {
+                                                                                                              logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                              _model.isLoadingIndicator = false;
+                                                                                                              safeSetState(() {});
+                                                                                                              logFirebaseEvent('AppleContainer_alert_dialog');
+                                                                                                              await showDialog(
+                                                                                                                context: context,
+                                                                                                                builder: (dialogContext) {
+                                                                                                                  return Dialog(
+                                                                                                                    elevation: 0,
+                                                                                                                    insetPadding: EdgeInsets.zero,
+                                                                                                                    backgroundColor: Colors.transparent,
+                                                                                                                    alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                    child: GestureDetector(
+                                                                                                                      onTap: () {
+                                                                                                                        FocusScope.of(dialogContext).unfocus();
+                                                                                                                        FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                      },
+                                                                                                                      child: CustomAlertDailogWidget(
+                                                                                                                        des: FFAppConstants.vpnMSG,
+                                                                                                                        height: 150.0,
+                                                                                                                        title: ' ',
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  );
+                                                                                                                },
+                                                                                                              );
+
+                                                                                                              logFirebaseEvent('AppleContainer_update_page_state');
+                                                                                                              _model.isPaymentDone = true;
+                                                                                                              safeSetState(() {});
+                                                                                                            }
                                                                                                           } else {
-                                                                                                            logFirebaseEvent('AppleContainer_update_page_state');
-                                                                                                            _model.isLoadingIndicator = false;
-                                                                                                            safeSetState(() {});
                                                                                                             logFirebaseEvent('AppleContainer_alert_dialog');
                                                                                                             await showDialog(
                                                                                                               context: context,
-                                                                                                              builder: (alertDialogContext) {
-                                                                                                                return AlertDialog(
-                                                                                                                  title: Text(FFAppState().AppName),
-                                                                                                                  content: Text(getJsonField(
-                                                                                                                    (_model.apiResultapplePaynew?.jsonBody ?? ''),
-                                                                                                                    r'''$.message''',
-                                                                                                                  ).toString()),
-                                                                                                                  actions: [
-                                                                                                                    TextButton(
-                                                                                                                      onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                                      child: Text('Ok'),
+                                                                                                              builder: (dialogContext) {
+                                                                                                                return Dialog(
+                                                                                                                  elevation: 0,
+                                                                                                                  insetPadding: EdgeInsets.zero,
+                                                                                                                  backgroundColor: Colors.transparent,
+                                                                                                                  alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                  child: GestureDetector(
+                                                                                                                    onTap: () {
+                                                                                                                      FocusScope.of(dialogContext).unfocus();
+                                                                                                                      FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                    },
+                                                                                                                    child: CustomAlertDailogWidget(
+                                                                                                                      des: 'Please add delivery adderss',
+                                                                                                                      height: 150.0,
+                                                                                                                      title: ' ',
                                                                                                                     ),
-                                                                                                                  ],
+                                                                                                                  ),
                                                                                                                 );
                                                                                                               },
+                                                                                                            );
+
+                                                                                                            logFirebaseEvent('AppleContainer_wait__delay');
+                                                                                                            await Future.delayed(
+                                                                                                              Duration(
+                                                                                                                milliseconds: 200,
+                                                                                                              ),
                                                                                                             );
                                                                                                             logFirebaseEvent('AppleContainer_update_page_state');
                                                                                                             _model.isPaymentDone = true;
@@ -5520,19 +6311,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                           logFirebaseEvent('AppleContainer_alert_dialog');
                                                                                                           await showDialog(
                                                                                                             context: context,
-                                                                                                            builder: (alertDialogContext) {
-                                                                                                              return AlertDialog(
-                                                                                                                title: Text(FFAppState().AppName),
-                                                                                                                content: Text('Please add delivery adderss'),
-                                                                                                                actions: [
-                                                                                                                  TextButton(
-                                                                                                                    onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                                    child: Text('Ok'),
+                                                                                                            builder: (dialogContext) {
+                                                                                                              return Dialog(
+                                                                                                                elevation: 0,
+                                                                                                                insetPadding: EdgeInsets.zero,
+                                                                                                                backgroundColor: Colors.transparent,
+                                                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                child: GestureDetector(
+                                                                                                                  onTap: () {
+                                                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                  },
+                                                                                                                  child: CustomAlertDailogWidget(
+                                                                                                                    des: FFAppConstants.subscriptionDateCheckMsg,
+                                                                                                                    height: 150.0,
+                                                                                                                    title: ' ',
                                                                                                                   ),
-                                                                                                                ],
+                                                                                                                ),
                                                                                                               );
                                                                                                             },
                                                                                                           );
+
                                                                                                           logFirebaseEvent('AppleContainer_wait__delay');
                                                                                                           await Future.delayed(
                                                                                                             Duration(
@@ -5559,9 +6358,9 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                   FocusManager.instance.primaryFocus?.unfocus();
                                                                                                                 },
                                                                                                                 child: CustomAlertDailogWidget(
-                                                                                                                  des: FFAppConstants.subscriptionDateCheckMsg,
-                                                                                                                  height: 250.0,
-                                                                                                                  title: FFAppState().AppName,
+                                                                                                                  des: 'Please select all required information in product',
+                                                                                                                  height: 150.0,
+                                                                                                                  title: ' ',
                                                                                                                 ),
                                                                                                               ),
                                                                                                             );
@@ -5582,19 +6381,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                       logFirebaseEvent('AppleContainer_alert_dialog');
                                                                                                       await showDialog(
                                                                                                         context: context,
-                                                                                                        builder: (alertDialogContext) {
-                                                                                                          return AlertDialog(
-                                                                                                            title: Text(FFAppState().AppName),
-                                                                                                            content: Text('Please select all required information in product'),
-                                                                                                            actions: [
-                                                                                                              TextButton(
-                                                                                                                onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                                child: Text('Ok'),
+                                                                                                        builder: (dialogContext) {
+                                                                                                          return Dialog(
+                                                                                                            elevation: 0,
+                                                                                                            insetPadding: EdgeInsets.zero,
+                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                            child: GestureDetector(
+                                                                                                              onTap: () {
+                                                                                                                FocusScope.of(dialogContext).unfocus();
+                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                              },
+                                                                                                              child: CustomAlertDailogWidget(
+                                                                                                                des: 'You can not place apple pay order',
+                                                                                                                height: 150.0,
+                                                                                                                title: ' ',
                                                                                                               ),
-                                                                                                            ],
+                                                                                                            ),
                                                                                                           );
                                                                                                         },
                                                                                                       );
+
                                                                                                       logFirebaseEvent('AppleContainer_wait__delay');
                                                                                                       await Future.delayed(
                                                                                                         Duration(
@@ -5676,47 +6483,14 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                               safeSetState(() {});
                                                                                               logFirebaseEvent('QuickPayContainer_update_app_state');
                                                                                               FFAppState().paymentMethod = FFAppState().isCardChange == true ? FFAppState().paymentMethod : 'card';
-                                                                                              FFAppState().selectedAddresID = FFAppState().selectedAddress1 == null || FFAppState().selectedAddress1 == ''
-                                                                                                  ? ((getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.lastadd''',
-                                                                                                          ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
-                                                                                                              .withoutNulls
-                                                                                                              .length >
-                                                                                                          0
-                                                                                                      ? getJsonField(
-                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                          r'''$.data.lastadd[0].address_id''',
-                                                                                                        ).toString()
-                                                                                                      : FFAppState().selectedAddresID)
-                                                                                                  : FFAppState().selectedAddresID;
-                                                                                              if (functions.checkSubscriptionCartEmpty(getJsonField(
-                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                    r'''$.data.data''',
-                                                                                                  )) ==
-                                                                                                  true) {
-                                                                                                if (functions.checkDateforOldOrCurrentDate(getJsonField(
+                                                                                              FFAppState().selectedAddresID = FFAppState().selectedAddress1 != null && FFAppState().selectedAddress1 != ''
+                                                                                                  ? FFAppState().selectedAddresID
+                                                                                                  : getJsonField(
                                                                                                       tabBarShowsubcartResponse.jsonBody,
-                                                                                                      r'''$.data.data''',
-                                                                                                    )) ==
-                                                                                                    false) {
-                                                                                                  if (FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') {
-                                                                                                    logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                    _model.isLoadingIndicator = true;
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                    _model.isPaymentDone = false;
-                                                                                                    safeSetState(() {});
-                                                                                                    logFirebaseEvent('QuickPayContainer_backend_call');
-                                                                                                    _model.apiResult44bquickPay = await QuickartGroup.subpaymentCall.call(
-                                                                                                      userid: FFAppState().userID,
-                                                                                                      addressid: FFAppState().selectedAddresID,
-                                                                                                      storeid: FFAppState().storeID,
-                                                                                                      paymentMethod: 'Card',
-                                                                                                      wallet: _model.isSubWalletCheckBoxSelected == 'add' ? 'yes' : 'no',
-                                                                                                      deviceid: FFAppState().deviceID,
-                                                                                                      paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
-                                                                                                      orderTotal: functions.updateTotalAmount(
+                                                                                                      r'''$.data.lastadd[0].address_id''',
+                                                                                                    ).toString();
+                                                                                              if (functions.stringToDouble(functions
+                                                                                                      .updateTotalAmount(
                                                                                                           '0',
                                                                                                           '0',
                                                                                                           getJsonField(
@@ -5725,7 +6499,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                           ).toString(),
                                                                                                           functions
                                                                                                               .checkWalletWithAction(
-                                                                                                                  _model.isSubWalletCheckBoxSelected,
+                                                                                                                  _model.isRefSubWalletCheckBoxSelected,
                                                                                                                   functions
                                                                                                                       .updateTotalAmount(
                                                                                                                           '0',
@@ -5736,41 +6510,35 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                           ).toString(),
                                                                                                                           getJsonField(
                                                                                                                             tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                            r'''$.data.referral_balance''',
                                                                                                                           ).toString(),
-                                                                                                                          _model.isWalletCheckBoxSelected,
+                                                                                                                          '',
                                                                                                                           _model.selectedPaymentMethod,
                                                                                                                           getJsonField(
                                                                                                                             FFAppState().appInfo,
                                                                                                                             r'''$.codcharges''',
                                                                                                                           ).toString(),
-                                                                                                                          getJsonField(
-                                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                                          ).toString(),
-                                                                                                                          _model.isWalletCheckBoxSelected)
+                                                                                                                          '',
+                                                                                                                          '')
                                                                                                                       .toString(),
-                                                                                                                  getJsonField(
+                                                                                                                  functions.setDecimalValue(getJsonField(
                                                                                                                     tabBarShowsubcartResponse.jsonBody,
-                                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                                  ).toString(),
+                                                                                                                    r'''$.data.referral_balance''',
+                                                                                                                  ).toString()),
                                                                                                                   getJsonField(
                                                                                                                     FFAppState().appInfo,
                                                                                                                     r'''$.wallet_deduction_percentage''',
                                                                                                                   ).toString())
                                                                                                               .toString(),
-                                                                                                          _model.isSubWalletCheckBoxSelected,
+                                                                                                          _model.isRefSubWalletCheckBoxSelected,
                                                                                                           _model.selectedPaymentMethod,
                                                                                                           '0',
-                                                                                                          '',
-                                                                                                          ''),
-                                                                                                      totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
-                                                                                                              ? functions.checkWalletWithAction(
-                                                                                                                  _model.isSubWalletCheckBoxSelected,
+                                                                                                          functions
+                                                                                                              .calculateFinalPayableForCashPayment(
                                                                                                                   functions
                                                                                                                       .updateTotalAmount(
-                                                                                                                          '0',
-                                                                                                                          '0',
+                                                                                                                          FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                          FFAppState().couponDiscount.toString(),
                                                                                                                           getJsonField(
                                                                                                                             tabBarShowsubcartResponse.jsonBody,
                                                                                                                             r'''$.data.total_price''',
@@ -5780,56 +6548,339 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                             r'''$.data.wallet_balance''',
                                                                                                                           ).toString(),
                                                                                                                           'false',
-                                                                                                                          _model.selectedPaymentMethod,
+                                                                                                                          '',
                                                                                                                           getJsonField(
                                                                                                                             FFAppState().appInfo,
                                                                                                                             r'''$.codcharges''',
                                                                                                                           ).toString(),
+                                                                                                                          '',
+                                                                                                                          '')
+                                                                                                                      .toString(),
+                                                                                                                  functions
+                                                                                                                      .checkWalletWithAction(
+                                                                                                                          _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                          functions
+                                                                                                                              .updateTotalAmount(
+                                                                                                                                  FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                  FFAppState().couponDiscount.toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                    r'''$.data.total_price''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  getJsonField(
+                                                                                                                                    tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                    r'''$.data.referral_balance''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  'false',
+                                                                                                                                  '',
+                                                                                                                                  getJsonField(
+                                                                                                                                    FFAppState().appInfo,
+                                                                                                                                    r'''$.codcharges''',
+                                                                                                                                  ).toString(),
+                                                                                                                                  '',
+                                                                                                                                  '')
+                                                                                                                              .toString(),
                                                                                                                           getJsonField(
                                                                                                                             tabBarShowsubcartResponse.jsonBody,
-                                                                                                                            r'''$.data.wallet_balance''',
+                                                                                                                            r'''$.data.referral_balance''',
                                                                                                                           ).toString(),
-                                                                                                                          'FALSE')
+                                                                                                                          getJsonField(
+                                                                                                                            FFAppState().appInfo,
+                                                                                                                            r'''$.wallet_deduction_percentage''',
+                                                                                                                          ).toString())
                                                                                                                       .toString(),
                                                                                                                   getJsonField(
                                                                                                                     tabBarShowsubcartResponse.jsonBody,
                                                                                                                     r'''$.data.wallet_balance''',
                                                                                                                   ).toString(),
-                                                                                                                  getJsonField(
-                                                                                                                    FFAppState().appInfo,
-                                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                                  ).toString())
-                                                                                                              : 0.0)
-                                                                                                          .toString(),
-                                                                                                      delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                                      orderInstruction: _model.textController.text,
-                                                                                                      platform: isiOS ? 'ios' : 'android',
-                                                                                                    );
-
-                                                                                                    if ((_model.apiResult44bquickPay?.succeeded ?? true)) {
+                                                                                                                  _model.isSubWalletCheckBoxSelected)
+                                                                                                              .toString(),
+                                                                                                          _model.isSubWalletCheckBoxSelected)
+                                                                                                      .toString()) >
+                                                                                                  0.0) {
+                                                                                                if (functions.checkSubscriptionCartEmpty(getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.data''',
+                                                                                                    )) ==
+                                                                                                    true) {
+                                                                                                  if (functions.checkDateforOldOrCurrentDate(getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.data''',
+                                                                                                      )) ==
+                                                                                                      false) {
+                                                                                                    if ((FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') && (FFAppState().selectedAddresID != 'null')) {
                                                                                                       logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                      _model.isLoadingIndicator = false;
+                                                                                                      _model.isLoadingIndicator = true;
                                                                                                       safeSetState(() {});
                                                                                                       logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                      _model.isPaymentDone = true;
+                                                                                                      _model.isPaymentDone = false;
                                                                                                       safeSetState(() {});
-                                                                                                      logFirebaseEvent('QuickPayContainer_navigate_to');
+                                                                                                      logFirebaseEvent('QuickPayContainer_custom_action');
+                                                                                                      _model.isVpnONQP = await actions.isVpnEnabled();
+                                                                                                      if (_model.isVpnONQP == false) {
+                                                                                                        logFirebaseEvent('QuickPayContainer_backend_call');
+                                                                                                        _model.apiResult44bquickPay = await QuickartGroup.subpaymentCall.call(
+                                                                                                          userid: FFAppState().userID,
+                                                                                                          addressid: FFAppState().selectedAddresID,
+                                                                                                          storeid: FFAppState().storeID,
+                                                                                                          paymentMethod: 'Card',
+                                                                                                          wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                                          deviceid: FFAppState().deviceID,
+                                                                                                          paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
+                                                                                                          orderTotal: functions.updateTotalAmount(
+                                                                                                              '0',
+                                                                                                              '0',
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.total_price''',
+                                                                                                              ).toString(),
+                                                                                                              functions
+                                                                                                                  .checkWalletWithAction(
+                                                                                                                      _model.isSubWalletCheckBoxSelected,
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              '0',
+                                                                                                                              '0',
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              _model.isSubWalletCheckBoxSelected)
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                                      ).toString())
+                                                                                                                  .toString(),
+                                                                                                              _model.isSubWalletCheckBoxSelected,
+                                                                                                              _model.selectedPaymentMethod,
+                                                                                                              '0',
+                                                                                                              '',
+                                                                                                              ''),
+                                                                                                          totalWalletAmt: (_model.isSubWalletCheckBoxSelected == 'add'
+                                                                                                                  ? functions.calculateFinalPayableForCashPayment(
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              'false',
+                                                                                                                              '',
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      functions
+                                                                                                                          .checkWalletWithAction(
+                                                                                                                              _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                              functions
+                                                                                                                                  .updateTotalAmount(
+                                                                                                                                      FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                                      FFAppState().couponDiscount.toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.total_price''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      getJsonField(
+                                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      'false',
+                                                                                                                                      '',
+                                                                                                                                      getJsonField(
+                                                                                                                                        FFAppState().appInfo,
+                                                                                                                                        r'''$.codcharges''',
+                                                                                                                                      ).toString(),
+                                                                                                                                      '',
+                                                                                                                                      '')
+                                                                                                                                  .toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                                                              ).toString())
+                                                                                                                          .toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      _model.isSubWalletCheckBoxSelected)
+                                                                                                                  : 0.0)
+                                                                                                              .toString(),
+                                                                                                          delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                                          orderInstruction: (String var1) {
+                                                                                                            return var1.trim() ?? '';
+                                                                                                          }(_model.textController.text),
+                                                                                                          platform: isiOS ? 'ios' : 'android',
+                                                                                                          totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
+                                                                                                                  ? functions.checkWalletWithAction(
+                                                                                                                      _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                      functions
+                                                                                                                          .updateTotalAmount(
+                                                                                                                              '0',
+                                                                                                                              '0',
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.total_price''',
+                                                                                                                              ).toString(),
+                                                                                                                              getJsonField(
+                                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                r'''$.data.referral_balance''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              _model.selectedPaymentMethod,
+                                                                                                                              getJsonField(
+                                                                                                                                FFAppState().appInfo,
+                                                                                                                                r'''$.codcharges''',
+                                                                                                                              ).toString(),
+                                                                                                                              '',
+                                                                                                                              '')
+                                                                                                                          .toString(),
+                                                                                                                      functions.setDecimalValue(getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                      ).toString()),
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                                      ).toString())
+                                                                                                                  : 0.0)
+                                                                                                              .toString(),
+                                                                                                        );
 
-                                                                                                      context.pushNamed(
-                                                                                                        PaymentScreenWidget.routeName,
-                                                                                                        queryParameters: {
-                                                                                                          'redirectURl': serializeParam(
-                                                                                                            getJsonField(
-                                                                                                              (_model.apiResult44bquickPay?.jsonBody ?? ''),
-                                                                                                              r'''$.data.redirect_url''',
-                                                                                                            ).toString(),
-                                                                                                            ParamType.String,
-                                                                                                          ),
-                                                                                                          'screenPName': serializeParam(
-                                                                                                            'subscription',
-                                                                                                            ParamType.String,
-                                                                                                          ),
-                                                                                                          'mrp': serializeParam(
+                                                                                                        if ((_model.apiResult44bquickPay?.succeeded ?? true)) {
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isLoadingIndicator = false;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isPaymentDone = true;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('QuickPayContainer_navigate_to');
+
+                                                                                                          context.pushNamed(
+                                                                                                            PaymentScreenWidget.routeName,
+                                                                                                            queryParameters: {
+                                                                                                              'redirectURl': serializeParam(
+                                                                                                                getJsonField(
+                                                                                                                  (_model.apiResult44bquickPay?.jsonBody ?? ''),
+                                                                                                                  r'''$.data.redirect_url''',
+                                                                                                                ).toString(),
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'screenPName': serializeParam(
+                                                                                                                'subscription',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'mrp': serializeParam(
+                                                                                                                functions.updateTotalAmount(
+                                                                                                                    '0',
+                                                                                                                    '0',
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    functions
+                                                                                                                        .checkWalletWithAction(
+                                                                                                                            _model.isSubWalletCheckBoxSelected,
+                                                                                                                            functions
+                                                                                                                                .updateTotalAmount(
+                                                                                                                                    '0',
+                                                                                                                                    '0',
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.total_price''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                                    getJsonField(
+                                                                                                                                      FFAppState().appInfo,
+                                                                                                                                      r'''$.codcharges''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    getJsonField(
+                                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                                    ).toString(),
+                                                                                                                                    _model.isSubWalletCheckBoxSelected)
+                                                                                                                                .toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                                            ).toString(),
+                                                                                                                            getJsonField(
+                                                                                                                              FFAppState().appInfo,
+                                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                                            ).toString())
+                                                                                                                        .toString(),
+                                                                                                                    _model.isSubWalletCheckBoxSelected,
+                                                                                                                    _model.selectedPaymentMethod,
+                                                                                                                    '0',
+                                                                                                                    '',
+                                                                                                                    ''),
+                                                                                                                ParamType.double,
+                                                                                                              ),
+                                                                                                              'orderType': serializeParam(
+                                                                                                                'subscription order card',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                              'groupID': serializeParam(
+                                                                                                                '0',
+                                                                                                                ParamType.String,
+                                                                                                              ),
+                                                                                                            }.withoutNulls,
+                                                                                                          );
+
+                                                                                                          logFirebaseEvent('QuickPayContainer_custom_action');
+                                                                                                          await actions.facebookEventClass(
+                                                                                                            (List<String> var1) {
+                                                                                                              return var1.join(', ');
+                                                                                                            }(functions
+                                                                                                                .getVarientIdsWithCartQty(
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.data''',
+                                                                                                                    ),
+                                                                                                                    'daily')
+                                                                                                                .map((e) => e.toString())
+                                                                                                                .toList()),
+                                                                                                            '0',
+                                                                                                            'subscription order',
+                                                                                                            0.0,
+                                                                                                            0,
                                                                                                             functions.updateTotalAmount(
                                                                                                                 '0',
                                                                                                                 '0',
@@ -5848,11 +6899,11 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                   tabBarShowsubcartResponse.jsonBody,
                                                                                                                                   r'''$.data.total_price''',
                                                                                                                                 ).toString(),
-                                                                                                                                getJsonField(
+                                                                                                                                functions.setDecimalValue(getJsonField(
                                                                                                                                   tabBarShowsubcartResponse.jsonBody,
                                                                                                                                   r'''$.data.wallet_balance''',
-                                                                                                                                ).toString(),
-                                                                                                                                _model.isWalletCheckBoxSelected,
+                                                                                                                                ).toString()),
+                                                                                                                                _model.isRefSubWalletCheckBoxSelected,
                                                                                                                                 _model.selectedPaymentMethod,
                                                                                                                                 getJsonField(
                                                                                                                                   FFAppState().appInfo,
@@ -5862,12 +6913,12 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                                   tabBarShowsubcartResponse.jsonBody,
                                                                                                                                   r'''$.data.wallet_balance''',
                                                                                                                                 ).toString(),
-                                                                                                                                _model.isWalletCheckBoxSelected)
+                                                                                                                                _model.isSubWalletCheckBoxSelected)
                                                                                                                             .toString(),
-                                                                                                                        getJsonField(
+                                                                                                                        functions.setDecimalValue(getJsonField(
                                                                                                                           tabBarShowsubcartResponse.jsonBody,
                                                                                                                           r'''$.data.wallet_balance''',
-                                                                                                                        ).toString(),
+                                                                                                                        ).toString()),
                                                                                                                         getJsonField(
                                                                                                                           FFAppState().appInfo,
                                                                                                                           r'''$.wallet_deduction_percentage''',
@@ -5877,115 +6928,116 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                 _model.selectedPaymentMethod,
                                                                                                                 '0',
                                                                                                                 '',
-                                                                                                                ''),
-                                                                                                            ParamType.double,
-                                                                                                          ),
-                                                                                                          'orderType': serializeParam(
-                                                                                                            'subscription order card',
-                                                                                                            ParamType.String,
-                                                                                                          ),
-                                                                                                        }.withoutNulls,
-                                                                                                      );
-
-                                                                                                      logFirebaseEvent('QuickPayContainer_custom_action');
-                                                                                                      await actions.facebookEventClass(
-                                                                                                        (List<String> var1) {
-                                                                                                          return var1.join(', ');
-                                                                                                        }(functions
-                                                                                                            .getVarientIdsWithCartQty(
-                                                                                                                getJsonField(
-                                                                                                                  tabBarShowsubcartResponse.jsonBody,
-                                                                                                                  r'''$.data.data''',
-                                                                                                                ),
-                                                                                                                'daily')
-                                                                                                            .map((e) => e.toString())
-                                                                                                            .toList()),
-                                                                                                        '0',
-                                                                                                        'subscription order',
-                                                                                                        0.0,
-                                                                                                        0,
-                                                                                                        functions.updateTotalAmount(
-                                                                                                            '0',
-                                                                                                            '0',
+                                                                                                                '')!,
+                                                                                                            'checkout',
                                                                                                             getJsonField(
                                                                                                               tabBarShowsubcartResponse.jsonBody,
-                                                                                                              r'''$.data.total_price''',
-                                                                                                            ).toString(),
-                                                                                                            functions
-                                                                                                                .checkWalletWithAction(
-                                                                                                                    _model.isSubWalletCheckBoxSelected,
-                                                                                                                    functions
-                                                                                                                        .updateTotalAmount(
-                                                                                                                            '0',
-                                                                                                                            '0',
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.total_price''',
-                                                                                                                            ).toString(),
-                                                                                                                            functions.setDecimalValue(getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                                            ).toString()),
-                                                                                                                            _model.isWalletCheckBoxSelected,
-                                                                                                                            _model.selectedPaymentMethod,
-                                                                                                                            getJsonField(
-                                                                                                                              FFAppState().appInfo,
-                                                                                                                              r'''$.codcharges''',
-                                                                                                                            ).toString(),
-                                                                                                                            getJsonField(
-                                                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                                                              r'''$.data.wallet_balance''',
-                                                                                                                            ).toString(),
-                                                                                                                            _model.isWalletCheckBoxSelected)
-                                                                                                                        .toString(),
-                                                                                                                    functions.setDecimalValue(getJsonField(
-                                                                                                                      tabBarShowsubcartResponse.jsonBody,
-                                                                                                                      r'''$.data.wallet_balance''',
-                                                                                                                    ).toString()),
-                                                                                                                    getJsonField(
-                                                                                                                      FFAppState().appInfo,
-                                                                                                                      r'''$.wallet_deduction_percentage''',
-                                                                                                                    ).toString())
-                                                                                                                .toString(),
-                                                                                                            _model.isSubWalletCheckBoxSelected,
-                                                                                                            _model.selectedPaymentMethod,
-                                                                                                            '0',
-                                                                                                            '',
-                                                                                                            '')!,
-                                                                                                        'checkout',
-                                                                                                        getJsonField(
-                                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                                          r'''$.data.data''',
-                                                                                                        ),
-                                                                                                        'subscription order card',
-                                                                                                        ' ',
-                                                                                                        ' ',
-                                                                                                        ' ',
-                                                                                                        ' ',
-                                                                                                      );
+                                                                                                              r'''$.data.data''',
+                                                                                                            ),
+                                                                                                            'subscription order card',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                            ' ',
+                                                                                                          );
+                                                                                                        } else {
+                                                                                                          logFirebaseEvent('QuickPayContainer_alert_dialog');
+                                                                                                          await showDialog(
+                                                                                                            context: context,
+                                                                                                            builder: (dialogContext) {
+                                                                                                              return Dialog(
+                                                                                                                elevation: 0,
+                                                                                                                insetPadding: EdgeInsets.zero,
+                                                                                                                backgroundColor: Colors.transparent,
+                                                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                child: GestureDetector(
+                                                                                                                  onTap: () {
+                                                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                  },
+                                                                                                                  child: CustomAlertDailogWidget(
+                                                                                                                    des: getJsonField(
+                                                                                                                      (_model.apiResult44bquickPay?.jsonBody ?? ''),
+                                                                                                                      r'''$.message''',
+                                                                                                                    ).toString(),
+                                                                                                                    height: 130.0,
+                                                                                                                    title: ' ',
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                              );
+                                                                                                            },
+                                                                                                          );
+
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isLoadingIndicator = false;
+                                                                                                          safeSetState(() {});
+                                                                                                          logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                          _model.isPaymentDone = true;
+                                                                                                          safeSetState(() {});
+                                                                                                        }
+                                                                                                      } else {
+                                                                                                        logFirebaseEvent('QuickPayContainer_alert_dialog');
+                                                                                                        await showDialog(
+                                                                                                          context: context,
+                                                                                                          builder: (dialogContext) {
+                                                                                                            return Dialog(
+                                                                                                              elevation: 0,
+                                                                                                              insetPadding: EdgeInsets.zero,
+                                                                                                              backgroundColor: Colors.transparent,
+                                                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                              child: GestureDetector(
+                                                                                                                onTap: () {
+                                                                                                                  FocusScope.of(dialogContext).unfocus();
+                                                                                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                                },
+                                                                                                                child: CustomAlertDailogWidget(
+                                                                                                                  des: FFAppConstants.vpnMSG,
+                                                                                                                  height: 140.0,
+                                                                                                                  title: ' ',
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            );
+                                                                                                          },
+                                                                                                        );
+
+                                                                                                        logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                        _model.isLoadingIndicator = false;
+                                                                                                        safeSetState(() {});
+                                                                                                        logFirebaseEvent('QuickPayContainer_update_page_state');
+                                                                                                        _model.isPaymentDone = true;
+                                                                                                        safeSetState(() {});
+                                                                                                      }
                                                                                                     } else {
                                                                                                       logFirebaseEvent('QuickPayContainer_alert_dialog');
                                                                                                       await showDialog(
                                                                                                         context: context,
-                                                                                                        builder: (alertDialogContext) {
-                                                                                                          return AlertDialog(
-                                                                                                            title: Text(FFAppState().AppName),
-                                                                                                            content: Text(getJsonField(
-                                                                                                              (_model.apiResult44bquickPay?.jsonBody ?? ''),
-                                                                                                              r'''$.message''',
-                                                                                                            ).toString()),
-                                                                                                            actions: [
-                                                                                                              TextButton(
-                                                                                                                onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                                child: Text('Ok'),
+                                                                                                        builder: (dialogContext) {
+                                                                                                          return Dialog(
+                                                                                                            elevation: 0,
+                                                                                                            insetPadding: EdgeInsets.zero,
+                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                            alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                            child: GestureDetector(
+                                                                                                              onTap: () {
+                                                                                                                FocusScope.of(dialogContext).unfocus();
+                                                                                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                              },
+                                                                                                              child: CustomAlertDailogWidget(
+                                                                                                                des: 'Please add delivery adderss',
+                                                                                                                height: 130.0,
+                                                                                                                title: ' ',
                                                                                                               ),
-                                                                                                            ],
+                                                                                                            ),
                                                                                                           );
                                                                                                         },
                                                                                                       );
-                                                                                                      logFirebaseEvent('QuickPayContainer_update_page_state');
-                                                                                                      _model.isLoadingIndicator = false;
-                                                                                                      safeSetState(() {});
+
+                                                                                                      logFirebaseEvent('QuickPayContainer_wait__delay');
+                                                                                                      await Future.delayed(
+                                                                                                        Duration(
+                                                                                                          milliseconds: 200,
+                                                                                                        ),
+                                                                                                      );
                                                                                                       logFirebaseEvent('QuickPayContainer_update_page_state');
                                                                                                       _model.isPaymentDone = true;
                                                                                                       safeSetState(() {});
@@ -5994,19 +7046,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                     logFirebaseEvent('QuickPayContainer_alert_dialog');
                                                                                                     await showDialog(
                                                                                                       context: context,
-                                                                                                      builder: (alertDialogContext) {
-                                                                                                        return AlertDialog(
-                                                                                                          title: Text(FFAppState().AppName),
-                                                                                                          content: Text('Please add delivery adderss'),
-                                                                                                          actions: [
-                                                                                                            TextButton(
-                                                                                                              onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                              child: Text('Ok'),
+                                                                                                      builder: (dialogContext) {
+                                                                                                        return Dialog(
+                                                                                                          elevation: 0,
+                                                                                                          insetPadding: EdgeInsets.zero,
+                                                                                                          backgroundColor: Colors.transparent,
+                                                                                                          alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                          child: GestureDetector(
+                                                                                                            onTap: () {
+                                                                                                              FocusScope.of(dialogContext).unfocus();
+                                                                                                              FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                            },
+                                                                                                            child: CustomAlertDailogWidget(
+                                                                                                              des: FFAppConstants.subscriptionDateCheckMsg,
+                                                                                                              height: 150.0,
+                                                                                                              title: '',
                                                                                                             ),
-                                                                                                          ],
+                                                                                                          ),
                                                                                                         );
                                                                                                       },
                                                                                                     );
+
                                                                                                     logFirebaseEvent('QuickPayContainer_wait__delay');
                                                                                                     await Future.delayed(
                                                                                                       Duration(
@@ -6033,9 +7093,9 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                             FocusManager.instance.primaryFocus?.unfocus();
                                                                                                           },
                                                                                                           child: CustomAlertDailogWidget(
-                                                                                                            des: FFAppConstants.subscriptionDateCheckMsg,
-                                                                                                            height: 250.0,
-                                                                                                            title: FFAppState().AppName,
+                                                                                                            des: 'Please select all required information in product',
+                                                                                                            height: 150.0,
+                                                                                                            title: ' ',
                                                                                                           ),
                                                                                                         ),
                                                                                                       );
@@ -6056,19 +7116,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                 logFirebaseEvent('QuickPayContainer_alert_dialog');
                                                                                                 await showDialog(
                                                                                                   context: context,
-                                                                                                  builder: (alertDialogContext) {
-                                                                                                    return AlertDialog(
-                                                                                                      title: Text(FFAppState().AppName),
-                                                                                                      content: Text('Please select all required information in product'),
-                                                                                                      actions: [
-                                                                                                        TextButton(
-                                                                                                          onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                          child: Text('Ok'),
+                                                                                                  builder: (dialogContext) {
+                                                                                                    return Dialog(
+                                                                                                      elevation: 0,
+                                                                                                      insetPadding: EdgeInsets.zero,
+                                                                                                      backgroundColor: Colors.transparent,
+                                                                                                      alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                      child: GestureDetector(
+                                                                                                        onTap: () {
+                                                                                                          FocusScope.of(dialogContext).unfocus();
+                                                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                        },
+                                                                                                        child: CustomAlertDailogWidget(
+                                                                                                          des: 'You can not place quick pay order',
+                                                                                                          height: 130.0,
+                                                                                                          title: ' ',
                                                                                                         ),
-                                                                                                      ],
+                                                                                                      ),
                                                                                                     );
                                                                                                   },
                                                                                                 );
+
                                                                                                 logFirebaseEvent('QuickPayContainer_wait__delay');
                                                                                                 await Future.delayed(
                                                                                                   Duration(
@@ -6311,7 +7379,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       hoverColor: Colors.transparent,
                                                                                       highlightColor: Colors.transparent,
                                                                                       onTap: () async {
-                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_gy5xy');
+                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_kgk7e');
                                                                                         logFirebaseEvent('Text_navigate_to');
 
                                                                                         context.pushNamed(CardScreenWidget.routeName);
@@ -6361,7 +7429,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       hoverColor: Colors.transparent,
                                                                                       highlightColor: Colors.transparent,
                                                                                       onTap: () async {
-                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_wy2xd');
+                                                                                        logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_y0xi8');
                                                                                         logFirebaseEvent('Text_navigate_to');
 
                                                                                         context.pushNamed(CardScreenWidget.routeName);
@@ -6499,7 +7567,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                 hoverColor: Colors.transparent,
                                                                                 highlightColor: Colors.transparent,
                                                                                 onTap: () async {
-                                                                                  logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Column_mhz');
+                                                                                  logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Column_rfd');
                                                                                   logFirebaseEvent('Column_navigate_to');
 
                                                                                   context.pushNamed(AddressListScreenWidget.routeName);
@@ -6627,7 +7695,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                     hoverColor: Colors.transparent,
                                                                                     highlightColor: Colors.transparent,
                                                                                     onTap: () async {
-                                                                                      logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_zh2b9');
+                                                                                      logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_0ytqf');
                                                                                       logFirebaseEvent('Text_navigate_to');
 
                                                                                       context.pushNamed(AddressListScreenWidget.routeName);
@@ -6702,7 +7770,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                 Colors.transparent,
                                                                             onTap:
                                                                                 () async {
-                                                                              logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_guai7');
+                                                                              logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_sqgp3');
                                                                               logFirebaseEvent('Text_navigate_to');
 
                                                                               context.pushNamed(AddressListScreenWidget.routeName);
@@ -6761,7 +7829,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               Colors.transparent,
                                                                           onTap:
                                                                               () async {
-                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_rtmji');
+                                                                            logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Text_f0qe7');
                                                                             logFirebaseEvent('Text_navigate_to');
 
                                                                             context.pushNamed(AddressListScreenWidget.routeName);
@@ -6824,6 +7892,12 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               .isPaymentDone ==
                                                                           true) {
                                                                         logFirebaseEvent(
+                                                                            'PaymentContainer_update_page_state');
+                                                                        _model.isPaymentDone =
+                                                                            false;
+                                                                        safeSetState(
+                                                                            () {});
+                                                                        logFirebaseEvent(
                                                                             'PaymentContainer_wait__delay');
                                                                         await Future
                                                                             .delayed(
@@ -6833,21 +7907,129 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                           ),
                                                                         );
                                                                         logFirebaseEvent(
-                                                                            'PaymentContainer_update_page_state');
-                                                                        _model.isPaymentDone =
-                                                                            false;
-                                                                        safeSetState(
-                                                                            () {});
-                                                                        logFirebaseEvent(
                                                                             'PaymentContainer_update_app_state');
-                                                                        FFAppState()
-                                                                            .selectedSINumber = FFAppState().isCardChange ==
-                                                                                true
-                                                                            ? FFAppState().selectedCardID
-                                                                            : getJsonField(
-                                                                                tabBarShowsubcartResponse.jsonBody,
-                                                                                r'''$.data.lastcarddetails.si_sub_ref_no''',
-                                                                              ).toString();
+                                                                        FFAppState().selectedSINumber =
+                                                                            () {
+                                                                          if (FFAppState().isCardChange ==
+                                                                              true) {
+                                                                            return FFAppState().selectedCardID;
+                                                                          } else if (functions.stringToDouble(functions
+                                                                                  .updateTotalAmount(
+                                                                                      '0',
+                                                                                      '0',
+                                                                                      getJsonField(
+                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                        r'''$.data.total_price''',
+                                                                                      ).toString(),
+                                                                                      functions
+                                                                                          .checkWalletWithAction(
+                                                                                              _model.isRefSubWalletCheckBoxSelected,
+                                                                                              functions
+                                                                                                  .updateTotalAmount(
+                                                                                                      '0',
+                                                                                                      '0',
+                                                                                                      getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.total_price''',
+                                                                                                      ).toString(),
+                                                                                                      getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.referral_balance''',
+                                                                                                      ).toString(),
+                                                                                                      '',
+                                                                                                      _model.selectedPaymentMethod,
+                                                                                                      getJsonField(
+                                                                                                        FFAppState().appInfo,
+                                                                                                        r'''$.codcharges''',
+                                                                                                      ).toString(),
+                                                                                                      '',
+                                                                                                      '')
+                                                                                                  .toString(),
+                                                                                              functions.setDecimalValue(getJsonField(
+                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                r'''$.data.referral_balance''',
+                                                                                              ).toString()),
+                                                                                              getJsonField(
+                                                                                                FFAppState().appInfo,
+                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                              ).toString())
+                                                                                          .toString(),
+                                                                                      _model.isRefSubWalletCheckBoxSelected,
+                                                                                      _model.selectedPaymentMethod,
+                                                                                      '0',
+                                                                                      functions
+                                                                                          .calculateFinalPayableForCashPayment(
+                                                                                              functions
+                                                                                                  .updateTotalAmount(
+                                                                                                      FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                      FFAppState().couponDiscount.toString(),
+                                                                                                      getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.total_price''',
+                                                                                                      ).toString(),
+                                                                                                      getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                      ).toString(),
+                                                                                                      'false',
+                                                                                                      '',
+                                                                                                      getJsonField(
+                                                                                                        FFAppState().appInfo,
+                                                                                                        r'''$.codcharges''',
+                                                                                                      ).toString(),
+                                                                                                      '',
+                                                                                                      '')
+                                                                                                  .toString(),
+                                                                                              functions
+                                                                                                  .checkWalletWithAction(
+                                                                                                      _model.isRefSubWalletCheckBoxSelected,
+                                                                                                      functions
+                                                                                                          .updateTotalAmount(
+                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.total_price''',
+                                                                                                              ).toString(),
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.referral_balance''',
+                                                                                                              ).toString(),
+                                                                                                              'false',
+                                                                                                              '',
+                                                                                                              getJsonField(
+                                                                                                                FFAppState().appInfo,
+                                                                                                                r'''$.codcharges''',
+                                                                                                              ).toString(),
+                                                                                                              '',
+                                                                                                              '')
+                                                                                                          .toString(),
+                                                                                                      getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.referral_balance''',
+                                                                                                      ).toString(),
+                                                                                                      getJsonField(
+                                                                                                        FFAppState().appInfo,
+                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                      ).toString())
+                                                                                                  .toString(),
+                                                                                              getJsonField(
+                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                r'''$.data.wallet_balance''',
+                                                                                              ).toString(),
+                                                                                              _model.isSubWalletCheckBoxSelected)
+                                                                                          .toString(),
+                                                                                      _model.isSubWalletCheckBoxSelected)
+                                                                                  .toString()) ==
+                                                                              0.0) {
+                                                                            return '0';
+                                                                          } else {
+                                                                            return getJsonField(
+                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                              r'''$.data.lastcarddetails.si_sub_ref_no''',
+                                                                            ).toString();
+                                                                          }
+                                                                        }();
                                                                         FFAppState()
                                                                             .selectedAddresID = FFAppState().selectedAddress1 != null &&
                                                                                 FFAppState().selectedAddress1 != ''
@@ -6858,197 +8040,263 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               ).toString();
                                                                         safeSetState(
                                                                             () {});
-                                                                        if (functions.checkSubscriptionCartEmpty(getJsonField(
-                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                              r'''$.data.data''',
-                                                                            )) ==
+                                                                        if (functions.checkTotalAndOrderType(
+                                                                                functions
+                                                                                    .stringToDouble(functions
+                                                                                        .updateTotalAmount(
+                                                                                            '0',
+                                                                                            '0',
+                                                                                            getJsonField(
+                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                              r'''$.data.total_price''',
+                                                                                            ).toString(),
+                                                                                            functions
+                                                                                                .checkWalletWithAction(
+                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                    functions
+                                                                                                        .updateTotalAmount(
+                                                                                                            '0',
+                                                                                                            '0',
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            _model.selectedPaymentMethod,
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            '')
+                                                                                                        .toString(),
+                                                                                                    functions.setDecimalValue(getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.referral_balance''',
+                                                                                                    ).toString()),
+                                                                                                    getJsonField(
+                                                                                                      FFAppState().appInfo,
+                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                    ).toString())
+                                                                                                .toString(),
+                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                            _model.selectedPaymentMethod,
+                                                                                            '0',
+                                                                                            functions
+                                                                                                .calculateFinalPayableForCashPayment(
+                                                                                                    functions
+                                                                                                        .updateTotalAmount(
+                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                            ).toString(),
+                                                                                                            'false',
+                                                                                                            '',
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            '')
+                                                                                                        .toString(),
+                                                                                                    functions
+                                                                                                        .checkWalletWithAction(
+                                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                                            functions
+                                                                                                                .updateTotalAmount(
+                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.referral_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    'false',
+                                                                                                                    '',
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.codcharges''',
+                                                                                                                    ).toString(),
+                                                                                                                    '',
+                                                                                                                    '')
+                                                                                                                .toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                            ).toString())
+                                                                                                        .toString(),
+                                                                                                    getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                    ).toString(),
+                                                                                                    _model.isSubWalletCheckBoxSelected)
+                                                                                                .toString(),
+                                                                                            _model.isSubWalletCheckBoxSelected)
+                                                                                        .toString())
+                                                                                    .toString(),
+                                                                                _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery') ==
                                                                             true) {
-                                                                          if (functions.checkDateforOldOrCurrentDate(getJsonField(
+                                                                          if (functions.checkSubscriptionCartEmpty(getJsonField(
                                                                                 tabBarShowsubcartResponse.jsonBody,
                                                                                 r'''$.data.data''',
                                                                               )) ==
-                                                                              false) {
-                                                                            if ((FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') &&
-                                                                                (FFAppState().selectedAddresID != 'null')) {
-                                                                              if ((FFAppState().selectedSINumber != null && FFAppState().selectedSINumber != '') && (FFAppState().selectedSINumber != 'null')) {
-                                                                                if ((_model.yes ==
-                                                                                        getJsonField(
-                                                                                          tabBarShowsubcartResponse.jsonBody,
-                                                                                          r'''$.data.isAutoRenew''',
-                                                                                        ).toString()) &&
-                                                                                    (_model.subPaymentRadioButtonValue == 'Pay${'\n'}Now')) {
-                                                                                  logFirebaseEvent('PaymentContainer_alert_dialog');
-                                                                                  await showDialog(
-                                                                                    context: context,
-                                                                                    builder: (alertDialogContext) {
-                                                                                      return AlertDialog(
-                                                                                        title: Text(FFAppState().AppName),
-                                                                                        content: Text('Auto-renewal is enabled. To order, select \"Pay Per Delivery.\"'),
-                                                                                        actions: [
-                                                                                          TextButton(
-                                                                                            onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                            child: Text('Ok'),
-                                                                                          ),
-                                                                                        ],
-                                                                                      );
-                                                                                    },
-                                                                                  );
-                                                                                  logFirebaseEvent('PaymentContainer_wait__delay');
-                                                                                  await Future.delayed(
-                                                                                    Duration(
-                                                                                      milliseconds: 200,
-                                                                                    ),
-                                                                                  );
-                                                                                  logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                  _model.isPaymentDone = true;
-                                                                                  safeSetState(() {});
-                                                                                } else {
-                                                                                  logFirebaseEvent('PaymentContainer_custom_action');
-                                                                                  _model.connectivityResult33334 = await actions.checkInternetConnection();
-                                                                                  if (_model.connectivityResult33334 == true) {
-                                                                                    logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                    _model.isLoadingIndicator = true;
-                                                                                    safeSetState(() {});
-                                                                                    logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                    _model.isPaymentDone = false;
-                                                                                    safeSetState(() {});
-                                                                                    logFirebaseEvent('PaymentContainer_backend_call');
-                                                                                    _model.apiResultSUBC1 = await QuickartGroup.checkoutsubcribtionorderCall.call(
-                                                                                      userid: FFAppState().userID,
-                                                                                      addressID: (FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') && (FFAppState().selectedAddresID != 'null')
-                                                                                          ? FFAppState().selectedAddresID
-                                                                                          : getJsonField(
-                                                                                              tabBarShowsubcartResponse.jsonBody,
-                                                                                              r'''$.data.lastadd[0].address_id''',
-                                                                                            ).toString(),
-                                                                                      siNo: FFAppState().selectedSINumber,
-                                                                                      storeid: FFAppState().storeID,
-                                                                                      paymentMethod: 'Card',
-                                                                                      wallet: _model.isSubWalletCheckBoxSelected == 'add' ? 'yes' : 'no',
-                                                                                      couponid: '0',
-                                                                                      couponCode: '  ',
-                                                                                      discountAmount: '0',
-                                                                                      delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
-                                                                                      deviceid: FFAppState().deviceID,
-                                                                                      paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
-                                                                                      totalwalletamt: (_model.isSubWalletCheckBoxSelected == 'add'
-                                                                                              ? functions.checkWalletWithAction(
-                                                                                                  _model.isSubWalletCheckBoxSelected,
-                                                                                                  functions
-                                                                                                      .updateTotalAmount(
-                                                                                                          '0',
-                                                                                                          '0',
-                                                                                                          getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.total_price''',
-                                                                                                          ).toString(),
-                                                                                                          getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                          ).toString(),
-                                                                                                          'false',
-                                                                                                          _model.selectedPaymentMethod,
-                                                                                                          getJsonField(
-                                                                                                            FFAppState().appInfo,
-                                                                                                            r'''$.codcharges''',
-                                                                                                          ).toString(),
-                                                                                                          '',
-                                                                                                          '')
-                                                                                                      .toString(),
-                                                                                                  getJsonField(
-                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                  ).toString(),
-                                                                                                  getJsonField(
-                                                                                                    FFAppState().appInfo,
-                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                  ).toString())
-                                                                                              : 0.0)
-                                                                                          .toString(),
-                                                                                      orderTotal: functions.updateTotalAmount(
-                                                                                          '0',
-                                                                                          '0',
+                                                                              true) {
+                                                                            if (functions.checkDateforOldOrCurrentDate(getJsonField(
+                                                                                  tabBarShowsubcartResponse.jsonBody,
+                                                                                  r'''$.data.data''',
+                                                                                )) ==
+                                                                                false) {
+                                                                              if ((FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') && (FFAppState().selectedAddresID != 'null')) {
+                                                                                if ((FFAppState().selectedSINumber != null && FFAppState().selectedSINumber != '') && (FFAppState().selectedSINumber != 'null')) {
+                                                                                  if ((_model.yes ==
                                                                                           getJsonField(
                                                                                             tabBarShowsubcartResponse.jsonBody,
-                                                                                            r'''$.data.total_price''',
-                                                                                          ).toString(),
-                                                                                          functions
-                                                                                              .checkWalletWithAction(
-                                                                                                  _model.isSubWalletCheckBoxSelected,
-                                                                                                  functions
-                                                                                                      .updateTotalAmount(
-                                                                                                          '0',
-                                                                                                          '0',
-                                                                                                          getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.total_price''',
-                                                                                                          ).toString(),
-                                                                                                          getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                          ).toString(),
-                                                                                                          _model.isWalletCheckBoxSelected,
-                                                                                                          _model.selectedPaymentMethod,
-                                                                                                          getJsonField(
-                                                                                                            FFAppState().appInfo,
-                                                                                                            r'''$.codcharges''',
-                                                                                                          ).toString(),
-                                                                                                          getJsonField(
-                                                                                                            tabBarShowsubcartResponse.jsonBody,
-                                                                                                            r'''$.data.wallet_balance''',
-                                                                                                          ).toString(),
-                                                                                                          _model.isWalletCheckBoxSelected)
-                                                                                                      .toString(),
-                                                                                                  getJsonField(
-                                                                                                    tabBarShowsubcartResponse.jsonBody,
-                                                                                                    r'''$.data.wallet_balance''',
-                                                                                                  ).toString(),
-                                                                                                  getJsonField(
-                                                                                                    FFAppState().appInfo,
-                                                                                                    r'''$.wallet_deduction_percentage''',
-                                                                                                  ).toString())
-                                                                                              .toString(),
-                                                                                          _model.isSubWalletCheckBoxSelected,
-                                                                                          _model.selectedPaymentMethod,
-                                                                                          '0',
-                                                                                          '',
-                                                                                          ''),
-                                                                                      orderInstruction: _model.textController.text,
-                                                                                      platform: isiOS ? 'ios' : 'android',
+                                                                                            r'''$.data.isAutoRenew''',
+                                                                                          ).toString()) &&
+                                                                                      (_model.subPaymentRadioButtonValue == 'Pay${'\n'}Now')) {
+                                                                                    logFirebaseEvent('PaymentContainer_alert_dialog');
+                                                                                    await showDialog(
+                                                                                      context: context,
+                                                                                      builder: (dialogContext) {
+                                                                                        return Dialog(
+                                                                                          elevation: 0,
+                                                                                          insetPadding: EdgeInsets.zero,
+                                                                                          backgroundColor: Colors.transparent,
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                          child: GestureDetector(
+                                                                                            onTap: () {
+                                                                                              FocusScope.of(dialogContext).unfocus();
+                                                                                              FocusManager.instance.primaryFocus?.unfocus();
+                                                                                            },
+                                                                                            child: CustomAlertDailogWidget(
+                                                                                              des: 'Auto-renewal is enabled. To order, select \"Pay Per Delivery.\"',
+                                                                                              height: 150.0,
+                                                                                              title: ' ',
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                      },
                                                                                     );
 
-                                                                                    if ((_model.apiResultSUBC1?.succeeded ?? true)) {
+                                                                                    logFirebaseEvent('PaymentContainer_wait__delay');
+                                                                                    await Future.delayed(
+                                                                                      Duration(
+                                                                                        milliseconds: 200,
+                                                                                      ),
+                                                                                    );
+                                                                                    logFirebaseEvent('PaymentContainer_update_page_state');
+                                                                                    _model.isPaymentDone = true;
+                                                                                    safeSetState(() {});
+                                                                                  } else {
+                                                                                    logFirebaseEvent('PaymentContainer_custom_action');
+                                                                                    _model.connectivityResult33334 = await actions.checkInternetConnection();
+                                                                                    if (_model.connectivityResult33334 == true) {
                                                                                       logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                      _model.isLoadingIndicator = false;
-                                                                                      safeSetState(() {});
-                                                                                      logFirebaseEvent('PaymentContainer_navigate_to');
-
-                                                                                      context.pushNamed(OrderSuccessFailScreenWidget.routeName);
-
-                                                                                      logFirebaseEvent('PaymentContainer_update_app_state');
-                                                                                      FFAppState().screenName = 'subscription';
+                                                                                      _model.isLoadingIndicator = true;
                                                                                       safeSetState(() {});
                                                                                       logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                      _model.isPaymentDone = true;
+                                                                                      _model.isPaymentDone = false;
                                                                                       safeSetState(() {});
-                                                                                      logFirebaseEvent('PaymentContainer_custom_action');
-                                                                                      await actions.facebookEventClass(
-                                                                                        (List<String> var1) {
-                                                                                          return var1.join(', ');
-                                                                                        }(functions
-                                                                                            .getVarientIdsWithCartQty(
-                                                                                                getJsonField(
-                                                                                                  tabBarShowsubcartResponse.jsonBody,
-                                                                                                  r'''$.data.data''',
-                                                                                                ),
-                                                                                                'daily')
-                                                                                            .map((e) => e.toString())
-                                                                                            .toList()),
-                                                                                        '0',
-                                                                                        'subscription order',
-                                                                                        0.0,
-                                                                                        0,
-                                                                                        functions.updateTotalAmount(
+                                                                                      logFirebaseEvent('PaymentContainer_backend_call');
+                                                                                      _model.apiResultSUBC1 = await QuickartGroup.checkoutsubcribtionorderCall.call(
+                                                                                        userid: FFAppState().userID,
+                                                                                        addressID: (FFAppState().selectedAddresID != null && FFAppState().selectedAddresID != '') && (FFAppState().selectedAddresID != 'null')
+                                                                                            ? FFAppState().selectedAddresID
+                                                                                            : getJsonField(
+                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                r'''$.data.lastadd[0].address_id''',
+                                                                                              ).toString(),
+                                                                                        siNo: FFAppState().selectedSINumber == '0' ? '' : FFAppState().selectedSINumber,
+                                                                                        storeid: FFAppState().storeID,
+                                                                                        paymentMethod: 'Card',
+                                                                                        wallet: (_model.isSubWalletCheckBoxSelected == 'add') || (_model.isRefSubWalletCheckBoxSelected == 'add') ? 'yes' : 'no',
+                                                                                        couponid: '0',
+                                                                                        couponCode: '  ',
+                                                                                        discountAmount: '0',
+                                                                                        delPartnerInstruction: functions.combineInstructions(FFAppState().deliveryPartnerInstructionAvoid, FFAppState().deliveryPartnerInstructionBell, FFAppState().deliveryPartnerInstructionDoor),
+                                                                                        deviceid: FFAppState().deviceID,
+                                                                                        paymentType: _model.subPaymentRadioButtonValue == 'Pay${'\n'}Now' ? 'paynow' : 'payperdelivery',
+                                                                                        totalwalletamt: (_model.isSubWalletCheckBoxSelected == 'add'
+                                                                                                ? functions.calculateFinalPayableForCashPayment(
+                                                                                                    functions
+                                                                                                        .updateTotalAmount(
+                                                                                                            FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                            FFAppState().couponDiscount.toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.wallet_balance''',
+                                                                                                            ).toString(),
+                                                                                                            'false',
+                                                                                                            '',
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            '')
+                                                                                                        .toString(),
+                                                                                                    functions
+                                                                                                        .checkWalletWithAction(
+                                                                                                            _model.isRefSubWalletCheckBoxSelected,
+                                                                                                            functions
+                                                                                                                .updateTotalAmount(
+                                                                                                                    FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                    FFAppState().couponDiscount.toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.total_price''',
+                                                                                                                    ).toString(),
+                                                                                                                    getJsonField(
+                                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                                    ).toString(),
+                                                                                                                    'false',
+                                                                                                                    '',
+                                                                                                                    getJsonField(
+                                                                                                                      FFAppState().appInfo,
+                                                                                                                      r'''$.codcharges''',
+                                                                                                                    ).toString(),
+                                                                                                                    '',
+                                                                                                                    '')
+                                                                                                                .toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.wallet_deduction_percentage''',
+                                                                                                            ).toString())
+                                                                                                        .toString(),
+                                                                                                    getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.wallet_balance''',
+                                                                                                    ).toString(),
+                                                                                                    _model.isSubWalletCheckBoxSelected)
+                                                                                                : 0.0)
+                                                                                            .toString(),
+                                                                                        orderTotal: functions.updateTotalAmount(
                                                                                             '0',
                                                                                             '0',
                                                                                             getJsonField(
@@ -7066,11 +8314,11 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                               r'''$.data.total_price''',
                                                                                                             ).toString(),
-                                                                                                            functions.setDecimalValue(getJsonField(
+                                                                                                            getJsonField(
                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                               r'''$.data.wallet_balance''',
-                                                                                                            ).toString()),
-                                                                                                            _model.isWalletCheckBoxSelected,
+                                                                                                            ).toString(),
+                                                                                                            _model.isRefSubWalletCheckBoxSelected,
                                                                                                             _model.selectedPaymentMethod,
                                                                                                             getJsonField(
                                                                                                               FFAppState().appInfo,
@@ -7080,12 +8328,12 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                               tabBarShowsubcartResponse.jsonBody,
                                                                                                               r'''$.data.wallet_balance''',
                                                                                                             ).toString(),
-                                                                                                            _model.isWalletCheckBoxSelected)
+                                                                                                            _model.isSubWalletCheckBoxSelected)
                                                                                                         .toString(),
-                                                                                                    functions.setDecimalValue(getJsonField(
+                                                                                                    getJsonField(
                                                                                                       tabBarShowsubcartResponse.jsonBody,
                                                                                                       r'''$.data.wallet_balance''',
-                                                                                                    ).toString()),
+                                                                                                    ).toString(),
                                                                                                     getJsonField(
                                                                                                       FFAppState().appInfo,
                                                                                                       r'''$.wallet_deduction_percentage''',
@@ -7095,86 +8343,256 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                             _model.selectedPaymentMethod,
                                                                                             '0',
                                                                                             '',
-                                                                                            '')!,
-                                                                                        'purchase',
-                                                                                        FFAppState().emptyJson,
-                                                                                        'emptyjons',
-                                                                                        ' ',
-                                                                                        ' ',
-                                                                                        ' ',
-                                                                                        ' ',
+                                                                                            ''),
+                                                                                        orderInstruction: (String var1) {
+                                                                                          return var1.trim() ?? '';
+                                                                                        }(_model.textController.text),
+                                                                                        platform: isiOS ? 'ios' : 'android',
+                                                                                        totalrefwalletamt: (_model.isRefSubWalletCheckBoxSelected == 'add'
+                                                                                                ? functions.checkWalletWithAction(
+                                                                                                    _model.isRefSubWalletCheckBoxSelected,
+                                                                                                    functions
+                                                                                                        .updateTotalAmount(
+                                                                                                            '0',
+                                                                                                            '0',
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.total_price''',
+                                                                                                            ).toString(),
+                                                                                                            getJsonField(
+                                                                                                              tabBarShowsubcartResponse.jsonBody,
+                                                                                                              r'''$.data.referral_balance''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            _model.selectedPaymentMethod,
+                                                                                                            getJsonField(
+                                                                                                              FFAppState().appInfo,
+                                                                                                              r'''$.codcharges''',
+                                                                                                            ).toString(),
+                                                                                                            '',
+                                                                                                            '')
+                                                                                                        .toString(),
+                                                                                                    functions.setDecimalValue(getJsonField(
+                                                                                                      tabBarShowsubcartResponse.jsonBody,
+                                                                                                      r'''$.data.referral_balance''',
+                                                                                                    ).toString()),
+                                                                                                    getJsonField(
+                                                                                                      FFAppState().appInfo,
+                                                                                                      r'''$.wallet_deduction_percentage''',
+                                                                                                    ).toString())
+                                                                                                : 0.0)
+                                                                                            .toString(),
                                                                                       );
-                                                                                    } else {
-                                                                                      logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                      _model.isLoadingIndicator = false;
-                                                                                      safeSetState(() {});
-                                                                                      logFirebaseEvent('PaymentContainer_alert_dialog');
-                                                                                      await showDialog(
-                                                                                        context: context,
-                                                                                        builder: (alertDialogContext) {
-                                                                                          return AlertDialog(
-                                                                                            title: Text(FFAppState().AppName),
-                                                                                            content: Text(getJsonField(
-                                                                                              (_model.apiResultSUBC1?.jsonBody ?? ''),
-                                                                                              r'''$.message''',
-                                                                                            ).toString()),
-                                                                                            actions: [
-                                                                                              TextButton(
-                                                                                                onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                                child: Text('Ok'),
+
+                                                                                      if ((_model.apiResultSUBC1?.succeeded ?? true)) {
+                                                                                        logFirebaseEvent('PaymentContainer_update_page_state');
+                                                                                        _model.isLoadingIndicator = false;
+                                                                                        safeSetState(() {});
+                                                                                        logFirebaseEvent('PaymentContainer_navigate_to');
+
+                                                                                        context.pushNamed(OrderSuccessFailScreenWidget.routeName);
+
+                                                                                        logFirebaseEvent('PaymentContainer_update_app_state');
+                                                                                        FFAppState().screenName = 'subscription';
+                                                                                        safeSetState(() {});
+                                                                                        logFirebaseEvent('PaymentContainer_update_page_state');
+                                                                                        _model.isPaymentDone = true;
+                                                                                        safeSetState(() {});
+                                                                                        logFirebaseEvent('PaymentContainer_custom_action');
+                                                                                        await actions.facebookEventClass(
+                                                                                          (List<String> var1) {
+                                                                                            return var1.join(', ');
+                                                                                          }(functions
+                                                                                              .getVarientIdsWithCartQty(
+                                                                                                  getJsonField(
+                                                                                                    tabBarShowsubcartResponse.jsonBody,
+                                                                                                    r'''$.data.data''',
+                                                                                                  ),
+                                                                                                  'daily')
+                                                                                              .map((e) => e.toString())
+                                                                                              .toList()),
+                                                                                          '0',
+                                                                                          'subscription order',
+                                                                                          0.0,
+                                                                                          0,
+                                                                                          functions.updateTotalAmount(
+                                                                                              '0',
+                                                                                              '0',
+                                                                                              getJsonField(
+                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                r'''$.data.total_price''',
+                                                                                              ).toString(),
+                                                                                              functions
+                                                                                                  .checkWalletWithAction(
+                                                                                                      _model.isSubWalletCheckBoxSelected,
+                                                                                                      functions
+                                                                                                          .updateTotalAmount(
+                                                                                                              '0',
+                                                                                                              '0',
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.total_price''',
+                                                                                                              ).toString(),
+                                                                                                              functions.setDecimalValue(getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                              ).toString()),
+                                                                                                              _model.isRefSubWalletCheckBoxSelected,
+                                                                                                              _model.selectedPaymentMethod,
+                                                                                                              getJsonField(
+                                                                                                                FFAppState().appInfo,
+                                                                                                                r'''$.codcharges''',
+                                                                                                              ).toString(),
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                              ).toString(),
+                                                                                                              _model.isSubWalletCheckBoxSelected)
+                                                                                                          .toString(),
+                                                                                                      functions.setDecimalValue(getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                      ).toString()),
+                                                                                                      getJsonField(
+                                                                                                        FFAppState().appInfo,
+                                                                                                        r'''$.wallet_deduction_percentage''',
+                                                                                                      ).toString())
+                                                                                                  .toString(),
+                                                                                              _model.isSubWalletCheckBoxSelected,
+                                                                                              _model.selectedPaymentMethod,
+                                                                                              '0',
+                                                                                              '',
+                                                                                              '')!,
+                                                                                          'purchase',
+                                                                                          FFAppState().emptyJson,
+                                                                                          'emptyjons',
+                                                                                          ' ',
+                                                                                          ' ',
+                                                                                          ' ',
+                                                                                          ' ',
+                                                                                        );
+                                                                                      } else {
+                                                                                        logFirebaseEvent('PaymentContainer_update_page_state');
+                                                                                        _model.isLoadingIndicator = false;
+                                                                                        safeSetState(() {});
+                                                                                        logFirebaseEvent('PaymentContainer_alert_dialog');
+                                                                                        await showDialog(
+                                                                                          context: context,
+                                                                                          builder: (dialogContext) {
+                                                                                            return Dialog(
+                                                                                              elevation: 0,
+                                                                                              insetPadding: EdgeInsets.zero,
+                                                                                              backgroundColor: Colors.transparent,
+                                                                                              alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                              child: GestureDetector(
+                                                                                                onTap: () {
+                                                                                                  FocusScope.of(dialogContext).unfocus();
+                                                                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                                                                },
+                                                                                                child: CustomAlertDailogWidget(
+                                                                                                  des: getJsonField(
+                                                                                                    (_model.apiResultSUBC1?.jsonBody ?? ''),
+                                                                                                    r'''$.message''',
+                                                                                                  ).toString(),
+                                                                                                  height: 150.0,
+                                                                                                  title: ' ',
+                                                                                                ),
                                                                                               ),
-                                                                                            ],
-                                                                                          );
-                                                                                        },
+                                                                                            );
+                                                                                          },
+                                                                                        );
+
+                                                                                        logFirebaseEvent('PaymentContainer_update_page_state');
+                                                                                        _model.isPaymentDone = true;
+                                                                                        safeSetState(() {});
+                                                                                      }
+                                                                                    } else {
+                                                                                      logFirebaseEvent('PaymentContainer_show_snack_bar');
+                                                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                                                        SnackBar(
+                                                                                          content: Text(
+                                                                                            FFAppConstants.internetString,
+                                                                                            style: GoogleFonts.montserrat(
+                                                                                              color: FFAppConstants.blackColor0A0A0A,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 12.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                          duration: Duration(milliseconds: 4000),
+                                                                                          backgroundColor: FFAppConstants.NeutralBlack50Color,
+                                                                                        ),
+                                                                                      );
+                                                                                      logFirebaseEvent('PaymentContainer_wait__delay');
+                                                                                      await Future.delayed(
+                                                                                        Duration(
+                                                                                          milliseconds: 200,
+                                                                                        ),
                                                                                       );
                                                                                       logFirebaseEvent('PaymentContainer_update_page_state');
                                                                                       _model.isPaymentDone = true;
                                                                                       safeSetState(() {});
                                                                                     }
-                                                                                  } else {
-                                                                                    logFirebaseEvent('PaymentContainer_show_snack_bar');
-                                                                                    ScaffoldMessenger.of(context).showSnackBar(
-                                                                                      SnackBar(
-                                                                                        content: Text(
-                                                                                          FFAppConstants.internetString,
-                                                                                          style: GoogleFonts.montserrat(
-                                                                                            color: FFAppConstants.blackColor0A0A0A,
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                            fontSize: 12.0,
+                                                                                  }
+                                                                                } else {
+                                                                                  logFirebaseEvent('PaymentContainer_alert_dialog');
+                                                                                  await showDialog(
+                                                                                    context: context,
+                                                                                    builder: (dialogContext) {
+                                                                                      return Dialog(
+                                                                                        elevation: 0,
+                                                                                        insetPadding: EdgeInsets.zero,
+                                                                                        backgroundColor: Colors.transparent,
+                                                                                        alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                        child: GestureDetector(
+                                                                                          onTap: () {
+                                                                                            FocusScope.of(dialogContext).unfocus();
+                                                                                            FocusManager.instance.primaryFocus?.unfocus();
+                                                                                          },
+                                                                                          child: CustomAlertDailogWidget(
+                                                                                            des: 'Please select a bank card to place your order.',
+                                                                                            height: 150.0,
+                                                                                            title: ' ',
                                                                                           ),
                                                                                         ),
-                                                                                        duration: Duration(milliseconds: 4000),
-                                                                                        backgroundColor: FFAppConstants.NeutralBlack50Color,
-                                                                                      ),
-                                                                                    );
-                                                                                    logFirebaseEvent('PaymentContainer_wait__delay');
-                                                                                    await Future.delayed(
-                                                                                      Duration(
-                                                                                        milliseconds: 200,
-                                                                                      ),
-                                                                                    );
-                                                                                    logFirebaseEvent('PaymentContainer_update_page_state');
-                                                                                    _model.isPaymentDone = true;
-                                                                                    safeSetState(() {});
-                                                                                  }
+                                                                                      );
+                                                                                    },
+                                                                                  );
+
+                                                                                  logFirebaseEvent('PaymentContainer_wait__delay');
+                                                                                  await Future.delayed(
+                                                                                    Duration(
+                                                                                      milliseconds: 200,
+                                                                                    ),
+                                                                                  );
+                                                                                  logFirebaseEvent('PaymentContainer_update_page_state');
+                                                                                  _model.isPaymentDone = true;
+                                                                                  safeSetState(() {});
                                                                                 }
                                                                               } else {
                                                                                 logFirebaseEvent('PaymentContainer_alert_dialog');
                                                                                 await showDialog(
                                                                                   context: context,
-                                                                                  builder: (alertDialogContext) {
-                                                                                    return AlertDialog(
-                                                                                      title: Text(FFAppState().AppName),
-                                                                                      content: Text('Please select a bank card to place your order.'),
-                                                                                      actions: [
-                                                                                        TextButton(
-                                                                                          onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                          child: Text('Ok'),
+                                                                                  builder: (dialogContext) {
+                                                                                    return Dialog(
+                                                                                      elevation: 0,
+                                                                                      insetPadding: EdgeInsets.zero,
+                                                                                      backgroundColor: Colors.transparent,
+                                                                                      alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                      child: GestureDetector(
+                                                                                        onTap: () {
+                                                                                          FocusScope.of(dialogContext).unfocus();
+                                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                                        },
+                                                                                        child: CustomAlertDailogWidget(
+                                                                                          des: 'Please add delivery address',
+                                                                                          height: 130.0,
+                                                                                          title: ' ',
                                                                                         ),
-                                                                                      ],
+                                                                                      ),
                                                                                     );
                                                                                   },
                                                                                 );
+
                                                                                 logFirebaseEvent('PaymentContainer_wait__delay');
                                                                                 await Future.delayed(
                                                                                   Duration(
@@ -7189,19 +8607,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               logFirebaseEvent('PaymentContainer_alert_dialog');
                                                                               await showDialog(
                                                                                 context: context,
-                                                                                builder: (alertDialogContext) {
-                                                                                  return AlertDialog(
-                                                                                    title: Text(FFAppState().AppName),
-                                                                                    content: Text('Please add delivery address'),
-                                                                                    actions: [
-                                                                                      TextButton(
-                                                                                        onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                        child: Text('Ok'),
+                                                                                builder: (dialogContext) {
+                                                                                  return Dialog(
+                                                                                    elevation: 0,
+                                                                                    insetPadding: EdgeInsets.zero,
+                                                                                    backgroundColor: Colors.transparent,
+                                                                                    alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                    child: GestureDetector(
+                                                                                      onTap: () {
+                                                                                        FocusScope.of(dialogContext).unfocus();
+                                                                                        FocusManager.instance.primaryFocus?.unfocus();
+                                                                                      },
+                                                                                      child: CustomAlertDailogWidget(
+                                                                                        des: FFAppConstants.subscriptionDateCheckMsg,
+                                                                                        height: 130.0,
+                                                                                        title: ' ',
                                                                                       ),
-                                                                                    ],
+                                                                                    ),
                                                                                   );
                                                                                 },
                                                                               );
+
                                                                               logFirebaseEvent('PaymentContainer_wait__delay');
                                                                               await Future.delayed(
                                                                                 Duration(
@@ -7228,9 +8654,9 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       FocusManager.instance.primaryFocus?.unfocus();
                                                                                     },
                                                                                     child: CustomAlertDailogWidget(
-                                                                                      des: FFAppConstants.subscriptionDateCheckMsg,
-                                                                                      height: 250.0,
-                                                                                      title: FFAppState().AppName,
+                                                                                      des: 'Please select all required information in product',
+                                                                                      height: 130.0,
+                                                                                      title: ' ',
                                                                                     ),
                                                                                   ),
                                                                                 );
@@ -7255,19 +8681,27 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                             context:
                                                                                 context,
                                                                             builder:
-                                                                                (alertDialogContext) {
-                                                                              return AlertDialog(
-                                                                                title: Text(FFAppState().AppName),
-                                                                                content: Text('Please select all required information in product'),
-                                                                                actions: [
-                                                                                  TextButton(
-                                                                                    onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                    child: Text('Ok'),
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation: 0,
+                                                                                insetPadding: EdgeInsets.zero,
+                                                                                backgroundColor: Colors.transparent,
+                                                                                alignment: AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                child: GestureDetector(
+                                                                                  onTap: () {
+                                                                                    FocusScope.of(dialogContext).unfocus();
+                                                                                    FocusManager.instance.primaryFocus?.unfocus();
+                                                                                  },
+                                                                                  child: CustomAlertDailogWidget(
+                                                                                    des: 'You can not place pay per delivery order ',
+                                                                                    height: 130.0,
+                                                                                    title: ' ',
                                                                                   ),
-                                                                                ],
+                                                                                ),
                                                                               );
                                                                             },
                                                                           );
+
                                                                           logFirebaseEvent(
                                                                               'PaymentContainer_wait__delay');
                                                                           await Future
@@ -7306,13 +8740,13 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                         ),
                                                                         borderRadius:
                                                                             BorderRadius.only(
-                                                                          bottomLeft:
-                                                                              Radius.circular(8.0),
-                                                                          bottomRight:
-                                                                              Radius.circular(8.0),
                                                                           topLeft:
                                                                               Radius.circular(8.0),
                                                                           topRight:
+                                                                              Radius.circular(8.0),
+                                                                          bottomLeft:
+                                                                              Radius.circular(8.0),
+                                                                          bottomRight:
                                                                               Radius.circular(8.0),
                                                                         ),
                                                                         border:
@@ -7365,7 +8799,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                               ).toString(),
                                                                                               functions
                                                                                                   .checkWalletWithAction(
-                                                                                                      _model.isSubWalletCheckBoxSelected,
+                                                                                                      _model.isRefSubWalletCheckBoxSelected,
                                                                                                       functions
                                                                                                           .updateTotalAmount(
                                                                                                               '0',
@@ -7374,36 +8808,94 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                                                 tabBarShowsubcartResponse.jsonBody,
                                                                                                                 r'''$.data.total_price''',
                                                                                                               ).toString(),
-                                                                                                              functions.setDecimalValue(getJsonField(
+                                                                                                              getJsonField(
                                                                                                                 tabBarShowsubcartResponse.jsonBody,
                                                                                                                 r'''$.data.referral_balance''',
-                                                                                                              ).toString()),
-                                                                                                              _model.isRefWalletCheckBoxSelected,
+                                                                                                              ).toString(),
+                                                                                                              '',
                                                                                                               _model.selectedPaymentMethod,
                                                                                                               getJsonField(
                                                                                                                 FFAppState().appInfo,
                                                                                                                 r'''$.codcharges''',
                                                                                                               ).toString(),
-                                                                                                              getJsonField(
-                                                                                                                tabBarShowsubcartResponse.jsonBody,
-                                                                                                                r'''$.data.wallet_balance''',
-                                                                                                              ).toString(),
-                                                                                                              _model.isWalletCheckBoxSelected)
+                                                                                                              '',
+                                                                                                              '')
                                                                                                           .toString(),
                                                                                                       functions.setDecimalValue(getJsonField(
                                                                                                         tabBarShowsubcartResponse.jsonBody,
-                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                        r'''$.data.referral_balance''',
                                                                                                       ).toString()),
                                                                                                       getJsonField(
                                                                                                         FFAppState().appInfo,
                                                                                                         r'''$.wallet_deduction_percentage''',
                                                                                                       ).toString())
                                                                                                   .toString(),
-                                                                                              _model.isSubWalletCheckBoxSelected,
+                                                                                              _model.isRefSubWalletCheckBoxSelected,
                                                                                               _model.selectedPaymentMethod,
                                                                                               '0',
-                                                                                              '',
-                                                                                              '')
+                                                                                              functions
+                                                                                                  .calculateFinalPayableForCashPayment(
+                                                                                                      functions
+                                                                                                          .updateTotalAmount(
+                                                                                                              FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                              FFAppState().couponDiscount.toString(),
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.total_price''',
+                                                                                                              ).toString(),
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.wallet_balance''',
+                                                                                                              ).toString(),
+                                                                                                              'false',
+                                                                                                              '',
+                                                                                                              getJsonField(
+                                                                                                                FFAppState().appInfo,
+                                                                                                                r'''$.codcharges''',
+                                                                                                              ).toString(),
+                                                                                                              '',
+                                                                                                              '')
+                                                                                                          .toString(),
+                                                                                                      functions
+                                                                                                          .checkWalletWithAction(
+                                                                                                              _model.isRefSubWalletCheckBoxSelected,
+                                                                                                              functions
+                                                                                                                  .updateTotalAmount(
+                                                                                                                      FFAppState().isDeliveryPartnerTipSelected,
+                                                                                                                      FFAppState().couponDiscount.toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.total_price''',
+                                                                                                                      ).toString(),
+                                                                                                                      getJsonField(
+                                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                                        r'''$.data.referral_balance''',
+                                                                                                                      ).toString(),
+                                                                                                                      'false',
+                                                                                                                      '',
+                                                                                                                      getJsonField(
+                                                                                                                        FFAppState().appInfo,
+                                                                                                                        r'''$.codcharges''',
+                                                                                                                      ).toString(),
+                                                                                                                      '',
+                                                                                                                      '')
+                                                                                                                  .toString(),
+                                                                                                              getJsonField(
+                                                                                                                tabBarShowsubcartResponse.jsonBody,
+                                                                                                                r'''$.data.referral_balance''',
+                                                                                                              ).toString(),
+                                                                                                              getJsonField(
+                                                                                                                FFAppState().appInfo,
+                                                                                                                r'''$.wallet_deduction_percentage''',
+                                                                                                              ).toString())
+                                                                                                          .toString(),
+                                                                                                      getJsonField(
+                                                                                                        tabBarShowsubcartResponse.jsonBody,
+                                                                                                        r'''$.data.wallet_balance''',
+                                                                                                      ).toString(),
+                                                                                                      _model.isSubWalletCheckBoxSelected)
+                                                                                                  .toString(),
+                                                                                              _model.isSubWalletCheckBoxSelected)
                                                                                           .toString(),
                                                                                       style: GoogleFonts.montserrat(
                                                                                         color: FFAppConstants.whiteColor,
@@ -7519,7 +9011,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                               .transparent,
                                                           onTap: () async {
                                                             logFirebaseEvent(
-                                                                'CART_SUBSCRIPTION_SCREEN_COPY_Image_y5fx');
+                                                                'CART_SUBSCRIPTION_SCREEN_COPY_Image_3fwt');
                                                             logFirebaseEvent(
                                                                 'Image_update_page_state');
                                                             _model.doorImage =
@@ -7672,6 +9164,11 @@ class _CartSubscriptionScreenCopyWidgetState
                                                           platform: isiOS
                                                               ? 'ios'
                                                               : 'android',
+                                                          zoneID: getJsonField(
+                                                            FFAppState()
+                                                                .zoneInfo,
+                                                            r'''$.zone_id''',
+                                                          ).toString(),
                                                         ),
                                                         builder: (context,
                                                             snapshot) {
@@ -7833,13 +9330,13 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                             .white,
                                                                         borderRadius:
                                                                             BorderRadius.only(
-                                                                          bottomLeft:
-                                                                              Radius.circular(8.0),
-                                                                          bottomRight:
-                                                                              Radius.circular(8.0),
                                                                           topLeft:
                                                                               Radius.circular(8.0),
                                                                           topRight:
+                                                                              Radius.circular(8.0),
+                                                                          bottomLeft:
+                                                                              Radius.circular(8.0),
+                                                                          bottomRight:
                                                                               Radius.circular(8.0),
                                                                         ),
                                                                         border:
@@ -7869,8 +9366,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                       decoration: BoxDecoration(
                                                                                         color: FFAppConstants.productBgClr,
                                                                                         borderRadius: BorderRadius.only(
-                                                                                          bottomLeft: Radius.circular(0.0),
-                                                                                          bottomRight: Radius.circular(0.0),
                                                                                           topLeft: Radius.circular(8.0),
                                                                                           topRight: Radius.circular(8.0),
                                                                                         ),
@@ -8120,7 +9615,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                               hoverColor: Colors.transparent,
                                                                                               highlightColor: Colors.transparent,
                                                                                               onTap: () async {
-                                                                                                logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Row_y02p9e');
+                                                                                                logFirebaseEvent('CART_SUBSCRIPTION_SCREEN_COPY_Row_fm1nrb');
                                                                                                 logFirebaseEvent('Row_bottom_sheet');
                                                                                                 await showModalBottomSheet(
                                                                                                   isScrollControlled: true,
@@ -8367,10 +9862,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                         decoration: BoxDecoration(
                                                                                           color: Color(0xFFF4F6F4),
                                                                                           borderRadius: BorderRadius.only(
-                                                                                            bottomLeft: Radius.circular(8.0),
-                                                                                            bottomRight: Radius.circular(0.0),
-                                                                                            topLeft: Radius.circular(0.0),
                                                                                             topRight: Radius.circular(8.0),
+                                                                                            bottomLeft: Radius.circular(8.0),
                                                                                           ),
                                                                                           border: Border.all(
                                                                                             color: Color(0xFFDCE9D8),
@@ -8472,10 +9965,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                     decoration: BoxDecoration(
                                                                                       color: Color(0xFFF4F6F4),
                                                                                       borderRadius: BorderRadius.only(
-                                                                                        bottomLeft: Radius.circular(8.0),
-                                                                                        bottomRight: Radius.circular(0.0),
-                                                                                        topLeft: Radius.circular(0.0),
                                                                                         topRight: Radius.circular(8.0),
+                                                                                        bottomLeft: Radius.circular(8.0),
                                                                                       ),
                                                                                       border: Border.all(
                                                                                         color: Color(0xFFDCE9D8),
@@ -8577,10 +10068,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                             decoration:
                                                                                 BoxDecoration(
                                                                               borderRadius: BorderRadius.only(
-                                                                                bottomLeft: Radius.circular(0.0),
-                                                                                bottomRight: Radius.circular(8.0),
                                                                                 topLeft: Radius.circular(8.0),
-                                                                                topRight: Radius.circular(0.0),
+                                                                                bottomRight: Radius.circular(8.0),
                                                                               ),
                                                                             ),
                                                                             child:
@@ -8599,10 +10088,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                         decoration: BoxDecoration(
                                                                                           color: FFAppConstants.green44AC20,
                                                                                           borderRadius: BorderRadius.only(
-                                                                                            bottomLeft: Radius.circular(0.0),
-                                                                                            bottomRight: Radius.circular(0.0),
                                                                                             topLeft: Radius.circular(8.0),
-                                                                                            topRight: Radius.circular(0.0),
                                                                                           ),
                                                                                         ),
                                                                                         child: Align(
@@ -8696,8 +10182,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                     decoration: BoxDecoration(
                                                                                       color: Color(0xFFF4F6F4),
                                                                                       borderRadius: BorderRadius.only(
-                                                                                        bottomLeft: Radius.circular(0.0),
-                                                                                        bottomRight: Radius.circular(8.0),
                                                                                         topLeft: Radius.circular(valueOrDefault<double>(
                                                                                           FFAppConstants.percentageCheck <
                                                                                                   getJsonField(
@@ -8708,7 +10192,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                               : 8.0,
                                                                                           0.0,
                                                                                         )),
-                                                                                        topRight: Radius.circular(0.0),
+                                                                                        bottomRight: Radius.circular(8.0),
                                                                                       ),
                                                                                       border: Border.all(
                                                                                         color: Color(0xFFDCE9D8),
@@ -8751,8 +10235,6 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                                   borderRadius: BorderRadius.only(
                                                                                     bottomLeft: Radius.circular(8.0),
                                                                                     bottomRight: Radius.circular(8.0),
-                                                                                    topLeft: Radius.circular(0.0),
-                                                                                    topRight: Radius.circular(0.0),
                                                                                   ),
                                                                                 ),
                                                                                 child: Column(
@@ -9124,10 +10606,10 @@ class _CartSubscriptionScreenCopyWidgetState
                           elevation: 2.0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10.0),
-                              bottomRight: Radius.circular(10.0),
                               topLeft: Radius.circular(10.0),
                               topRight: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
                             ),
                           ),
                           child: Container(
@@ -9136,10 +10618,10 @@ class _CartSubscriptionScreenCopyWidgetState
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
                                 topLeft: Radius.circular(10.0),
                                 topRight: Radius.circular(10.0),
+                                bottomLeft: Radius.circular(10.0),
+                                bottomRight: Radius.circular(10.0),
                               ),
                             ),
                             child: Column(
@@ -9226,7 +10708,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                     .checkboxValue = newValue!);
                                                 if (newValue!) {
                                                   logFirebaseEvent(
-                                                      'CART_SUBSCRIPTION_SCREEN_COPY_Checkbox_y');
+                                                      'CART_SUBSCRIPTION_SCREEN_COPY_Checkbox_o');
                                                   logFirebaseEvent(
                                                       'Checkbox_update_app_state');
                                                   FFAppState()
@@ -9295,7 +10777,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                   safeSetState(() {});
                                                 } else {
                                                   logFirebaseEvent(
-                                                      'CART_SUBSCRIPTION_SCREEN_COPY_Checkbox_y');
+                                                      'CART_SUBSCRIPTION_SCREEN_COPY_Checkbox_o');
                                                   logFirebaseEvent(
                                                       'Checkbox_update_app_state');
                                                   FFAppState().isSunSelected =
@@ -10220,7 +11702,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                               },
                                                                               child: CustomAlertDailogWidget(
                                                                                 des: FFAppConstants.weekRepeatMsg,
-                                                                                height: 230.0,
+                                                                                height: 130.0,
                                                                                 title: ' ',
                                                                               ),
                                                                             ),
@@ -10353,7 +11835,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
                                       logFirebaseEvent(
-                                          'CART_SUBSCRIPTION_SCREEN_COPY_Row_x56cjs');
+                                          'CART_SUBSCRIPTION_SCREEN_COPY_Row_j4de7a');
                                       if ((FFAppState().isSunSelected == true) ||
                                           (FFAppState().isMonSelected ==
                                               true) ||
@@ -10466,6 +11948,13 @@ class _CartSubscriptionScreenCopyWidgetState
                                               FFAppState().isThuSelected,
                                               FFAppState().isFriSelected,
                                               FFAppState().isSatSelected),
+                                          platform: FFAppState().platform,
+                                          zoneID: getJsonField(
+                                            FFAppState().zoneInfo,
+                                            r'''$.zone_id''',
+                                          ).toString(),
+                                          variantID:
+                                              FFAppState().varientID.toString(),
                                         );
 
                                         if ((_model
@@ -11068,7 +12557,7 @@ class _CartSubscriptionScreenCopyWidgetState
                                                   Colors.transparent,
                                               onTap: () async {
                                                 logFirebaseEvent(
-                                                    'CART_SUBSCRIPTION_SCREEN_COPY_Icon_mnanb');
+                                                    'CART_SUBSCRIPTION_SCREEN_COPY_Icon_7no8k');
                                                 logFirebaseEvent(
                                                     'Icon_update_page_state');
                                                 _model.autorenewProduct = 'no';
@@ -11266,10 +12755,8 @@ class _CartSubscriptionScreenCopyWidgetState
                                                                   CustomAlertDailogWidget(
                                                                 des: FFAppConstants
                                                                     .subscriptionDateCheckMsg,
-                                                                height: 250.0,
-                                                                title:
-                                                                    FFAppState()
-                                                                        .AppName,
+                                                                height: 150.0,
+                                                                title: ' ',
                                                               ),
                                                             ),
                                                           );
@@ -11751,7 +13238,7 @@ class _CartSubscriptionScreenCopyWidgetState
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.asset(
-                            'assets/images/new_loader.gif',
+                            'assets/images/playstore.png',
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,

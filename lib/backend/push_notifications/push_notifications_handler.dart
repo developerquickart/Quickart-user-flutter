@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'serialization_util.dart';
+
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_util.dart';
@@ -33,11 +34,11 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
       return;
     }
 
-    // final notification = await FirebaseMessaging.instance.getInitialMessage();
-    // if (notification != null) {
-    //   await _handlePushNotification(notification);
-    // }
-    // FirebaseMessaging.onMessageOpenedApp.listen(_handlePushNotification);
+    final notification = await FirebaseMessaging.instance.getInitialMessage();
+    if (notification != null) {
+      await _handlePushNotification(notification);
+    }
+    FirebaseMessaging.onMessageOpenedApp.listen(_handlePushNotification);
   }
 
   Future _handlePushNotification(RemoteMessage message) async {
@@ -46,10 +47,14 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
     }
     _handledMessageIds.add(message.messageId);
 
+    await _handlePushNotificationData(message.data);
+  }
+
+  Future _handlePushNotificationData(Map<String, dynamic> messageData) async {
     safeSetState(() => _loading = true);
     try {
-      final initialPageName = message.data['initialPageName'] as String;
-      final initialParameterData = getInitialParameterData(message.data);
+      final initialPageName = messageData['initialPageName'] as String;
+      final initialParameterData = getInitialParameterData(messageData);
       final parametersBuilder = parametersBuilderMap[initialPageName];
       if (parametersBuilder != null) {
         final parameterData = await parametersBuilder(initialParameterData);
@@ -276,6 +281,7 @@ final parametersBuilderMap =
           'screenPName': getParameter<String>(data, 'screenPName'),
           'mrp': getParameter<double>(data, 'mrp'),
           'orderType': getParameter<String>(data, 'orderType'),
+          'groupID': getParameter<String>(data, 'groupID'),
         },
       ),
   'product_details_screen': (data) async => ParameterData(
@@ -406,18 +412,17 @@ final parametersBuilderMap =
           'title': getParameter<String>(data, 'title'),
         },
       ),
-  'GoogleMapsRedirectCopy': ParameterData.none(),
-  'TotalPaySDKPaymentScreen': (data) async => ParameterData(
-        allParams: {
-          'checkoutUrl': getParameter<String>(data, 'checkoutUrl'),
-          'cookies': getParameter<String>(data, 'cookies'),
-          'successUrl': getParameter<String>(data, 'successUrl'),
-          'cancelUrl': getParameter<String>(data, 'cancelUrl'),
-          'mrp': getParameter<String>(data, 'mrp'),
-        },
-      ),
   'dailyCartScreenCopy': ParameterData.none(),
   'cartSubscriptionScreenCopy': ParameterData.none(),
+  'RatingOrderScreenCopy1': (data) async => ParameterData(
+        allParams: {
+          'cartId': getParameter<String>(data, 'cartId'),
+          'subscriptionID': getParameter<String>(data, 'subscriptionID'),
+          'screenName': getParameter<String>(data, 'screenName'),
+          'rating': getParameter<int>(data, 'rating'),
+          'reviewStr': getParameter<String>(data, 'reviewStr'),
+        },
+      ),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

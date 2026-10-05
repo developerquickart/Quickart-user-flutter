@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/flutter_flow/flutter_flow_google_map.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_place_picker.dart';
@@ -9,6 +10,8 @@ import '/flutter_flow/place.dart';
 import 'dart:io';
 import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +40,7 @@ class _GoogleMapsRedirectWidgetState extends State<GoogleMapsRedirectWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => GoogleMapsRedirectModel());
-print("G1---latLang----->${ FFAppState().latLang!}");
+
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'GoogleMapsRedirect'});
     // On page load action.
@@ -45,6 +48,8 @@ print("G1---latLang----->${ FFAppState().latLang!}");
       logFirebaseEvent('GOOGLE_MAPS_REDIRECT_GoogleMapsRedirect_');
       logFirebaseEvent('GoogleMapsRedirect_update_app_state');
 
+      safeSetState(() {});
+      logFirebaseEvent('GoogleMapsRedirect_rebuild_page');
       safeSetState(() {});
     });
 
@@ -91,7 +96,7 @@ print("G1---latLang----->${ FFAppState().latLang!}");
                             controller: _model.googleMapsController,
                             onCameraIdle: (latLng) => safeSetState(
                                 () => _model.googleMapsCenter = latLng),
-                            initialLocation:FFAppState().categoryName != 'addAddress' ?  FFAppState().latLang! : _model.googleMapsCenter ??=
+                            initialLocation: _model.googleMapsCenter ??=
                                 FFAppState().latLang!,
                             markers: [
                               if (_googleMapMarker != null)
@@ -349,67 +354,197 @@ print("G1---latLang----->${ FFAppState().latLang!}");
                         alignment: AlignmentDirectional(0.0, 1.0),
                         child: PointerInterceptor(
                           intercepting: isWeb,
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 10.0),
-                            child: FFButtonWidget(
-                              onPressed: () async {
-                                logFirebaseEvent(
-                                    'GOOGLE_MAPS_REDIRECT_CONFIRM_LOCATION_BT');
-                                logFirebaseEvent('Button_custom_action');
-                                _model.getAddressfromMap =
-                                    await actions.getAddressformMap(
-                                  _model.googleMapsCenter!,
-                                  true,
-                                  getJsonField(
-                                    FFAppState().appInfo,
-                                    r'''$.country_list''',
-                                  ).toString(),
-                                );
-                                if (FFAppState().isEmiratesSelected == true) {
-                                  logFirebaseEvent('Button_update_app_state');
-                                  FFAppState().isLocationVisible = true;
-                                  FFAppState().latLang =
-                                      _model.googleMapsCenter;
-                                  safeSetState(() {});
-                                } else {
-                                  logFirebaseEvent('Button_alert_dialog');
-                                  await showDialog(
-                                    context: context,
-                                    builder: (alertDialogContext) {
-                                      return AlertDialog(
-                                        title: Text(FFAppState().AppName),
-                                        content: Text(
-                                            'We are not serviceable for this location'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                alertDialogContext),
-                                            child: Text('Ok'),
-                                          ),
-                                        ],
-                                      );
-                                    },
+                          child: Builder(
+                            builder: (context) => Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 10.0),
+                              child: FFButtonWidget(
+                                onPressed: () async {
+                                  logFirebaseEvent(
+                                      'GOOGLE_MAPS_REDIRECT_CONFIRM_LOCATION_BT');
+                                  logFirebaseEvent('Button_custom_action');
+                                  _model.getAddressfromMap =
+                                      await actions.getAddressformMap(
+                                    _model.googleMapsCenter!,
+                                    true,
+                                    getJsonField(
+                                      FFAppState().appInfo,
+                                      r'''$.country_list''',
+                                    ).toString(),
                                   );
-                                  logFirebaseEvent('Button_update_app_state');
-                                  FFAppState().selectedMapAddress = '';
-                                  safeSetState(() {});
-                                }
+                                  if (FFAppState().isEmiratesSelected == true) {
+                                    logFirebaseEvent('Button_backend_call');
+                                    _model.apiResultic8 =
+                                        await QuickartZoneGroup.getZoneIDCall
+                                            .call(
+                                      lat: functions
+                                          .getCurrentLatitudeLogitude(
+                                              _model.googleMapsCenter!, 'lat')
+                                          .toString(),
+                                      lng: functions
+                                          .getCurrentLatitudeLogitude(
+                                              _model.googleMapsCenter!, 'lng')
+                                          .toString(),
+                                      userid: FFAppState().userID,
+                                      addressID: 'null',
+                                    );
 
-                                safeSetState(() {});
-                              },
-                              text: 'Confirm Location',
-                              options: FFButtonOptions(
-                                height: 40.0,
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: FFAppConstants.indigoColor,
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      font: GoogleFonts.montserrat(
+                                    if ((_model.apiResultic8?.succeeded ??
+                                        true)) {
+                                      if (FFAppConstants.statusAPI1 ==
+                                          getJsonField(
+                                            (_model.apiResultic8?.jsonBody ??
+                                                ''),
+                                            r'''$.status''',
+                                          ).toString()) {
+                                        logFirebaseEvent(
+                                            'Button_update_app_state');
+                                        FFAppState().isLocationVisible = true;
+                                        FFAppState().latLang =
+                                            _model.googleMapsCenter;
+                                        FFAppState().zoneInfo =
+                                            QuickartZoneGroup.getZoneIDCall
+                                                .data(
+                                          (_model.apiResultic8?.jsonBody ?? ''),
+                                        );
+                                        safeSetState(() {});
+                                      } else {
+                                        logFirebaseEvent('Button_alert_dialog');
+                                        await showDialog(
+                                          context: context,
+                                          builder: (dialogContext) {
+                                            return Dialog(
+                                              elevation: 0,
+                                              insetPadding: EdgeInsets.zero,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              alignment:
+                                                  AlignmentDirectional(0.0, 0.0)
+                                                      .resolve(
+                                                          Directionality.of(
+                                                              context)),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  FocusScope.of(dialogContext)
+                                                      .unfocus();
+                                                  FocusManager
+                                                      .instance.primaryFocus
+                                                      ?.unfocus();
+                                                },
+                                                child: CustomAlertDailogWidget(
+                                                  des:
+                                                      'We are not serviceable for this location',
+                                                  height: 111.0,
+                                                  title: ' ',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+
+                                        logFirebaseEvent(
+                                            'Button_update_app_state');
+                                        FFAppState().selectedMapAddress = '';
+                                        safeSetState(() {});
+                                      }
+                                    } else {
+                                      logFirebaseEvent('Button_alert_dialog');
+                                      await showDialog(
+                                        context: context,
+                                        builder: (dialogContext) {
+                                          return Dialog(
+                                            elevation: 0,
+                                            insetPadding: EdgeInsets.zero,
+                                            backgroundColor: Colors.transparent,
+                                            alignment: AlignmentDirectional(
+                                                    0.0, 0.0)
+                                                .resolve(
+                                                    Directionality.of(context)),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                FocusScope.of(dialogContext)
+                                                    .unfocus();
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              child: CustomAlertDailogWidget(
+                                                des:
+                                                    'We are not serviceable for this location',
+                                                height: 111.0,
+                                                title: ' ',
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+
+                                      logFirebaseEvent(
+                                          'Button_update_app_state');
+                                      FFAppState().selectedMapAddress = '';
+                                      safeSetState(() {});
+                                    }
+                                  } else {
+                                    logFirebaseEvent('Button_alert_dialog');
+                                    await showDialog(
+                                      context: context,
+                                      builder: (dialogContext) {
+                                        return Dialog(
+                                          elevation: 0,
+                                          insetPadding: EdgeInsets.zero,
+                                          backgroundColor: Colors.transparent,
+                                          alignment: AlignmentDirectional(
+                                                  0.0, 0.0)
+                                              .resolve(
+                                                  Directionality.of(context)),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              FocusScope.of(dialogContext)
+                                                  .unfocus();
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                            },
+                                            child: CustomAlertDailogWidget(
+                                              des:
+                                                  'We are not serviceable for this location',
+                                              height: 111.0,
+                                              title: ' ',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+
+                                    logFirebaseEvent('Button_update_app_state');
+                                    FFAppState().selectedMapAddress = '';
+                                    safeSetState(() {});
+                                  }
+
+                                  safeSetState(() {});
+                                },
+                                text: 'Confirm Location',
+                                options: FFButtonOptions(
+                                  height: 40.0,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                      0.0, 0.0, 0.0, 0.0),
+                                  color: FFAppConstants.indigoColor,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        font: GoogleFonts.montserrat(
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                        color: Colors.white,
+                                        letterSpacing: 0.0,
                                         fontWeight: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .fontWeight,
@@ -417,21 +552,13 @@ print("G1---latLang----->${ FFAppState().latLang!}");
                                             .titleSmall
                                             .fontStyle,
                                       ),
-                                      color: Colors.white,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                elevation: 3.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
+                                  elevation: 3.0,
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                           ),
@@ -460,8 +587,6 @@ print("G1---latLang----->${ FFAppState().latLang!}");
                                     decoration: BoxDecoration(
                                       color: FFAppConstants.whiteColor,
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(0.0),
-                                        bottomRight: Radius.circular(0.0),
                                         topLeft: Radius.circular(8.0),
                                         topRight: Radius.circular(8.0),
                                       ),
@@ -674,9 +799,6 @@ print("G1---latLang----->${ FFAppState().latLang!}");
                                                   logFirebaseEvent(
                                                       'GOOGLE_MAPS_REDIRECT_NEXT_BTN_ON_TAP');
                                                   logFirebaseEvent(
-                                                      'Button_navigate_back');
-                                                  context.pop();
-                                                  logFirebaseEvent(
                                                       'Button_update_app_state');
                                                   FFAppState()
                                                           .isLocationVisible =
@@ -684,6 +806,43 @@ print("G1---latLang----->${ FFAppState().latLang!}");
                                                   FFAppState().latLang =
                                                       _model.googleMapsCenter;
                                                   safeSetState(() {});
+                                                  if ((FFAppState()
+                                                              .screenName ==
+                                                          'dashboard') &&
+                                                      (FFAppState()
+                                                              .categoryName !=
+                                                          'editAddress') &&
+                                                      (FFAppState()
+                                                              .categoryName !=
+                                                          'addAddress')) {
+                                                    logFirebaseEvent(
+                                                        'Button_update_app_state');
+                                                    FFAppState()
+                                                            .selectedMapAddress =
+                                                        _model
+                                                            .getAddressfromMap!;
+                                                    safeSetState(() {});
+                                                    logFirebaseEvent(
+                                                        'Button_custom_action');
+                                                    await actions
+                                                        .navigateToBackBtnScreen(
+                                                      context,
+                                                      'DashboardScreen',
+                                                      () async {
+                                                        logFirebaseEvent(
+                                                            '_refresh_database_request');
+                                                        safeSetState(() => _model
+                                                                .apiRequestCompleter =
+                                                            null);
+                                                        await _model
+                                                            .waitForApiRequestCompleted();
+                                                      },
+                                                    );
+                                                  } else {
+                                                    logFirebaseEvent(
+                                                        'Button_navigate_back');
+                                                    context.pop();
+                                                  }
                                                 },
                                                 text: 'Next',
                                                 options: FFButtonOptions(

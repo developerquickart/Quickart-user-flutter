@@ -309,8 +309,10 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                       userid:
                                                           FFAppState().userID,
                                                       qty: '1',
-                                                      storeid:
-                                                          FFAppState().storeID,
+                                                      storeid: getJsonField(
+                                                        FFAppState().zoneInfo,
+                                                        r'''$.store_id''',
+                                                      ).toString(),
                                                       varientid: getJsonField(
                                                         productModelItem,
                                                         r'''$.varient_id''',
@@ -699,8 +701,11 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                                   FFAppState()
                                                                       .userID,
                                                               storeid:
-                                                                  FFAppState()
-                                                                      .storeID,
+                                                                  getJsonField(
+                                                                FFAppState()
+                                                                    .zoneInfo,
+                                                                r'''$.store_id''',
+                                                              ).toString(),
                                                               deviceid:
                                                                   FFAppState()
                                                                       .deviceID,
@@ -1133,8 +1138,11 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                                           ),
                                                                           'add'),
                                                                   storeid:
-                                                                      FFAppState()
-                                                                          .storeID,
+                                                                      getJsonField(
+                                                                    FFAppState()
+                                                                        .zoneInfo,
+                                                                    r'''$.store_id''',
+                                                                  ).toString(),
                                                                   varientid:
                                                                       getJsonField(
                                                                     productModelItem,
@@ -1747,7 +1755,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                   text: TextSpan(
                                                     children: [
                                                       TextSpan(
-                                                        text: 'AED ',
+                                                        text: FFAppConstants
+                                                            .currancyAED,
                                                         style: FlutterFlowTheme
                                                                 .of(context)
                                                             .bodyMedium
@@ -1846,7 +1855,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                             MainAxisSize.max,
                                                         children: [
                                                           Text(
-                                                            'AED ',
+                                                            FFAppConstants
+                                                                .currancyAED,
                                                             textAlign:
                                                                 TextAlign.start,
                                                             style: FlutterFlowTheme
@@ -2737,7 +2747,10 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                         await QuickartGroup.addremwishlistCall
                                             .call(
                                       userid: FFAppState().userID,
-                                      storeID: FFAppState().storeID,
+                                      storeID: getJsonField(
+                                        FFAppState().zoneInfo,
+                                        r'''$.store_id''',
+                                      ).toString(),
                                       varientID: getJsonField(
                                         productModelItem,
                                         r'''$.varient_id''',
@@ -2773,10 +2786,10 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                           r'''$.product_name''',
                                         ).toString(),
                                         'remove',
-                                        getJsonField(
+                                        functions.stringToDouble(getJsonField(
                                           productModelItem,
                                           r'''$.price''',
-                                        ),
+                                        ).toString()),
                                         0,
                                         0.0,
                                         'wishList',
@@ -2808,7 +2821,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                               r'''$.message''',
                                             ).toString(),
                                             style: GoogleFonts.montserrat(
-                                              color: FFAppConstants.indigoColor,
+                                              color: FFAppConstants
+                                                  .blackColor0A0A0A,
                                               fontWeight: FontWeight.w500,
                                               fontSize: 12.0,
                                             ),
@@ -2828,7 +2842,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                         content: Text(
                                           FFAppConstants.internetString,
                                           style: GoogleFonts.montserrat(
-                                            color: FFAppConstants.indigoColor,
+                                            color:
+                                                FFAppConstants.blackColor0A0A0A,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 12.0,
                                           ),
@@ -2885,7 +2900,10 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                 .addremwishlistCall
                                                 .call(
                                           userid: FFAppState().userID,
-                                          storeID: FFAppState().storeID,
+                                          storeID: getJsonField(
+                                            FFAppState().zoneInfo,
+                                            r'''$.store_id''',
+                                          ).toString(),
                                           varientID: getJsonField(
                                             productModelItem,
                                             r'''$.varient_id''',
@@ -2925,10 +2943,11 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                               r'''$.product_name''',
                                             ).toString(),
                                             'add',
-                                            getJsonField(
+                                            functions
+                                                .stringToDouble(getJsonField(
                                               productModelItem,
                                               r'''$.price''',
-                                            ),
+                                            ).toString()),
                                             0,
                                             0.0,
                                             'wishList',
@@ -2962,7 +2981,7 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                                 ).toString(),
                                                 style: GoogleFonts.montserrat(
                                                   color: FFAppConstants
-                                                      .primaryPurpleE4D8F5,
+                                                      .blackColor0A0A0A,
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 12.0,
                                                 ),
@@ -2983,8 +3002,8 @@ class _ProductsListViewWidgetState extends State<ProductsListViewWidget> {
                                             content: Text(
                                               FFAppConstants.internetString,
                                               style: GoogleFonts.montserrat(
-                                                color:
-                                                    FFAppConstants.indigoColor,
+                                                color: FFAppConstants
+                                                    .blackColor0A0A0A,
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 12.0,
                                               ),

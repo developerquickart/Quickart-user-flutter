@@ -42,28 +42,21 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       logFirebaseEvent('COUPONSAND_OFFERS_CouponsandOffers_ON_IN');
       logFirebaseEvent('CouponsandOffers_custom_action');
-      _model.internetConnection = await actions.checkInternetConnection();
-      if (_model.internetConnection == true) {
-        logFirebaseEvent('CouponsandOffers_update_app_state');
-
-        safeSetState(() {});
-        logFirebaseEvent('CouponsandOffers_google_analytics_event');
-        logFirebaseEvent('CouponsAndOffersAnalytics');
-      } else {
-        logFirebaseEvent('CouponsandOffers_show_snack_bar');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              FFAppConstants.internetString,
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
-      }
+      await actions.facebookEventClass(
+        FFAppState().userID,
+        '0',
+        '0',
+        0.0,
+        0,
+        0.0,
+        'couponViewed',
+        FFAppState().emptyJson,
+        '0',
+        '0',
+        '0',
+        '0',
+        '0',
+      );
     });
 
     _model.textController ??= TextEditingController();
@@ -154,10 +147,10 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                 decoration: BoxDecoration(
                                   color: FFAppConstants.whiteColor,
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(8.0),
-                                    bottomRight: Radius.circular(8.0),
                                     topLeft: Radius.circular(8.0),
                                     topRight: Radius.circular(8.0),
+                                    bottomLeft: Radius.circular(8.0),
+                                    bottomRight: Radius.circular(8.0),
                                   ),
                                   border: Border.all(
                                     color: FFAppConstants.neutralBlackE0E0E0,
@@ -266,13 +259,18 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                     logFirebaseEvent('Text_update_page_state');
                                     _model.isLoadingIndicator = true;
                                     safeSetState(() {});
+                                    logFirebaseEvent('Text_haptic_feedback');
+                                    HapticFeedback.heavyImpact();
                                     logFirebaseEvent('Text_backend_call');
                                     _model.apiResultrm2 = await QuickartGroup
                                         .applyCouponCall
                                         .call(
                                       couponCode: _model.textController.text,
                                       userId: FFAppState().userID,
-                                      storeId: FFAppState().storeID,
+                                      storeId: getJsonField(
+                                        FFAppState().zoneInfo,
+                                        r'''$.store_id''',
+                                      ).toString(),
                                       orderType: FFAppState().couponType,
                                       platform: isiOS ? 'ios' : 'android',
                                     );
@@ -336,16 +334,20 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                           FFAppState().userID,
                                           _model.textController.text,
                                           FFAppState().couponType,
-                                          0.0,
+                                          functions.stringToDouble(getJsonField(
+                                            (_model.apiResultrm2?.jsonBody ??
+                                                ''),
+                                            r'''$.data.save_amount''',
+                                          ).toString()),
                                           1,
                                           0.0,
                                           'coupon',
                                           FFAppState().emptyJson,
-                                          ' ',
-                                          ' ',
-                                          ' ',
-                                          ' ',
-                                          ' ',
+                                          '0 ',
+                                          '0 ',
+                                          '0 ',
+                                          '0 ',
+                                          '0',
                                         );
                                       } else {
                                         logFirebaseEvent('Text_show_snack_bar');
@@ -473,10 +475,17 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                     ApiCallResponse>()
                                   ..complete(QuickartGroup.couponListCall.call(
                                     userId: FFAppState().userID,
-                                    storeId: '7',
+                                    storeId: getJsonField(
+                                      FFAppState().zoneInfo,
+                                      r'''$.store_id''',
+                                    ).toString(),
                                     cartId: 'null',
                                     totalDelievery: '2',
                                     platform: isiOS ? 'ios' : 'android',
+                                    zoneID: getJsonField(
+                                      FFAppState().zoneInfo,
+                                      r'''$.zone_id''',
+                                    ).toString(),
                                   )))
                                 .future,
                             builder: (context, snapshot) {
@@ -747,12 +756,19 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                                                         safeSetState(
                                                                             () {});
                                                                         logFirebaseEvent(
+                                                                            'Text_haptic_feedback');
+                                                                        HapticFeedback
+                                                                            .heavyImpact();
+                                                                        logFirebaseEvent(
                                                                             'Text_backend_call');
                                                                         _model.apiResulth77 = await QuickartGroup
                                                                             .applyCouponCall
                                                                             .call(
                                                                           storeId:
-                                                                              FFAppState().storeID,
+                                                                              getJsonField(
+                                                                            FFAppState().zoneInfo,
+                                                                            r'''$.store_id''',
+                                                                          ).toString(),
                                                                           userId:
                                                                               FFAppState().userID,
                                                                           couponCode:
@@ -825,16 +841,19 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                                                                 r'''$.coupon_code''',
                                                                               ).toString(),
                                                                               FFAppState().couponType,
-                                                                              0.0,
+                                                                              functions.checkDoubleValue(getJsonField(
+                                                                                (_model.apiResulth77?.jsonBody ?? ''),
+                                                                                r'''$.data.save_amount''',
+                                                                              ).toString())!,
                                                                               1,
                                                                               0.0,
                                                                               'coupon',
                                                                               FFAppState().emptyJson,
-                                                                              ' ',
-                                                                              ' ',
-                                                                              ' ',
-                                                                              ' ',
-                                                                              ' ',
+                                                                              '0 ',
+                                                                              ' 0',
+                                                                              '0 ',
+                                                                              ' 0',
+                                                                              ' 0',
                                                                             );
                                                                             logFirebaseEvent('Text_google_analytics_event');
                                                                             logFirebaseEvent(
@@ -1067,21 +1086,7 @@ class _CouponsandOffersWidgetState extends State<CouponsandOffersWidget> {
                                                                 .indigoColor,
                                                             borderRadius:
                                                                 BorderRadius
-                                                                    .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                            ),
+                                                                    .only(),
                                                           ),
                                                         ),
                                                       ),

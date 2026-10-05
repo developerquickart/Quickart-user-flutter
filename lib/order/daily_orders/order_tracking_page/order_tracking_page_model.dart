@@ -1,9 +1,11 @@
 import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
+import '/components/custom_alert_dailog_width_action/custom_alert_dailog_width_action_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
+import '/backend/schema/structs/index.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -23,7 +25,7 @@ class OrderTrackingPageModel extends FlutterFlowModel<OrderTrackingPageWidget> {
 
   String dailyorderType = 'daily';
 
-  String trialorderType = 'trail';
+  String trialorderType = 'trial';
 
   bool deliveryProofImage = false;
 
@@ -36,6 +38,10 @@ class OrderTrackingPageModel extends FlutterFlowModel<OrderTrackingPageWidget> {
   String cardTypeWallet = 'Wallet';
 
   String checkDiscount1 = '0';
+
+  String surgeChange = 'surge_charge';
+
+  String discountTimeSlot = 'discount';
 
   ///  State fields for stateful widgets in this page.
 

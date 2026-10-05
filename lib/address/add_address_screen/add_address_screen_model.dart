@@ -13,6 +13,7 @@ import '/index.dart';
 import 'add_address_screen_widget.dart' show AddAddressScreenWidget;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -86,6 +87,7 @@ class AddAddressScreenModel extends FlutterFlowModel<AddAddressScreenWidget> {
   bool? connectivityResult;
   // Stores action output result for [Backend Call - API (addaddress)] action in Button widget.
   ApiCallResponse? apiResultAddAddress;
+  Completer<ApiCallResponse>? apiRequestCompleter;
   // Stores action output result for [Backend Call - API (editaddress)] action in Button widget.
   ApiCallResponse? apiResultEditAddress;
   bool isDataUploading_uploadData63y1 = false;
@@ -115,5 +117,21 @@ class AddAddressScreenModel extends FlutterFlowModel<AddAddressScreenWidget> {
 
     textEmailFocusNode?.dispose();
     textEmailTextController?.dispose();
+  }
+
+  /// Additional helper methods.
+  Future waitForApiRequestCompleted({
+    double minWait = 0,
+    double maxWait = double.infinity,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+    while (true) {
+      await Future.delayed(Duration(milliseconds: 50));
+      final timeElapsed = stopwatch.elapsedMilliseconds;
+      final requestComplete = apiRequestCompleter?.isCompleted ?? false;
+      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
+        break;
+      }
+    }
   }
 }

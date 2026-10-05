@@ -516,10 +516,10 @@ class _CancelOrderScreenWidgetState extends State<CancelOrderScreenWidget> {
                                     height: 40.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(16.0),
-                                        bottomRight: Radius.circular(16.0),
                                         topLeft: Radius.circular(16.0),
                                         topRight: Radius.circular(16.0),
+                                        bottomLeft: Radius.circular(16.0),
+                                        bottomRight: Radius.circular(16.0),
                                       ),
                                     ),
                                     child: FFButtonWidget(
@@ -964,10 +964,10 @@ class _CancelOrderScreenWidgetState extends State<CancelOrderScreenWidget> {
                                     height: 40.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(16.0),
-                                        bottomRight: Radius.circular(16.0),
                                         topLeft: Radius.circular(16.0),
                                         topRight: Radius.circular(16.0),
+                                        bottomLeft: Radius.circular(16.0),
+                                        bottomRight: Radius.circular(16.0),
                                       ),
                                     ),
                                     child: FFButtonWidget(
@@ -1404,10 +1404,10 @@ class _CancelOrderScreenWidgetState extends State<CancelOrderScreenWidget> {
                                     height: 40.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(16.0),
-                                        bottomRight: Radius.circular(16.0),
                                         topLeft: Radius.circular(16.0),
                                         topRight: Radius.circular(16.0),
+                                        bottomLeft: Radius.circular(16.0),
+                                        bottomRight: Radius.circular(16.0),
                                       ),
                                     ),
                                     child: FFButtonWidget(

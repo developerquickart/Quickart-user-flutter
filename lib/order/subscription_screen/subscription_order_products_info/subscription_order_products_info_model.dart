@@ -1,10 +1,10 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
-import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'dart:async';
@@ -37,7 +37,7 @@ class SubscriptionOrderProductsInfoModel
 
   // Stores action output result for [Backend Call - API (subscriptionOrderPause)] action in Container widget.
   ApiCallResponse? apiResultOrderPause1;
-  Completer<ApiCallResponse>? apiRequestCompleter2;
+  Completer<ApiCallResponse>? apiRequestCompleter;
   // Stores action output result for [Backend Call - API (subscriptionOrderResume)] action in Button widget.
   ApiCallResponse? subscriptionOrderResumeAPI1;
 
@@ -48,7 +48,7 @@ class SubscriptionOrderProductsInfoModel
   void dispose() {}
 
   /// Additional helper methods.
-  Future waitForApiRequestCompleted2({
+  Future waitForApiRequestCompleted({
     double minWait = 0,
     double maxWait = double.infinity,
   }) async {
@@ -56,7 +56,7 @@ class SubscriptionOrderProductsInfoModel
     while (true) {
       await Future.delayed(Duration(milliseconds: 50));
       final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = apiRequestCompleter2?.isCompleted ?? false;
+      final requestComplete = apiRequestCompleter?.isCompleted ?? false;
       if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
         break;
       }

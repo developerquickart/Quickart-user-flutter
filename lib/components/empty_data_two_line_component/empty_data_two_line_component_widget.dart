@@ -188,10 +188,10 @@ class _EmptyDataTwoLineComponentWidgetState
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(6.0),
-                        bottomRight: Radius.circular(6.0),
                         topLeft: Radius.circular(6.0),
                         topRight: Radius.circular(6.0),
+                        bottomLeft: Radius.circular(6.0),
+                        bottomRight: Radius.circular(6.0),
                       ),
                       hoverColor: FFAppConstants.indigoColor,
                       hoverTextColor: FFAppConstants.whiteColor,

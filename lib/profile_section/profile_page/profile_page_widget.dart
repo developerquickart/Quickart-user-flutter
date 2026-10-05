@@ -1,4 +1,3 @@
-
 import '/backend/api_requests/api_calls.dart';
 import '/components/bottomnav_bar/bottomnav_bar_widget.dart';
 import '/components/empty_data_two_line_component_copy/empty_data_two_line_component_copy_widget.dart';
@@ -16,6 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'profile_page_model.dart';
+export 'profile_page_model.dart';
 
 class ProfilePageWidget extends StatefulWidget {
   const ProfilePageWidget({super.key});
@@ -107,7 +107,10 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
     return FutureBuilder<ApiCallResponse>(
       future: QuickartGroup.userOrderListCall.call(
         userId: FFAppState().userID,
-        storeId: FFAppState().storeID,
+        storeId: getJsonField(
+          FFAppState().zoneInfo,
+          r'''$.store_id''',
+        ).toString(),
         deviceId: FFAppState().deviceID,
         platform: isiOS ? 'ios' : 'android',
       ),
@@ -773,59 +776,193 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20.0, 0.0, 0.0, 0.0),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            logFirebaseEvent(
-                                                'PROFILE_PAGE_PAGE_Row_lraeirq2_ON_TAP');
-                                            logFirebaseEvent('Row_navigate_to');
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              FFButtonWidget(
+                                                onPressed: () async {
+                                                  logFirebaseEvent(
+                                                      'PROFILE_PAGE_PAGE_MY_ORDERS_BTN_ON_TAP');
+                                                  logFirebaseEvent(
+                                                      'Button_update_app_state');
+                                                  FFAppState()
+                                                      .RatingScreenName = '';
+                                                  FFAppState()
+                                                      .cardScreenNavigation = '';
+                                                  FFAppState().update(() {});
+                                                  logFirebaseEvent(
+                                                      'Button_update_app_state');
+                                                  FFAppState().screenName = 'd';
+                                                  safeSetState(() {});
+                                                  logFirebaseEvent(
+                                                      'Button_navigate_to');
 
-                                            context.pushNamed(
-                                                AddressListScreenWidget
-                                                    .routeName);
+                                                  context.pushNamed(
+                                                      AllOrdersTABLISTWidget
+                                                          .routeName);
 
-                                            logFirebaseEvent(
-                                                'Row_google_analytics_event');
-                                            logFirebaseEvent(
-                                              'Navigation',
-                                              parameters: {
-                                                'Screen Name': 'Profile',
-                                                'Navigate To':
-                                                    'Address List Screen',
-                                              },
-                                            );
-                                          },
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
+                                                  logFirebaseEvent(
+                                                      'Button_google_analytics_event');
+                                                  logFirebaseEvent(
+                                                    'Navigation',
+                                                    parameters: {
+                                                      'Screen Name': 'Profile',
+                                                      'Navigate To':
+                                                          'Daily Orders Screen',
+                                                    },
+                                                  );
+                                                },
+                                                text: 'My Orders',
+                                                icon: Icon(
+                                                  Icons.shopping_cart,
+                                                  size: 22.0,
+                                                ),
+                                                options: FFButtonOptions(
+                                                  width: 150.0,
+                                                  height: 35.0,
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 0.0, 8.0, 0.0),
+                                                  iconPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(0.0, 0.0,
+                                                              0.0, 0.0),
+                                                  color:
+                                                      FFAppConstants.whiteColor,
+                                                  textStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleSmall
+                                                                  .fontStyle,
+                                                        ),
+                                                        color: FFAppConstants
+                                                            .indigoColor,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .fontStyle,
+                                                      ),
+                                                  elevation: 0.0,
+                                                  borderSide: BorderSide(
+                                                    color: FFAppConstants
+                                                        .indigoColor,
+                                                    width: 1.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          24.0),
+                                                  hoverColor: FFAppConstants
+                                                      .primaryPurpleE4D8F5,
+                                                  hoverBorderSide: BorderSide(
+                                                    color: FFAppConstants
+                                                        .indigoColor,
+                                                    width: 1.0,
+                                                  ),
+                                                  hoverTextColor: FFAppConstants
+                                                      .indigoColor,
+                                                  hoverElevation: 0.0,
+                                                ),
+                                              ),
+                                              FFButtonWidget(
+                                                onPressed: () async {
+                                                  logFirebaseEvent(
+                                                      'PROFILE_PAGE_PAGE_MY_ADDRESS_BTN_ON_TAP');
+                                                  logFirebaseEvent(
+                                                      'Button_navigate_to');
+
+                                                  context.pushNamed(
+                                                      AddressListScreenWidget
+                                                          .routeName);
+
+                                                  logFirebaseEvent(
+                                                      'Button_update_app_state');
+                                                  FFAppState().screenName =
+                                                      'profile';
+                                                  safeSetState(() {});
+                                                },
+                                                text: 'My Address',
+                                                icon: Icon(
+                                                  Icons.location_pin,
+                                                  size: 22.0,
+                                                ),
+                                                options: FFButtonOptions(
+                                                  width: 150.0,
+                                                  height: 35.0,
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 0.0, 8.0, 0.0),
+                                                  iconPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(0.0, 0.0,
+                                                              0.0, 0.0),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  textStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleSmall
+                                                                  .fontStyle,
+                                                        ),
+                                                        color: FFAppConstants
+                                                            .indigoColor,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .fontStyle,
+                                                      ),
+                                                  elevation: 0.0,
+                                                  borderSide: BorderSide(
+                                                    color: FFAppConstants
+                                                        .indigoColor,
+                                                    width: 1.0,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          24.0),
+                                                ),
+                                              ),
+                                              if (FFAppState().usserType !=
+                                                  'guest')
                                                 FFButtonWidget(
                                                   onPressed: () async {
                                                     logFirebaseEvent(
-                                                        'PROFILE_PAGE_PAGE_MY_ORDERS_BTN_ON_TAP');
-                                                    logFirebaseEvent(
-                                                        'Button_update_app_state');
-                                                    FFAppState()
-                                                        .RatingScreenName = '';
-                                                    FFAppState()
-                                                        .cardScreenNavigation = '';
-                                                    FFAppState().update(() {});
-                                                    logFirebaseEvent(
-                                                        'Button_update_app_state');
-                                                    FFAppState().screenName =
-                                                        'd';
-                                                    safeSetState(() {});
+                                                        'PROFILE_PAGE_PAGE_MY_ACCOUNT_BTN_ON_TAP');
                                                     logFirebaseEvent(
                                                         'Button_navigate_to');
 
                                                     context.pushNamed(
-                                                        AllOrdersTABLISTWidget
+                                                        EditProfileWidget
                                                             .routeName);
 
                                                     logFirebaseEvent(
@@ -836,13 +973,13 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                         'Screen Name':
                                                             'Profile',
                                                         'Navigate To':
-                                                            'Daily Orders Screen',
+                                                            'Edit Profile',
                                                       },
                                                     );
                                                   },
-                                                  text: 'My Orders',
+                                                  text: 'My Account',
                                                   icon: Icon(
-                                                    Icons.shopping_cart,
+                                                    Icons.person_rounded,
                                                     size: 22.0,
                                                   ),
                                                   options: FFButtonOptions(
@@ -893,73 +1030,59 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             24.0),
-                                                    hoverColor: FFAppConstants
-                                                        .primaryPurpleE4D8F5,
-                                                    hoverBorderSide: BorderSide(
-                                                      color: FFAppConstants
-                                                          .indigoColor,
-                                                      width: 1.0,
-                                                    ),
-                                                    hoverTextColor:
-                                                        FFAppConstants
-                                                            .indigoColor,
-                                                    hoverElevation: 0.0,
                                                   ),
                                                 ),
-                                                FFButtonWidget(
-                                                  onPressed: () async {
-                                                    logFirebaseEvent(
-                                                        'PROFILE_PAGE_PAGE_MY_ADDRESS_BTN_ON_TAP');
-                                                    logFirebaseEvent(
-                                                        'Button_navigate_to');
+                                              FFButtonWidget(
+                                                onPressed: () async {
+                                                  logFirebaseEvent(
+                                                      'PROFILE_PAGE_PAGE_MY_OFFERS_BTN_ON_TAP');
+                                                  logFirebaseEvent(
+                                                      'Button_update_app_state');
+                                                  FFAppState().couponsScreen =
+                                                      'profile';
+                                                  FFAppState().update(() {});
+                                                  logFirebaseEvent(
+                                                      'Button_navigate_to');
 
-                                                    context.pushNamed(
-                                                        AddressListScreenWidget
-                                                            .routeName);
+                                                  context.pushNamed(
+                                                      CouponsandOffersWidget
+                                                          .routeName);
 
-                                                    logFirebaseEvent(
-                                                        'Button_update_app_state');
-                                                    FFAppState().screenName =
-                                                        'profile';
-                                                    safeSetState(() {});
-                                                  },
-                                                  text: 'My Address',
-                                                  icon: Icon(
-                                                    Icons.location_pin,
-                                                    size: 22.0,
-                                                  ),
-                                                  options: FFButtonOptions(
-                                                    width: 150.0,
-                                                    height: 35.0,
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(8.0, 0.0,
-                                                                8.0, 0.0),
-                                                    iconPadding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 0.0),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                    textStyle: FlutterFlowTheme
-                                                            .of(context)
-                                                        .titleSmall
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .indigoColor,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
+                                                  logFirebaseEvent(
+                                                      'Button_google_analytics_event');
+                                                  logFirebaseEvent(
+                                                    'Navigation',
+                                                    parameters: {
+                                                      'Screen Name': 'Profile',
+                                                      'Navigate To':
+                                                          'Favourites Screen',
+                                                    },
+                                                  );
+                                                },
+                                                text: 'My Offers',
+                                                icon: Icon(
+                                                  FFIcons.kdiscount3704830,
+                                                  size: 22.0,
+                                                ),
+                                                options: FFButtonOptions(
+                                                  width: 150.0,
+                                                  height: 35.0,
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 0.0, 8.0, 0.0),
+                                                  iconPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(0.0, 0.0,
+                                                              0.0, 0.0),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  textStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        font: GoogleFonts
+                                                            .montserrat(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
@@ -968,194 +1091,32 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                                   .titleSmall
                                                                   .fontStyle,
                                                         ),
-                                                    elevation: 0.0,
-                                                    borderSide: BorderSide(
-                                                      color: FFAppConstants
-                                                          .indigoColor,
-                                                      width: 1.0,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            24.0),
-                                                  ),
-                                                ),
-                                                if (FFAppState().usserType !=
-                                                    'guest')
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      logFirebaseEvent(
-                                                          'PROFILE_PAGE_PAGE_MY_ACCOUNT_BTN_ON_TAP');
-                                                      logFirebaseEvent(
-                                                          'Button_navigate_to');
-
-                                                      context.pushNamed(
-                                                          EditProfileWidget
-                                                              .routeName);
-
-                                                      logFirebaseEvent(
-                                                          'Button_google_analytics_event');
-                                                      logFirebaseEvent(
-                                                        'Navigation',
-                                                        parameters: {
-                                                          'Screen Name':
-                                                              'Profile',
-                                                          'Navigate To':
-                                                              'Edit Profile',
-                                                        },
-                                                      );
-                                                    },
-                                                    text: 'My Account',
-                                                    icon: Icon(
-                                                      Icons.person_rounded,
-                                                      size: 22.0,
-                                                    ),
-                                                    options: FFButtonOptions(
-                                                      width: 150.0,
-                                                      height: 35.0,
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  8.0,
-                                                                  0.0,
-                                                                  8.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color: FFAppConstants
-                                                          .whiteColor,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .montserrat(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmall
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FFAppConstants
-                                                                    .indigoColor,
-                                                                fontSize: 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .fontStyle,
-                                                              ),
-                                                      elevation: 0.0,
-                                                      borderSide: BorderSide(
                                                         color: FFAppConstants
                                                             .indigoColor,
-                                                        width: 1.0,
+                                                        fontSize: 16.0,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .fontStyle,
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              24.0),
-                                                    ),
+                                                  elevation: 0.0,
+                                                  borderSide: BorderSide(
+                                                    color: FFAppConstants
+                                                        .indigoColor,
+                                                    width: 1.0,
                                                   ),
-                                                FFButtonWidget(
-                                                  onPressed: () async {
-                                                    logFirebaseEvent(
-                                                        'PROFILE_PAGE_PAGE_MY_OFFERS_BTN_ON_TAP');
-                                                    logFirebaseEvent(
-                                                        'Button_update_app_state');
-                                                    FFAppState().couponsScreen =
-                                                        'profile';
-                                                    FFAppState().update(() {});
-                                                    logFirebaseEvent(
-                                                        'Button_navigate_to');
-
-                                                    context.pushNamed(
-                                                        CouponsandOffersWidget
-                                                            .routeName);
-
-                                                    logFirebaseEvent(
-                                                        'Button_google_analytics_event');
-                                                    logFirebaseEvent(
-                                                      'Navigation',
-                                                      parameters: {
-                                                        'Screen Name':
-                                                            'Profile',
-                                                        'Navigate To':
-                                                            'Favourites Screen',
-                                                      },
-                                                    );
-                                                  },
-                                                  text: 'My Offers',
-                                                  icon: Icon(
-                                                    FFIcons.kdiscount3704830,
-                                                    size: 22.0,
-                                                  ),
-                                                  options: FFButtonOptions(
-                                                    width: 150.0,
-                                                    height: 35.0,
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(8.0, 0.0,
-                                                                8.0, 0.0),
-                                                    iconPadding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 0.0),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                    textStyle: FlutterFlowTheme
-                                                            .of(context)
-                                                        .titleSmall
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: FFAppConstants
-                                                              .indigoColor,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleSmall
-                                                                  .fontStyle,
-                                                        ),
-                                                    elevation: 0.0,
-                                                    borderSide: BorderSide(
-                                                      color: FFAppConstants
-                                                          .indigoColor,
-                                                      width: 1.0,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            24.0),
-                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          24.0),
                                                 ),
-                                              ]
-                                                  .divide(SizedBox(width: 10.0))
-                                                  .addToEnd(
-                                                      SizedBox(width: 5.0)),
-                                            ),
+                                              ),
+                                            ]
+                                                .divide(SizedBox(width: 10.0))
+                                                .addToEnd(SizedBox(width: 5.0)),
                                           ),
                                         ),
                                       ),
@@ -1684,9 +1645,11 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                 height: 40.0,
                                                 decoration: BoxDecoration(),
                                                 child: Visibility(
-                                                  visible:
-                                                      FFAppState().usserType !=
-                                                          'guest',
+                                                  visible: getJsonField(
+                                                        FFAppState().appInfo,
+                                                        r'''$.user_type''',
+                                                      ) ==
+                                                      null,
                                                   child: Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
@@ -2441,109 +2404,105 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                         ),
-                                        child: InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            logFirebaseEvent(
-                                                'PROFILE_PAGE_PAGE_Column_bt6ictxa_ON_TAP');
-                                          },
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Builder(
-                                                builder: (context) => Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          20.0, 0.0, 20.0, 0.0),
-                                                  child: InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      logFirebaseEvent(
-                                                          'PROFILE_PAGE_PAGE_Row_l90g3oxk_ON_TAP');
-                                                      logFirebaseEvent(
-                                                          'Row_custom_action');
-                                                      _model.refCodeN =
-                                                          await actions
-                                                              .generateReferralLink(
-                                                        getJsonField(
-                                                          FFAppState().appInfo,
-                                                          r'''$.referral_code''',
-                                                        ).toString(),
-                                                      );
-                                                      logFirebaseEvent(
-                                                          'Row_wait__delay');
-                                                      await Future.delayed(
-                                                        Duration(
-                                                          milliseconds: 1000,
-                                                        ),
-                                                      );
-                                                      logFirebaseEvent(
-                                                          'Row_share');
-                                                      await Share.share(
-                                                        '${getJsonField(
-                                                          (_model.apiShowProfile
-                                                                  ?.jsonBody ??
-                                                              ''),
-                                                          r'''$.data.referral_message''',
-                                                        ).toString()}  ${_model.refCodeN}',
-                                                        sharePositionOrigin:
-                                                            getWidgetBoundingBox(
-                                                                context),
-                                                      );
-                                                      logFirebaseEvent(
-                                                          'Row_google_analytics_event');
-                                                      logFirebaseEvent(
-                                                        'Share',
-                                                        parameters: {
-                                                          'Screen Name':
-                                                              'Profile',
-                                                          'Share To':
-                                                              'Refer a Friend',
-                                                        },
-                                                      );
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Builder(
+                                              builder: (context) => Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        20.0, 0.0, 20.0, 0.0),
+                                                child: InkWell(
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  focusColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  onTap: () async {
+                                                    logFirebaseEvent(
+                                                        'PROFILE_PAGE_PAGE_Row_l90g3oxk_ON_TAP');
+                                                    logFirebaseEvent(
+                                                        'Row_custom_action');
+                                                    _model.refCodeN =
+                                                        await actions
+                                                            .generateReferralLink(
+                                                      getJsonField(
+                                                        FFAppState().appInfo,
+                                                        r'''$.referral_code''',
+                                                      ).toString(),
+                                                    );
+                                                    logFirebaseEvent(
+                                                        'Row_wait__delay');
+                                                    await Future.delayed(
+                                                      Duration(
+                                                        milliseconds: 1000,
+                                                      ),
+                                                    );
+                                                    logFirebaseEvent(
+                                                        'Row_custom_action');
+                                                    await actions
+                                                        .facebookEventClass(
+                                                      _model.refCodeN!,
+                                                      FFAppState().userID,
+                                                      '0',
+                                                      0.0,
+                                                      0,
+                                                      0.0,
+                                                      'appShare',
+                                                      FFAppState().emptyJson,
+                                                      '0',
+                                                      '0',
+                                                      '0',
+                                                      '0',
+                                                      '0',
+                                                    );
+                                                    logFirebaseEvent(
+                                                        'Row_share');
+                                                    await Share.share(
+                                                      '${getJsonField(
+                                                        (_model.apiShowProfile
+                                                                ?.jsonBody ??
+                                                            ''),
+                                                        r'''$.data.referral_message''',
+                                                      ).toString()}  ${_model.refCodeN}',
+                                                      sharePositionOrigin:
+                                                          getWidgetBoundingBox(
+                                                              context),
+                                                    );
+                                                    logFirebaseEvent(
+                                                        'Row_google_analytics_event');
+                                                    logFirebaseEvent(
+                                                      'Share',
+                                                      parameters: {
+                                                        'Screen Name':
+                                                            'Profile',
+                                                        'Share To':
+                                                            'Refer a Friend',
+                                                      },
+                                                    );
 
-                                                      safeSetState(() {});
-                                                    },
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          'Refer with friends',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .montserrat(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                                ),
-                                                                color: FFAppConstants
-                                                                    .blackColor666666,
-                                                                fontSize: 13.0,
-                                                                letterSpacing:
-                                                                    0.0,
+                                                    safeSetState(() {});
+                                                  },
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Refer with friends',
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              font: GoogleFonts
+                                                                  .montserrat(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500,
@@ -2552,74 +2511,85 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                                     .bodyMedium
                                                                     .fontStyle,
                                                               ),
-                                                        ),
-                                                        Builder(
-                                                          builder: (context) =>
-                                                              FlutterFlowIconButton(
-                                                            borderColor: Colors
-                                                                .transparent,
-                                                            borderRadius: 20.0,
-                                                            borderWidth: 1.0,
-                                                            buttonSize: 28.0,
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .arrow_forward_ios,
                                                               color: FFAppConstants
-                                                                  .blackColor0A0A0A,
-                                                              size: 16.0,
+                                                                  .blackColor666666,
+                                                              fontSize: 13.0,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
                                                             ),
-                                                            onPressed:
-                                                                () async {
-                                                              logFirebaseEvent(
-                                                                  'PROFILE_arrow_forward_ios_ICN_ON_TAP');
-                                                              logFirebaseEvent(
-                                                                  'IconButton_custom_action');
-                                                              _model.refCodep =
-                                                                  await actions
-                                                                      .generateReferralLink(
-                                                                getJsonField(
-                                                                  FFAppState()
-                                                                      .appInfo,
-                                                                  r'''$.referral_code''',
-                                                                ).toString(),
-                                                              );
-                                                              logFirebaseEvent(
-                                                                  'IconButton_share');
-                                                              await Share.share(
-                                                                '${getJsonField(
-                                                                  (_model.apiShowProfile
-                                                                          ?.jsonBody ??
-                                                                      ''),
-                                                                  r'''$.data.referral_message''',
-                                                                ).toString()}  ${_model.refCodep}',
-                                                                sharePositionOrigin:
-                                                                    getWidgetBoundingBox(
-                                                                        context),
-                                                              );
-                                                              logFirebaseEvent(
-                                                                  'IconButton_google_analytics_event');
-                                                              logFirebaseEvent(
-                                                                'Share',
-                                                                parameters: {
-                                                                  'Screen Name':
-                                                                      'Profile',
-                                                                  'Share To':
-                                                                      'Refer a Friend',
-                                                                },
-                                                              );
-
-                                                              safeSetState(
-                                                                  () {});
-                                                            },
+                                                      ),
+                                                      Builder(
+                                                        builder: (context) =>
+                                                            FlutterFlowIconButton(
+                                                          borderColor: Colors
+                                                              .transparent,
+                                                          borderRadius: 20.0,
+                                                          borderWidth: 1.0,
+                                                          buttonSize: 28.0,
+                                                          icon: Icon(
+                                                            Icons
+                                                                .arrow_forward_ios,
+                                                            color: FFAppConstants
+                                                                .blackColor0A0A0A,
+                                                            size: 16.0,
                                                           ),
+                                                          onPressed: () async {
+                                                            logFirebaseEvent(
+                                                                'PROFILE_arrow_forward_ios_ICN_ON_TAP');
+                                                            logFirebaseEvent(
+                                                                'IconButton_custom_action');
+                                                            _model.refCodep =
+                                                                await actions
+                                                                    .generateReferralLink(
+                                                              getJsonField(
+                                                                FFAppState()
+                                                                    .appInfo,
+                                                                r'''$.referral_code''',
+                                                              ).toString(),
+                                                            );
+                                                            logFirebaseEvent(
+                                                                'IconButton_share');
+                                                            await Share.share(
+                                                              '${getJsonField(
+                                                                (_model.apiShowProfile
+                                                                        ?.jsonBody ??
+                                                                    ''),
+                                                                r'''$.data.referral_message''',
+                                                              ).toString()}  ${_model.refCodep}',
+                                                              sharePositionOrigin:
+                                                                  getWidgetBoundingBox(
+                                                                      context),
+                                                            );
+                                                            logFirebaseEvent(
+                                                                'IconButton_google_analytics_event');
+                                                            logFirebaseEvent(
+                                                              'Share',
+                                                              parameters: {
+                                                                'Screen Name':
+                                                                    'Profile',
+                                                                'Share To':
+                                                                    'Refer a Friend',
+                                                              },
+                                                            );
+
+                                                            safeSetState(() {});
+                                                          },
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     Container(
@@ -3251,6 +3221,26 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                             logFirebaseEvent(
                                                                 'logoutRow_custom_action');
                                                             await actions
+                                                                .facebookEventClass(
+                                                              '0',
+                                                              FFAppState()
+                                                                  .userID,
+                                                              '0',
+                                                              0.0,
+                                                              0,
+                                                              0.0,
+                                                              'logout',
+                                                              FFAppState()
+                                                                  .emptyJson,
+                                                              '0',
+                                                              '',
+                                                              '0',
+                                                              '0',
+                                                              '0',
+                                                            );
+                                                            logFirebaseEvent(
+                                                                'logoutRow_custom_action');
+                                                            await actions
                                                                 .clearSharePrefeData();
                                                             logFirebaseEvent(
                                                                 'logoutRow_navigate_to');
@@ -3463,136 +3453,6 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                                   () async {
                                                                 logFirebaseEvent(
                                                                     'PROFILE_arrow_forward_ios_ICN_ON_TAP');
-                                                                logFirebaseEvent(
-                                                                    'IconButton_alert_dialog');
-                                                                var confirmDialogResponse =
-                                                                    await showDialog<
-                                                                            bool>(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (alertDialogContext) {
-                                                                            return AlertDialog(
-                                                                              title: Text(FFAppState().AppName),
-                                                                              content: Text(FFAppState().logoutMsg),
-                                                                              actions: [
-                                                                                TextButton(
-                                                                                  onPressed: () => Navigator.pop(alertDialogContext, false),
-                                                                                  child: Text('Cancel'),
-                                                                                ),
-                                                                                TextButton(
-                                                                                  onPressed: () => Navigator.pop(alertDialogContext, true),
-                                                                                  child: Text('Logout'),
-                                                                                ),
-                                                                              ],
-                                                                            );
-                                                                          },
-                                                                        ) ??
-                                                                        false;
-                                                                if (confirmDialogResponse) {
-                                                                  logFirebaseEvent(
-                                                                      'IconButton_navigate_to');
-
-                                                                  context.pushNamed(
-                                                                      LoginOnBoardScreenWidget
-                                                                          .routeName);
-
-                                                                  logFirebaseEvent(
-                                                                      'IconButton_update_app_state');
-                                                                  FFAppState()
-                                                                          .isUserLogin =
-                                                                      false;
-                                                                  FFAppState()
-                                                                      .deletePhoneNo();
-                                                                  FFAppState()
-                                                                      .phoneNo = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserID();
-                                                                  FFAppState()
-                                                                      .userID = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserEmail();
-                                                                  FFAppState()
-                                                                      .userEmail = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserName();
-                                                                  FFAppState()
-                                                                      .userName = '';
-
-                                                                  FFAppState()
-                                                                      .deleteIsverified();
-                                                                  FFAppState()
-                                                                      .isverified = 1;
-
-                                                                  FFAppState()
-                                                                          .countryCode =
-                                                                      '971';
-                                                                  FFAppState()
-                                                                      .categoryName = '';
-                                                                  FFAppState()
-                                                                      .deleteProfileImage();
-                                                                  FFAppState()
-                                                                      .profileImage = '';
-
-                                                                  FFAppState()
-                                                                      .deleteProfileImageBytes();
-                                                                  FFAppState()
-                                                                          .profileImageBytes =
-                                                                      'https://media.istockphoto.com/id/1916685823/photo/businesswoman-using-laptop-with-banking-applications-via-internet-network.jpg?s=612x612&w=0&k=20&c=L9wQekG3TJ-6fSFlUCUelo5xOCYkm9SVE5ER5J8QiK0=';
-
-                                                                  FFAppState()
-                                                                      .deleteUserPhoneNo();
-                                                                  FFAppState()
-                                                                      .userPhoneNo = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserCountryCode();
-                                                                  FFAppState()
-                                                                      .userCountryCode = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserPhoneEP();
-                                                                  FFAppState()
-                                                                      .userPhoneEP = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserPhoneProfile();
-                                                                  FFAppState()
-                                                                      .userPhoneProfile = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUserCountryCodeEP();
-                                                                  FFAppState()
-                                                                      .userCountryCodeEP = '';
-
-                                                                  FFAppState()
-                                                                      .deleteUsserType();
-                                                                  FFAppState()
-                                                                      .usserType = '';
-
-                                                                  FFAppState()
-                                                                          .subCartSavingAmount =
-                                                                      0.0;
-                                                                  FFAppState()
-                                                                          .subCartTotalPrice =
-                                                                      0.0;
-                                                                  FFAppState()
-                                                                      .subCartTotalItem = 0;
-                                                                  FFAppState()
-                                                                      .cartTotalCount = 0;
-                                                                  FFAppState()
-                                                                          .cartTotalPrice =
-                                                                      0.0;
-                                                                  FFAppState()
-                                                                      .cartAmount = '';
-                                                                  FFAppState()
-                                                                      .cartTotal = '';
-                                                                  safeSetState(
-                                                                      () {});
-                                                                }
                                                               },
                                                             ),
                                                           ],
@@ -3624,6 +3484,24 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                     LoginOnBoardScreenWidget
                                                         .routeName);
 
+                                                logFirebaseEvent(
+                                                    'Row_custom_action');
+                                                await actions
+                                                    .facebookEventClass(
+                                                  FFAppState().userID,
+                                                  '0',
+                                                  '0',
+                                                  0.0,
+                                                  0,
+                                                  0.0,
+                                                  'guestToRegister',
+                                                  FFAppState().emptyJson,
+                                                  '0',
+                                                  '0',
+                                                  '0',
+                                                  '0',
+                                                  '0',
+                                                );
                                                 logFirebaseEvent(
                                                     'Row_wait__delay');
                                                 await Future.delayed(
@@ -3734,6 +3612,10 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                         'Login Onboard Screen',
                                                   },
                                                 );
+                                                logFirebaseEvent(
+                                                    'Row_custom_action');
+                                                await actions
+                                                    .clearSharePrefeData();
                                               },
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
@@ -3795,49 +3677,9 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                         }
                                       },
                                     ),
-                                     Container(
-                                      height: 30,
-                                       alignment: AlignmentDirectional.centerStart,
-                                       child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        20.0, 0.0, 0.0, 0.0),
-                                                child: Text(
-                                                  'Follow us on',
-                                                  textAlign: TextAlign.start,
-                                                  style:
-                                                      FlutterFlowTheme.of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight.w500,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FFAppConstants
-                                                                .blackColor0A0A0A,
-                                                            fontSize: 18.0,
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                ),
-                                              ),
-                                     ),
-                                           
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 1.0, 0.0, 10.0),
+                                          0.0, 5.0, 0.0, 10.0),
                                       child: Container(
                                         width:
                                             MediaQuery.sizeOf(context).width *
@@ -3853,6 +3695,41 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      20.0, 0.0, 0.0, 0.0),
+                                              child: Text(
+                                                'Follow us on',
+                                                textAlign: TextAlign.start,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                          color: FFAppConstants
+                                                              .blackColor0A0A0A,
+                                                          fontSize: 18.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                              ),
+                                            ),
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(
@@ -3981,7 +3858,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                 ].divide(SizedBox(width: 15.0)),
                                               ),
                                             ),
-                                         Align(
+                                            Align(
                                               alignment: AlignmentDirectional(
                                                   0.0, 0.0),
                                               child: Text(
@@ -4015,7 +3892,6 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                                         ),
                                               ),
                                             ),
-                                          
                                           ],
                                         ),
                                       ),

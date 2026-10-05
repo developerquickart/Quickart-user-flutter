@@ -140,7 +140,10 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> {
                   FutureBuilder<ApiCallResponse>(
                     future: QuickartGroup.appinfoCall.call(
                       userid: FFAppState().userID,
-                      stroreid: FFAppState().storeID,
+                      stroreid: getJsonField(
+                        FFAppState().zoneInfo,
+                        r'''$.store_id''',
+                      ).toString(),
                       platform: FFAppState().platform,
                       deviceid: FFAppState().deviceID,
                       fcmToken: FFAppState().fcmToken,

@@ -1,13 +1,10 @@
 // Automatic FlutterFlow imports
-import 'dart:async';
-
-import 'package:quic_kart/custom_code/appsflyer_service.dart';
-
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/flutter_flow/ff_builtin_enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -20,8 +17,8 @@ import '/flutter_flow/custom_functions.dart';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:quic_kart/custom_code/appsflyer_service.dart';
 
-// LOCAL NOTIFICATION PLUGIN (Global)
 final FlutterLocalNotificationsPlugin _localNotifications =
     FlutterLocalNotificationsPlugin();
 
@@ -167,21 +164,6 @@ Future initializePushNotification() async {
     );
   });
 
-  // 6️⃣ When app was terminated
-  // FirebaseMessaging.instance.getInitialMessage().then((message) {
-  //   print("🚀 getInitialMessage called");
-  //   print("🚀 message = $message");
-  //   if (message != null) {
-  //     print("🚀 FCM Foreground message 4: ${message.data}");
-  //     // NotificationManager.pendingNotification =
-  //     //     Map<String, dynamic>.from(message.data);
-  //     print("message = $message");
-
-  //     NotificationService.instance.setInitialNotification(
-  //       message == null ? null : Map<String, dynamic>.from(message.data),
-  //     );
-  //   }
-  // });
   final message = await FirebaseMessaging.instance.getInitialMessage();
 
   print("🚀 Initial Message = ${message?.data}");
@@ -192,10 +174,6 @@ Future initializePushNotification() async {
 
   print("✅ Push notification setup completed.");
 }
-
-// class NotificationManager {
-//   static Map<String, dynamic>? pendingNotification;
-// }
 
 class NotificationService {
   NotificationService._();

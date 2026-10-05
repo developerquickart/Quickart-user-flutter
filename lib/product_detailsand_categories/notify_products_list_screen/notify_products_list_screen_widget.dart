@@ -122,7 +122,10 @@ class _NotifyProductsListScreenWidgetState
                                 ApiCallResponse>()
                               ..complete(QuickartGroup.shownotifymeCall.call(
                                 userid: FFAppState().userID,
-                                storeid: FFAppState().storeID,
+                                storeid: getJsonField(
+                                  FFAppState().zoneInfo,
+                                  r'''$.store_id''',
+                                ).toString(),
                                 platform: isiOS ? 'ios' : 'android',
                               )))
                             .future,
@@ -262,14 +265,14 @@ class _NotifyProductsListScreenWidgetState
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(8.0),
-                                            bottomRight: Radius.circular(8.0),
                                             topLeft: Radius.circular(8.0),
                                             topRight: Radius.circular(8.0),
+                                            bottomLeft: Radius.circular(8.0),
+                                            bottomRight: Radius.circular(8.0),
                                           ),
                                           border: Border.all(
-                                            color: FFAppConstants.whiteColor,
-                                            width: 1.0,
+                                            color: FFAppConstants.borderColor,
+                                            width: 0.5,
                                           ),
                                         ),
                                         child: Stack(
@@ -311,13 +314,6 @@ class _NotifyProductsListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
@@ -353,12 +349,6 @@ class _NotifyProductsListScreenWidgetState
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        0.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        0.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
@@ -502,7 +492,10 @@ class _NotifyProductsListScreenWidgetState
                                                                               _model.addtoCart = await QuickartGroup.addToCartCall.call(
                                                                                 userid: FFAppState().userID,
                                                                                 qty: '1',
-                                                                                storeid: FFAppState().storeID,
+                                                                                storeid: getJsonField(
+                                                                                  FFAppState().zoneInfo,
+                                                                                  r'''$.store_id''',
+                                                                                ).toString(),
                                                                                 varientid: getJsonField(
                                                                                   productModelItem,
                                                                                   r'''$.varient_id''',
@@ -711,13 +704,13 @@ class _NotifyProductsListScreenWidgetState
                                                                           BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.only(
-                                                                          bottomLeft:
-                                                                              Radius.circular(5.0),
-                                                                          bottomRight:
-                                                                              Radius.circular(5.0),
                                                                           topLeft:
                                                                               Radius.circular(5.0),
                                                                           topRight:
+                                                                              Radius.circular(5.0),
+                                                                          bottomLeft:
+                                                                              Radius.circular(5.0),
+                                                                          bottomRight:
                                                                               Radius.circular(5.0),
                                                                         ),
                                                                         border:
@@ -776,7 +769,10 @@ class _NotifyProductsListScreenWidgetState
                                                                                     logFirebaseEvent('Button_backend_call');
                                                                                     _model.addtocart = await QuickartGroup.addToCartCall.call(
                                                                                       userid: FFAppState().userID,
-                                                                                      storeid: FFAppState().storeID,
+                                                                                      storeid: getJsonField(
+                                                                                        FFAppState().zoneInfo,
+                                                                                        r'''$.store_id''',
+                                                                                      ).toString(),
                                                                                       deviceid: FFAppState().deviceID,
                                                                                       qty: functions.addRemoveQTY(
                                                                                           getJsonField(
@@ -926,10 +922,8 @@ class _NotifyProductsListScreenWidgetState
                                                                                     ),
                                                                                 elevation: 0.0,
                                                                                 borderRadius: BorderRadius.only(
-                                                                                  bottomLeft: Radius.circular(5.0),
-                                                                                  bottomRight: Radius.circular(0.0),
                                                                                   topLeft: Radius.circular(5.0),
-                                                                                  topRight: Radius.circular(0.0),
+                                                                                  bottomLeft: Radius.circular(5.0),
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -1031,7 +1025,7 @@ class _NotifyProductsListScreenWidgetState
                                                                                                 child: CustomAlertDailogWidget(
                                                                                                   des: FFAppConstants.noStock,
                                                                                                   height: 150.0,
-                                                                                                  title: "",
+                                                                                                  title: ' ',
                                                                                                 ),
                                                                                               ),
                                                                                             );
@@ -1049,7 +1043,10 @@ class _NotifyProductsListScreenWidgetState
                                                                                                 r'''$.cart_qty''',
                                                                                               ),
                                                                                               'add'),
-                                                                                          storeid: FFAppState().storeID,
+                                                                                          storeid: getJsonField(
+                                                                                            FFAppState().zoneInfo,
+                                                                                            r'''$.store_id''',
+                                                                                          ).toString(),
                                                                                           varientid: getJsonField(
                                                                                             productModelItem,
                                                                                             r'''$.varient_id''',
@@ -1223,10 +1220,8 @@ class _NotifyProductsListScreenWidgetState
                                                                                     width: 0.0,
                                                                                   ),
                                                                                   borderRadius: BorderRadius.only(
-                                                                                    bottomLeft: Radius.circular(0.0),
-                                                                                    bottomRight: Radius.circular(5.0),
-                                                                                    topLeft: Radius.circular(0.0),
                                                                                     topRight: Radius.circular(5.0),
+                                                                                    bottomRight: Radius.circular(5.0),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -2077,12 +2072,6 @@ class _NotifyProductsListScreenWidgetState
                                                           bottomRight:
                                                               Radius.circular(
                                                                   8.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  0.0),
                                                         ),
                                                       ),
                                                       child: Column(
@@ -2548,13 +2537,9 @@ class _NotifyProductsListScreenWidgetState
                                               height: 20.0,
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(0.0),
+                                                  topLeft: Radius.circular(8.0),
                                                   bottomRight:
                                                       Radius.circular(8.0),
-                                                  topLeft: Radius.circular(8.0),
-                                                  topRight:
-                                                      Radius.circular(0.0),
                                                 ),
                                               ),
                                               child: Row(
@@ -2577,19 +2562,9 @@ class _NotifyProductsListScreenWidgetState
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      0.0),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          0.0),
                                                               topLeft: Radius
                                                                   .circular(
                                                                       8.0),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      0.0),
                                                             ),
                                                           ),
                                                           child: Align(
@@ -2739,12 +2714,6 @@ class _NotifyProductsListScreenWidgetState
                                                             Color(0xFFF4F6F4),
                                                         borderRadius:
                                                             BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  8.0),
                                                           topLeft:
                                                               Radius.circular(
                                                                   valueOrDefault<
@@ -2759,9 +2728,9 @@ class _NotifyProductsListScreenWidgetState
                                                                 : 8.0,
                                                             0.0,
                                                           )),
-                                                          topRight:
+                                                          bottomRight:
                                                               Radius.circular(
-                                                                  0.0),
+                                                                  8.0),
                                                         ),
                                                         border: Border.all(
                                                           color:
@@ -2822,16 +2791,10 @@ class _NotifyProductsListScreenWidgetState
                                                             Color(0xFFF4F6F4),
                                                         borderRadius:
                                                             BorderRadius.only(
-                                                          bottomLeft:
+                                                          topRight:
                                                               Radius.circular(
                                                                   8.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topRight:
+                                                          bottomLeft:
                                                               Radius.circular(
                                                                   8.0),
                                                         ),
@@ -2875,8 +2838,11 @@ class _NotifyProductsListScreenWidgetState
                                                                   FFAppState()
                                                                       .userID,
                                                               storeID:
-                                                                  FFAppState()
-                                                                      .storeID,
+                                                                  getJsonField(
+                                                                FFAppState()
+                                                                    .zoneInfo,
+                                                                r'''$.store_id''',
+                                                              ).toString(),
                                                               varientID:
                                                                   getJsonField(
                                                                 productModelItem,
@@ -3028,16 +2994,10 @@ class _NotifyProductsListScreenWidgetState
                                                             Color(0xFFF4F6F4),
                                                         borderRadius:
                                                             BorderRadius.only(
-                                                          bottomLeft:
+                                                          topRight:
                                                               Radius.circular(
                                                                   8.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  0.0),
-                                                          topRight:
+                                                          bottomLeft:
                                                               Radius.circular(
                                                                   8.0),
                                                         ),
@@ -3081,8 +3041,11 @@ class _NotifyProductsListScreenWidgetState
                                                                   FFAppState()
                                                                       .userID,
                                                               storeID:
-                                                                  FFAppState()
-                                                                      .storeID,
+                                                                  getJsonField(
+                                                                FFAppState()
+                                                                    .zoneInfo,
+                                                                r'''$.store_id''',
+                                                              ).toString(),
                                                               varientID:
                                                                   getJsonField(
                                                                 productModelItem,
@@ -3363,10 +3326,10 @@ class _NotifyProductsListScreenWidgetState
                               decoration: BoxDecoration(
                                 color: FFAppConstants.indigoColor,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
                                   topLeft: Radius.circular(10.0),
                                   topRight: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
                               ),
                               child: Padding(

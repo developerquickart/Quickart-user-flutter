@@ -75,8 +75,15 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
       future: (_model.apiRequestCompleter ??= Completer<ApiCallResponse>()
             ..complete(QuickartGroup.trendingrecentsearchCall.call(
               userid: FFAppState().userID,
-              storeid: FFAppState().storeID,
+              storeid: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.zone_id''',
+              ).toString(),
             )))
           .future,
       builder: (context, snapshot) {
@@ -204,6 +211,25 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
                                                         SearchResultScreenWidget
                                                             .routeName);
 
+                                                    logFirebaseEvent(
+                                                        'TextField_custom_action');
+                                                    await actions
+                                                        .facebookEventClass(
+                                                      FFAppState().userID,
+                                                      _model
+                                                          .textController.text,
+                                                      '0',
+                                                      0.0,
+                                                      0,
+                                                      0.0,
+                                                      'searchStart',
+                                                      FFAppState().emptyJson,
+                                                      '0',
+                                                      '0',
+                                                      '0',
+                                                      '0',
+                                                      '0',
+                                                    );
                                                     logFirebaseEvent(
                                                         'TextField_update_app_state');
                                                     FFAppState().userID =
@@ -522,6 +548,28 @@ class _SearchScreenWidgetState extends State<SearchScreenWidget> {
                                                               SearchResultScreenWidget
                                                                   .routeName);
 
+                                                          logFirebaseEvent(
+                                                              'Button_custom_action');
+                                                          await actions
+                                                              .facebookEventClass(
+                                                            FFAppState().userID,
+                                                            getJsonField(
+                                                              keywordItem,
+                                                              r'''$.keyword''',
+                                                            ).toString(),
+                                                            '0',
+                                                            0.0,
+                                                            0,
+                                                            0.0,
+                                                            'searchStart',
+                                                            FFAppState()
+                                                                .emptyJson,
+                                                            '0',
+                                                            '0',
+                                                            '0',
+                                                            '0',
+                                                            '0',
+                                                          );
                                                           logFirebaseEvent(
                                                               'Button_update_app_state');
                                                           FFAppState().userID =

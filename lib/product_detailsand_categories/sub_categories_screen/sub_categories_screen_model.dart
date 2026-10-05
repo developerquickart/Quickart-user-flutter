@@ -73,7 +73,7 @@ class SubCategoriesScreenModel
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtocartremoveCopy;
   // Stores action output result for [Backend Call - API (catproduct)] action in Button widget.
-  ApiCallResponse? catproductlistCopy;
+  ApiCallResponse? apiResult001;
   // Stores action output result for [Bottom Sheet - VarientBotttomSheet] action in Button widget.
   dynamic? returnJson10;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.

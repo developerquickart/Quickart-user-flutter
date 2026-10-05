@@ -129,7 +129,7 @@ class _BrandWidgetWidgetState extends State<BrandWidgetWidget> {
                 height: 130.0,
                 decoration: BoxDecoration(
                   color: FFAppConstants.whiteColor,
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(18.0),
                   border: Border.all(
                     color: FFAppConstants.neutralWhiteF5F5F5,
                     width: 1.0,

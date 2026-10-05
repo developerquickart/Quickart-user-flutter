@@ -62,6 +62,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
   late SubCategoriesScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
@@ -103,14 +104,18 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
         if (_model.connectivityResultCatee == true) {
           logFirebaseEvent('subCategoriesScreen_backend_call');
           _model.apiResultSubcatID = await QuickartGroup.subcateeCall.call(
-            storeid: valueOrDefault<String>(
-              FFAppState().storeID,
-              '7',
-            ),
+            storeid: getJsonField(
+              FFAppState().zoneInfo,
+              r'''$.store_id''',
+            ).toString(),
             catid: widget!.catid == null || widget!.catid == ''
                 ? FFAppState().catID
                 : widget!.catid,
             platform: isiOS ? 'ios' : 'android',
+            zoneID: getJsonField(
+              FFAppState().zoneInfo,
+              r'''$.zone_id''',
+            ).toString(),
           );
 
           if ((_model.apiResultSubcatID?.succeeded ?? true)) {
@@ -150,7 +155,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
             _model.apiResultCatProduct1 =
                 await QuickartGroup.catproductCall.call(
               userid: FFAppState().userID,
-              storeid: FFAppState().storeID,
+              storeid: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
               catid: widget!.catid == null || widget!.catid == ''
                   ? FFAppState().catID
                   : widget!.catid,
@@ -167,6 +175,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                   ? 'all'
                   : widget!.subcatid,
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.zone_id''',
+              ).toString(),
             );
 
             if ((_model.apiResultCatProduct1?.succeeded ?? true)) {
@@ -476,6 +488,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                     }(),
                     subCatID: _model.selectedSubCatID,
                     platform: isiOS ? 'ios' : 'android',
+                    zoneID: getJsonField(
+                      FFAppState().zoneInfo,
+                      r'''$.zone_id''',
+                    ).toString(),
                   );
 
                   if ((_model.apiResultCartProductFilter?.succeeded ?? true)) {
@@ -585,6 +601,11 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                   onTap: () async {
                                                     logFirebaseEvent(
                                                         'SUB_CATEGORIES_SCREEN_Container_0j2krpez');
+                                                    currentUserLocationValue =
+                                                        await getCurrentUserLocation(
+                                                            defaultLocation:
+                                                                LatLng(
+                                                                    0.0, 0.0));
                                                     logFirebaseEvent(
                                                         'Container_update_page_state');
                                                     _model.selectedSubCatID =
@@ -602,8 +623,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                             .call(
                                                       userid:
                                                           FFAppState().userID,
-                                                      storeid:
-                                                          FFAppState().storeID,
+                                                      storeid: getJsonField(
+                                                        FFAppState().zoneInfo,
+                                                        r'''$.store_id''',
+                                                      ).toString(),
                                                       catid: widget!.catid ==
                                                                   null ||
                                                               widget!.catid ==
@@ -618,18 +641,52 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                           FFAppState().maxPrice,
                                                       stock: FFAppState().stock,
                                                       minDiscount:
-                                                          FFAppState().minPrice,
-                                                      maxDiscount: FFAppState()
-                                                          .maxDiscount,
+                                                          _model.isFilterSelected ==
+                                                                  3
+                                                              ? '0.0'
+                                                              : FFAppState()
+                                                                  .minDiscount,
+                                                      maxDiscount:
+                                                          _model.isFilterSelected ==
+                                                                  3
+                                                              ? '99.99'
+                                                              : FFAppState()
+                                                                  .minDiscount,
                                                       sort: FFAppState().sort,
                                                       sortName:
                                                           FFAppState().sortName,
-                                                      sortPrice: FFAppState()
-                                                          .sortPrice,
+                                                      sortPrice: () {
+                                                        if (_model
+                                                                .isFilterSelected ==
+                                                            1) {
+                                                          return 'htol';
+                                                        } else if (_model
+                                                                .isFilterSelected ==
+                                                            2) {
+                                                          return 'ltoh';
+                                                        } else {
+                                                          return FFAppState()
+                                                              .sortPrice;
+                                                        }
+                                                      }(),
                                                       subCatID: 'all',
                                                       platform: isiOS
                                                           ? 'ios'
                                                           : 'android',
+                                                      zoneID: getJsonField(
+                                                        FFAppState().zoneInfo,
+                                                        r'''$.zone_id''',
+                                                      ).toString(),
+                                                      lat: functions
+                                                          .getCurrentLatitudeLogitude(
+                                                              currentUserLocationValue!,
+                                                              'lat')
+                                                          .toString(),
+                                                      lng: functions
+                                                          .getCurrentLatitudeLogitude(
+                                                              currentUserLocationValue!,
+                                                              'lng')
+                                                          .toString(),
                                                     );
 
                                                     if ((_model
@@ -987,8 +1044,11 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                   FFAppState()
                                                                       .userID,
                                                               storeid:
-                                                                  FFAppState()
-                                                                      .storeID,
+                                                                  getJsonField(
+                                                                FFAppState()
+                                                                    .zoneInfo,
+                                                                r'''$.store_id''',
+                                                              ).toString(),
                                                               catid: widget!.catid ==
                                                                           null ||
                                                                       widget!.catid ==
@@ -1031,6 +1091,12 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                               platform: isiOS
                                                                   ? 'ios'
                                                                   : 'android',
+                                                              zoneID:
+                                                                  getJsonField(
+                                                                FFAppState()
+                                                                    .zoneInfo,
+                                                                r'''$.zone_id''',
+                                                              ).toString(),
                                                             );
 
                                                             if ((_model
@@ -1682,6 +1748,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                               child: FFButtonWidget(
                                                                                                 onPressed: () async {
                                                                                                   logFirebaseEvent('SUB_CATEGORIES_SCREEN_ADD_BTN_ON_TAP');
+                                                                                                  currentUserLocationValue = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
                                                                                                   if (functions.checkVariantFeatureCondition(productModelItem) == true) {
                                                                                                     logFirebaseEvent('Button_bottom_sheet');
                                                                                                     await showModalBottomSheet(
@@ -1719,7 +1786,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                       _model.apiResultsmdcCopy1 = await QuickartGroup.addToCartCall.call(
                                                                                                         userid: FFAppState().userID,
                                                                                                         qty: '1',
-                                                                                                        storeid: FFAppState().storeID,
+                                                                                                        storeid: getJsonField(
+                                                                                                          FFAppState().zoneInfo,
+                                                                                                          r'''$.store_id''',
+                                                                                                        ).toString(),
                                                                                                         varientid: getJsonField(
                                                                                                           productModelItem,
                                                                                                           r'''$.varient_id''',
@@ -1732,19 +1802,36 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                         logFirebaseEvent('Button_backend_call');
                                                                                                         _model.apiResultbf5Copy1 = await QuickartGroup.catproductCall.call(
                                                                                                           userid: FFAppState().userID,
-                                                                                                          storeid: FFAppState().storeID,
+                                                                                                          storeid: getJsonField(
+                                                                                                            FFAppState().zoneInfo,
+                                                                                                            r'''$.store_id''',
+                                                                                                          ).toString(),
                                                                                                           catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                           byName: FFAppState().byName,
                                                                                                           minPrice: FFAppState().minPrice,
                                                                                                           maxPrice: FFAppState().maxPrice,
                                                                                                           stock: FFAppState().stock,
-                                                                                                          minDiscount: FFAppState().minDiscount,
-                                                                                                          maxDiscount: FFAppState().maxDiscount,
+                                                                                                          minDiscount: _model.isFilterSelected == 3 ? '0.0' : FFAppState().minDiscount,
+                                                                                                          maxDiscount: _model.isFilterSelected == 3 ? '99.99' : FFAppState().minDiscount,
                                                                                                           sort: FFAppState().sort,
                                                                                                           sortName: FFAppState().sortName,
-                                                                                                          sortPrice: FFAppState().sortPrice,
+                                                                                                          sortPrice: () {
+                                                                                                            if (_model.isFilterSelected == 1) {
+                                                                                                              return 'htol';
+                                                                                                            } else if (_model.isFilterSelected == 2) {
+                                                                                                              return 'ltoh';
+                                                                                                            } else {
+                                                                                                              return FFAppState().sortPrice;
+                                                                                                            }
+                                                                                                          }(),
                                                                                                           subCatID: _model.selectedSubCatID,
                                                                                                           platform: isiOS ? 'ios' : 'android',
+                                                                                                          zoneID: getJsonField(
+                                                                                                            FFAppState().zoneInfo,
+                                                                                                            r'''$.zone_id''',
+                                                                                                          ).toString(),
+                                                                                                          lat: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat').toString(),
+                                                                                                          lng: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng').toString(),
                                                                                                         );
 
                                                                                                         if ((_model.apiResultbf5Copy1?.succeeded ?? true)) {
@@ -1956,6 +2043,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                   child: FFButtonWidget(
                                                                                                     onPressed: () async {
                                                                                                       logFirebaseEvent('SUB_CATEGORIES_SCREEN_PAGE__BTN_ON_TAP');
+                                                                                                      currentUserLocationValue = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
                                                                                                       if (functions.checkVariantFeatureCondition(productModelItem) == true) {
                                                                                                         logFirebaseEvent('Button_bottom_sheet');
                                                                                                         await showModalBottomSheet(
@@ -1998,7 +2086,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                                   r'''$.cart_qty''',
                                                                                                                 ),
                                                                                                                 'remove'),
-                                                                                                            storeid: FFAppState().storeID,
+                                                                                                            storeid: getJsonField(
+                                                                                                              FFAppState().zoneInfo,
+                                                                                                              r'''$.store_id''',
+                                                                                                            ).toString(),
                                                                                                             varientid: getJsonField(
                                                                                                               productModelItem,
                                                                                                               r'''$.varient_id''',
@@ -2025,109 +2116,157 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                               },
                                                                                                             );
                                                                                                             logFirebaseEvent('Button_backend_call');
-                                                                                                            _model.catproductlistCopy = await QuickartGroup.catproductCall.call(
+                                                                                                            _model.apiResult001 = await QuickartGroup.catproductCall.call(
                                                                                                               userid: FFAppState().userID,
-                                                                                                              storeid: FFAppState().storeID,
+                                                                                                              storeid: getJsonField(
+                                                                                                                FFAppState().zoneInfo,
+                                                                                                                r'''$.store_id''',
+                                                                                                              ).toString(),
                                                                                                               catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                               byName: FFAppState().byName,
                                                                                                               minPrice: FFAppState().minPrice,
                                                                                                               maxPrice: FFAppState().maxPrice,
                                                                                                               stock: FFAppState().stock,
-                                                                                                              minDiscount: FFAppState().minDiscount,
-                                                                                                              maxDiscount: FFAppState().maxDiscount,
-                                                                                                              sort: FFAppState().sort,
+                                                                                                              minDiscount: _model.isFilterSelected == 3 ? '0.0' : FFAppState().minDiscount,
+                                                                                                              maxDiscount: _model.isFilterSelected == 3 ? '99.99' : FFAppState().minDiscount,
+                                                                                                              sort: () {
+                                                                                                                if (_model.isFilterSelected == 1) {
+                                                                                                                  return 'htol';
+                                                                                                                } else if (_model.isFilterSelected == 2) {
+                                                                                                                  return 'ltoh';
+                                                                                                                } else {
+                                                                                                                  return FFAppState().sortPrice;
+                                                                                                                }
+                                                                                                              }(),
                                                                                                               sortName: FFAppState().sortName,
-                                                                                                              sortPrice: FFAppState().sortPrice,
+                                                                                                              sortPrice: () {
+                                                                                                                if (_model.isFilterSelected == 1) {
+                                                                                                                  return 'htol';
+                                                                                                                } else if (_model.isFilterSelected == 2) {
+                                                                                                                  return 'ltoh';
+                                                                                                                } else {
+                                                                                                                  return FFAppState().sortPrice;
+                                                                                                                }
+                                                                                                              }(),
                                                                                                               subCatID: _model.selectedSubCatID,
                                                                                                               platform: isiOS ? 'ios' : 'android',
+                                                                                                              zoneID: getJsonField(
+                                                                                                                FFAppState().zoneInfo,
+                                                                                                                r'''$.zone_id''',
+                                                                                                              ).toString(),
+                                                                                                              lat: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat').toString(),
+                                                                                                              lng: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng').toString(),
                                                                                                             );
 
-                                                                                                            if ((_model.catproductlistCopy?.succeeded ?? true)) {
-                                                                                                              logFirebaseEvent('Button_update_page_state');
-                                                                                                              _model.productModelJson = getJsonField(
-                                                                                                                (_model.catproductlistCopy?.jsonBody ?? ''),
-                                                                                                                r'''$.data''',
-                                                                                                              );
-                                                                                                              safeSetState(() {});
-                                                                                                              logFirebaseEvent('Button_update_app_state');
-                                                                                                              FFAppState().isCartShow = false;
-                                                                                                              FFAppState().cartTotalCount = QuickartGroup.addToCartCall.totalItems(
-                                                                                                                (_model.addtocartremoveCopy?.jsonBody ?? ''),
-                                                                                                              )!;
-                                                                                                              FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                                  .savingPrice(
-                                                                                                                    (_model.addtocartremoveCopy?.jsonBody ?? ''),
-                                                                                                                  )!
-                                                                                                                  .toString());
-                                                                                                              FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                                  .totalPrice(
-                                                                                                                    (_model.addtocartremoveCopy?.jsonBody ?? ''),
-                                                                                                                  )!
-                                                                                                                  .toString());
-                                                                                                              FFAppState().refreshTrigger = true;
-                                                                                                              safeSetState(() {});
-                                                                                                              logFirebaseEvent('Button_google_analytics_event');
-                                                                                                              logFirebaseEvent(
-                                                                                                                'AddToCartButtonAnalytics',
-                                                                                                                parameters: {
-                                                                                                                  'VarientId': getJsonField(
+                                                                                                            if ((_model.apiResult001?.succeeded ?? true)) {
+                                                                                                              if (FFAppConstants.checkStatus ==
+                                                                                                                  getJsonField(
+                                                                                                                    (_model.apiResult001?.jsonBody ?? ''),
+                                                                                                                    r'''$.status''',
+                                                                                                                  ).toString()) {
+                                                                                                                logFirebaseEvent('Button_update_page_state');
+                                                                                                                _model.productModelJson = getJsonField(
+                                                                                                                  (_model.apiResult001?.jsonBody ?? ''),
+                                                                                                                  r'''$.data''',
+                                                                                                                );
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('Button_update_app_state');
+                                                                                                                FFAppState().isCartShow = false;
+                                                                                                                FFAppState().cartTotalCount = QuickartGroup.addToCartCall.totalItems(
+                                                                                                                  (_model.addtocartremoveCopy?.jsonBody ?? ''),
+                                                                                                                )!;
+                                                                                                                FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup.addToCartCall
+                                                                                                                    .savingPrice(
+                                                                                                                      (_model.addtocartremoveCopy?.jsonBody ?? ''),
+                                                                                                                    )!
+                                                                                                                    .toString());
+                                                                                                                FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup.addToCartCall
+                                                                                                                    .totalPrice(
+                                                                                                                      (_model.addtocartremoveCopy?.jsonBody ?? ''),
+                                                                                                                    )!
+                                                                                                                    .toString());
+                                                                                                                FFAppState().refreshTrigger = true;
+                                                                                                                safeSetState(() {});
+                                                                                                                logFirebaseEvent('Button_custom_action');
+                                                                                                                await actions.facebookEventClass(
+                                                                                                                  getJsonField(
                                                                                                                     productModelItem,
                                                                                                                     r'''$.varient_id''',
-                                                                                                                  ),
-                                                                                                                  'Quantity': getJsonField(
+                                                                                                                  ).toString(),
+                                                                                                                  getJsonField(
                                                                                                                     productModelItem,
-                                                                                                                    r'''$.cart_qty''',
-                                                                                                                  ),
-                                                                                                                },
-                                                                                                              );
-                                                                                                              logFirebaseEvent('Button_custom_action');
-                                                                                                              await actions.facebookEventClass(
-                                                                                                                getJsonField(
-                                                                                                                  productModelItem,
-                                                                                                                  r'''$.varient_id''',
-                                                                                                                ).toString(),
-                                                                                                                getJsonField(
-                                                                                                                  productModelItem,
-                                                                                                                  r'''$.product_name''',
-                                                                                                                ).toString(),
-                                                                                                                'product',
-                                                                                                                functions.stringToDouble(getJsonField(
-                                                                                                                  productModelItem,
-                                                                                                                  r'''$.price''',
-                                                                                                                ).toString()),
-                                                                                                                getJsonField(
+                                                                                                                    r'''$.product_name''',
+                                                                                                                  ).toString(),
+                                                                                                                  'product',
+                                                                                                                  functions.stringToDouble(getJsonField(
+                                                                                                                    productModelItem,
+                                                                                                                    r'''$.price''',
+                                                                                                                  ).toString()),
+                                                                                                                  getJsonField(
+                                                                                                                        productModelItem,
+                                                                                                                        r'''$.cart_qty''',
+                                                                                                                      ) -
+                                                                                                                      1,
+                                                                                                                  functions.stringToDouble(getJsonField(
+                                                                                                                    productModelItem,
+                                                                                                                    r'''$.mrp''',
+                                                                                                                  ).toString()),
+                                                                                                                  'remove',
+                                                                                                                  FFAppState().emptyJson,
+                                                                                                                  'emptyjson',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                  ' ',
+                                                                                                                );
+                                                                                                                logFirebaseEvent('Button_google_analytics_event');
+                                                                                                                logFirebaseEvent(
+                                                                                                                  'AddToCartButtonAnalytics',
+                                                                                                                  parameters: {
+                                                                                                                    'VarientId': getJsonField(
+                                                                                                                      productModelItem,
+                                                                                                                      r'''$.varient_id''',
+                                                                                                                    ),
+                                                                                                                    'Quantity': getJsonField(
                                                                                                                       productModelItem,
                                                                                                                       r'''$.cart_qty''',
-                                                                                                                    ) -
-                                                                                                                    1,
-                                                                                                                functions.stringToDouble(getJsonField(
-                                                                                                                  productModelItem,
-                                                                                                                  r'''$.mrp''',
-                                                                                                                ).toString()),
-                                                                                                                'remove',
-                                                                                                                FFAppState().emptyJson,
-                                                                                                                'emptyjson',
-                                                                                                                ' ',
-                                                                                                                ' ',
-                                                                                                                ' ',
-                                                                                                                ' ',
-                                                                                                              );
+                                                                                                                    ),
+                                                                                                                  },
+                                                                                                                );
+                                                                                                              } else {
+                                                                                                                logFirebaseEvent('Button_show_snack_bar');
+                                                                                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                  SnackBar(
+                                                                                                                    content: Text(
+                                                                                                                      QuickartGroup.catproductCall.message(
+                                                                                                                        (_model.apiResult001?.jsonBody ?? ''),
+                                                                                                                      )!,
+                                                                                                                      style: GoogleFonts.montserrat(
+                                                                                                                        color: FFAppConstants.indigoColor,
+                                                                                                                        fontWeight: FontWeight.w500,
+                                                                                                                        fontSize: 12.0,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    duration: Duration(milliseconds: 4000),
+                                                                                                                    backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                                  ),
+                                                                                                                );
+                                                                                                              }
                                                                                                             } else {
                                                                                                               logFirebaseEvent('Button_show_snack_bar');
                                                                                                               ScaffoldMessenger.of(context).showSnackBar(
                                                                                                                 SnackBar(
                                                                                                                   content: Text(
-                                                                                                                    getJsonField(
-                                                                                                                      (_model.addtocartremoveCopy?.jsonBody ?? ''),
-                                                                                                                      r'''$.message''',
-                                                                                                                    ).toString(),
+                                                                                                                    QuickartGroup.catproductCall.message(
+                                                                                                                      (_model.apiResult001?.jsonBody ?? ''),
+                                                                                                                    )!,
                                                                                                                     style: GoogleFonts.montserrat(
                                                                                                                       color: FFAppConstants.indigoColor,
                                                                                                                       fontWeight: FontWeight.w500,
                                                                                                                       fontSize: 12.0,
                                                                                                                     ),
                                                                                                                   ),
-                                                                                                                  duration: Duration(milliseconds: 1500),
+                                                                                                                  duration: Duration(milliseconds: 4000),
                                                                                                                   backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
                                                                                                                 ),
                                                                                                               );
@@ -2244,6 +2383,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                     builder: (context) => FFButtonWidget(
                                                                                                       onPressed: () async {
                                                                                                         logFirebaseEvent('SUB_CATEGORIES_SCREEN_PAGE__BTN_ON_TAP');
+                                                                                                        currentUserLocationValue = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
                                                                                                         if (functions.checkVariantFeatureCondition(productModelItem) == true) {
                                                                                                           logFirebaseEvent('Button_bottom_sheet');
                                                                                                           await showModalBottomSheet(
@@ -2318,7 +2458,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                                       r'''$.cart_qty''',
                                                                                                                     ),
                                                                                                                     'add'),
-                                                                                                                storeid: FFAppState().storeID,
+                                                                                                                storeid: getJsonField(
+                                                                                                                  FFAppState().zoneInfo,
+                                                                                                                  r'''$.store_id''',
+                                                                                                                ).toString(),
                                                                                                                 varientid: getJsonField(
                                                                                                                   productModelItem,
                                                                                                                   r'''$.varient_id''',
@@ -2339,19 +2482,36 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                                 logFirebaseEvent('Button_backend_call');
                                                                                                                 _model.apiResult0v0123 = await QuickartGroup.catproductCall.call(
                                                                                                                   userid: FFAppState().userID,
-                                                                                                                  storeid: FFAppState().storeID,
+                                                                                                                  storeid: getJsonField(
+                                                                                                                    FFAppState().zoneInfo,
+                                                                                                                    r'''$.store_id''',
+                                                                                                                  ).toString(),
                                                                                                                   catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                                   byName: FFAppState().byName,
                                                                                                                   minPrice: FFAppState().minPrice,
                                                                                                                   maxPrice: FFAppState().maxPrice,
                                                                                                                   stock: FFAppState().stock,
-                                                                                                                  minDiscount: FFAppState().minDiscount,
-                                                                                                                  maxDiscount: FFAppState().maxDiscount,
+                                                                                                                  minDiscount: _model.isFilterSelected == 3 ? '0.0' : FFAppState().minDiscount,
+                                                                                                                  maxDiscount: _model.isFilterSelected == 3 ? '99.99' : FFAppState().minDiscount,
                                                                                                                   sort: FFAppState().sort,
                                                                                                                   sortName: FFAppState().sortName,
-                                                                                                                  sortPrice: FFAppState().sortPrice,
+                                                                                                                  sortPrice: () {
+                                                                                                                    if (_model.isFilterSelected == 1) {
+                                                                                                                      return 'htol';
+                                                                                                                    } else if (_model.isFilterSelected == 2) {
+                                                                                                                      return 'ltoh';
+                                                                                                                    } else {
+                                                                                                                      return FFAppState().sortPrice;
+                                                                                                                    }
+                                                                                                                  }(),
                                                                                                                   subCatID: _model.selectedSubCatID,
                                                                                                                   platform: isiOS ? 'ios' : 'android',
+                                                                                                                  zoneID: getJsonField(
+                                                                                                                    FFAppState().zoneInfo,
+                                                                                                                    r'''$.zone_id''',
+                                                                                                                  ).toString(),
+                                                                                                                  lat: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat').toString(),
+                                                                                                                  lng: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng').toString(),
                                                                                                                 );
 
                                                                                                                 if ((_model.apiResult0v0123?.succeeded ?? true)) {
@@ -3105,7 +3265,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                   logFirebaseEvent('Icon1_backend_call');
                                                                                                   _model.apiResultCartProduct11 = await QuickartGroup.catproductCall.call(
                                                                                                     userid: FFAppState().userID,
-                                                                                                    storeid: FFAppState().storeID,
+                                                                                                    storeid: getJsonField(
+                                                                                                      FFAppState().zoneInfo,
+                                                                                                      r'''$.store_id''',
+                                                                                                    ).toString(),
                                                                                                     catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                     byName: FFAppState().byName,
                                                                                                     minPrice: FFAppState().minPrice,
@@ -3568,7 +3731,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                 logFirebaseEvent('Icon1_backend_call');
                                                                                 _model.addRemoveAPIResponse = await QuickartGroup.addremwishlistCall.call(
                                                                                   userid: FFAppState().userID,
-                                                                                  storeID: FFAppState().storeID,
+                                                                                  storeID: getJsonField(
+                                                                                    FFAppState().zoneInfo,
+                                                                                    r'''$.store_id''',
+                                                                                  ).toString(),
                                                                                   varientID: getJsonField(
                                                                                     productModelItem,
                                                                                     r'''$.varient_id''',
@@ -3591,7 +3757,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                   logFirebaseEvent('Icon1_backend_call');
                                                                                   _model.apiResulttest = await QuickartGroup.catproductCall.call(
                                                                                     userid: FFAppState().userID,
-                                                                                    storeid: FFAppState().storeID,
+                                                                                    storeid: getJsonField(
+                                                                                      FFAppState().zoneInfo,
+                                                                                      r'''$.store_id''',
+                                                                                    ).toString(),
                                                                                     catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                     byName: FFAppState().byName,
                                                                                     minPrice: FFAppState().minPrice,
@@ -3740,7 +3909,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                     logFirebaseEvent('Icon2_backend_call');
                                                                                     _model.addRemoveAPIResult = await QuickartGroup.addremwishlistCall.call(
                                                                                       userid: FFAppState().userID,
-                                                                                      storeID: FFAppState().storeID,
+                                                                                      storeID: getJsonField(
+                                                                                        FFAppState().zoneInfo,
+                                                                                        r'''$.store_id''',
+                                                                                      ).toString(),
                                                                                       varientID: getJsonField(
                                                                                         productModelItem,
                                                                                         r'''$.varient_id''',
@@ -3761,7 +3933,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                       logFirebaseEvent('Icon2_backend_call');
                                                                                       _model.apiResultCartProduct2 = await QuickartGroup.catproductCall.call(
                                                                                         userid: FFAppState().userID,
-                                                                                        storeid: FFAppState().storeID,
+                                                                                        storeid: getJsonField(
+                                                                                          FFAppState().zoneInfo,
+                                                                                          r'''$.store_id''',
+                                                                                        ).toString(),
                                                                                         catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                         byName: FFAppState().byName,
                                                                                         minPrice: FFAppState().minPrice,
@@ -3814,10 +3989,9 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                         ScaffoldMessenger.of(context).showSnackBar(
                                                                                           SnackBar(
                                                                                             content: Text(
-                                                                                              getJsonField(
-                                                                                                (_model.apiResultCartProduct?.jsonBody ?? ''),
-                                                                                                r'''$.message''',
-                                                                                              ).toString(),
+                                                                                              QuickartGroup.catproductCall.message(
+                                                                                                (_model.apiResultCartProduct2?.jsonBody ?? ''),
+                                                                                              )!,
                                                                                               style: GoogleFonts.montserrat(
                                                                                                 color: FFAppConstants.indigoColor,
                                                                                                 fontSize: 12.0,
@@ -4151,6 +4325,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                               child: FFButtonWidget(
                                                                                                 onPressed: () async {
                                                                                                   logFirebaseEvent('SUB_CATEGORIES_SCREEN_ADD_BTN_ON_TAP');
+                                                                                                  currentUserLocationValue = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
                                                                                                   if (functions.checkVariantFeatureCondition(productModelItem) == true) {
                                                                                                     logFirebaseEvent('Button_bottom_sheet');
                                                                                                     await showModalBottomSheet(
@@ -4188,7 +4363,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                       _model.apiResultsmdcCopy22 = await QuickartGroup.addToCartCall.call(
                                                                                                         userid: FFAppState().userID,
                                                                                                         qty: '1',
-                                                                                                        storeid: FFAppState().storeID,
+                                                                                                        storeid: getJsonField(
+                                                                                                          FFAppState().zoneInfo,
+                                                                                                          r'''$.store_id''',
+                                                                                                        ).toString(),
                                                                                                         varientid: getJsonField(
                                                                                                           productModelItem,
                                                                                                           r'''$.varient_id''',
@@ -4201,19 +4379,36 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                         logFirebaseEvent('Button_backend_call');
                                                                                                         _model.apiResultbf51 = await QuickartGroup.catproductCall.call(
                                                                                                           userid: FFAppState().userID,
-                                                                                                          storeid: FFAppState().storeID,
+                                                                                                          storeid: getJsonField(
+                                                                                                            FFAppState().zoneInfo,
+                                                                                                            r'''$.store_id''',
+                                                                                                          ).toString(),
                                                                                                           catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                           byName: FFAppState().byName,
                                                                                                           minPrice: FFAppState().minPrice,
                                                                                                           maxPrice: FFAppState().maxPrice,
                                                                                                           stock: FFAppState().stock,
-                                                                                                          minDiscount: FFAppState().minDiscount,
-                                                                                                          maxDiscount: FFAppState().maxDiscount,
+                                                                                                          minDiscount: _model.isFilterSelected == 3 ? '0.0' : FFAppState().minDiscount,
+                                                                                                          maxDiscount: _model.isFilterSelected == 3 ? '99.99' : FFAppState().minDiscount,
                                                                                                           sort: FFAppState().sort,
                                                                                                           sortName: FFAppState().sortName,
-                                                                                                          sortPrice: FFAppState().sortPrice,
+                                                                                                          sortPrice: () {
+                                                                                                            if (_model.isFilterSelected == 1) {
+                                                                                                              return 'htol';
+                                                                                                            } else if (_model.isFilterSelected == 2) {
+                                                                                                              return 'ltoh';
+                                                                                                            } else {
+                                                                                                              return FFAppState().sortPrice;
+                                                                                                            }
+                                                                                                          }(),
                                                                                                           subCatID: _model.selectedSubCatID,
                                                                                                           platform: isiOS ? 'ios' : 'android',
+                                                                                                          zoneID: getJsonField(
+                                                                                                            FFAppState().zoneInfo,
+                                                                                                            r'''$.zone_id''',
+                                                                                                          ).toString(),
+                                                                                                          lat: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat').toString(),
+                                                                                                          lng: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng').toString(),
                                                                                                         );
 
                                                                                                         if ((_model.apiResultbf51?.succeeded ?? true)) {
@@ -4422,6 +4617,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                   child: FFButtonWidget(
                                                                                                     onPressed: () async {
                                                                                                       logFirebaseEvent('SUB_CATEGORIES_SCREEN_PAGE__BTN_ON_TAP');
+                                                                                                      currentUserLocationValue = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
                                                                                                       if (functions.checkVariantFeatureCondition(productModelItem) == true) {
                                                                                                         logFirebaseEvent('Button_bottom_sheet');
                                                                                                         await showModalBottomSheet(
@@ -4464,7 +4660,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                                   r'''$.cart_qty''',
                                                                                                                 ),
                                                                                                                 'remove'),
-                                                                                                            storeid: FFAppState().storeID,
+                                                                                                            storeid: getJsonField(
+                                                                                                              FFAppState().zoneInfo,
+                                                                                                              r'''$.store_id''',
+                                                                                                            ).toString(),
                                                                                                             varientid: getJsonField(
                                                                                                               productModelItem,
                                                                                                               r'''$.varient_id''',
@@ -4493,19 +4692,36 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                             logFirebaseEvent('Button_backend_call');
                                                                                                             _model.catproductlist222 = await QuickartGroup.catproductCall.call(
                                                                                                               userid: FFAppState().userID,
-                                                                                                              storeid: FFAppState().storeID,
+                                                                                                              storeid: getJsonField(
+                                                                                                                FFAppState().zoneInfo,
+                                                                                                                r'''$.store_id''',
+                                                                                                              ).toString(),
                                                                                                               catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                               byName: FFAppState().byName,
                                                                                                               minPrice: FFAppState().minPrice,
                                                                                                               maxPrice: FFAppState().maxPrice,
                                                                                                               stock: FFAppState().stock,
-                                                                                                              minDiscount: FFAppState().minDiscount,
-                                                                                                              maxDiscount: FFAppState().maxDiscount,
+                                                                                                              minDiscount: _model.isFilterSelected == 3 ? '0.0' : FFAppState().minDiscount,
+                                                                                                              maxDiscount: _model.isFilterSelected == 3 ? '99.99' : FFAppState().minDiscount,
                                                                                                               sort: FFAppState().sort,
                                                                                                               sortName: FFAppState().sortName,
-                                                                                                              sortPrice: FFAppState().sortPrice,
+                                                                                                              sortPrice: () {
+                                                                                                                if (_model.isFilterSelected == 1) {
+                                                                                                                  return 'htol';
+                                                                                                                } else if (_model.isFilterSelected == 2) {
+                                                                                                                  return 'ltoh';
+                                                                                                                } else {
+                                                                                                                  return FFAppState().sortPrice;
+                                                                                                                }
+                                                                                                              }(),
                                                                                                               subCatID: _model.selectedSubCatID,
                                                                                                               platform: isiOS ? 'ios' : 'android',
+                                                                                                              zoneID: getJsonField(
+                                                                                                                FFAppState().zoneInfo,
+                                                                                                                r'''$.zone_id''',
+                                                                                                              ).toString(),
+                                                                                                              lat: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat').toString(),
+                                                                                                              lng: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng').toString(),
                                                                                                             );
 
                                                                                                             if ((_model.catproductlist222?.succeeded ?? true)) {
@@ -4708,6 +4924,7 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                     builder: (context) => FFButtonWidget(
                                                                                                       onPressed: () async {
                                                                                                         logFirebaseEvent('SUB_CATEGORIES_SCREEN_PAGE__BTN_ON_TAP');
+                                                                                                        currentUserLocationValue = await getCurrentUserLocation(defaultLocation: LatLng(0.0, 0.0));
                                                                                                         if (functions.checkVariantFeatureCondition(productModelItem) == true) {
                                                                                                           logFirebaseEvent('Button_bottom_sheet');
                                                                                                           await showModalBottomSheet(
@@ -4782,7 +4999,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                                       r'''$.cart_qty''',
                                                                                                                     ),
                                                                                                                     'add'),
-                                                                                                                storeid: FFAppState().storeID,
+                                                                                                                storeid: getJsonField(
+                                                                                                                  FFAppState().zoneInfo,
+                                                                                                                  r'''$.store_id''',
+                                                                                                                ).toString(),
                                                                                                                 varientid: getJsonField(
                                                                                                                   productModelItem,
                                                                                                                   r'''$.varient_id''',
@@ -4803,19 +5023,36 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                                 logFirebaseEvent('Button_backend_call');
                                                                                                                 _model.apiResult0v01234 = await QuickartGroup.catproductCall.call(
                                                                                                                   userid: FFAppState().userID,
-                                                                                                                  storeid: FFAppState().storeID,
+                                                                                                                  storeid: getJsonField(
+                                                                                                                    FFAppState().zoneInfo,
+                                                                                                                    r'''$.store_id''',
+                                                                                                                  ).toString(),
                                                                                                                   catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                                   byName: FFAppState().byName,
                                                                                                                   minPrice: FFAppState().minPrice,
                                                                                                                   maxPrice: FFAppState().maxPrice,
                                                                                                                   stock: FFAppState().stock,
-                                                                                                                  minDiscount: FFAppState().minDiscount,
-                                                                                                                  maxDiscount: FFAppState().maxDiscount,
+                                                                                                                  minDiscount: _model.isFilterSelected == 3 ? '0.0' : FFAppState().minDiscount,
+                                                                                                                  maxDiscount: _model.isFilterSelected == 3 ? '99.99' : FFAppState().minDiscount,
                                                                                                                   sort: FFAppState().sort,
                                                                                                                   sortName: FFAppState().sortName,
-                                                                                                                  sortPrice: FFAppState().sortPrice,
+                                                                                                                  sortPrice: () {
+                                                                                                                    if (_model.isFilterSelected == 1) {
+                                                                                                                      return 'htol';
+                                                                                                                    } else if (_model.isFilterSelected == 2) {
+                                                                                                                      return 'ltoh';
+                                                                                                                    } else {
+                                                                                                                      return FFAppState().sortPrice;
+                                                                                                                    }
+                                                                                                                  }(),
                                                                                                                   subCatID: _model.selectedSubCatID,
                                                                                                                   platform: isiOS ? 'ios' : 'android',
+                                                                                                                  zoneID: getJsonField(
+                                                                                                                    FFAppState().zoneInfo,
+                                                                                                                    r'''$.zone_id''',
+                                                                                                                  ).toString(),
+                                                                                                                  lat: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lat').toString(),
+                                                                                                                  lng: functions.getCurrentLatitudeLogitude(currentUserLocationValue!, 'lng').toString(),
                                                                                                                 );
 
                                                                                                                 if ((_model.apiResult0v01234?.succeeded ?? true)) {
@@ -5566,7 +5803,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                                   logFirebaseEvent('Icon1_backend_call');
                                                                                                   _model.apiResultCartProduct111 = await QuickartGroup.catproductCall.call(
                                                                                                     userid: FFAppState().userID,
-                                                                                                    storeid: FFAppState().storeID,
+                                                                                                    storeid: getJsonField(
+                                                                                                      FFAppState().zoneInfo,
+                                                                                                      r'''$.store_id''',
+                                                                                                    ).toString(),
                                                                                                     catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                                     byName: FFAppState().byName,
                                                                                                     minPrice: FFAppState().minPrice,
@@ -6031,7 +6271,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                 logFirebaseEvent('Icon1_backend_call');
                                                                                 _model.addRemoveAPIResponse11 = await QuickartGroup.addremwishlistCall.call(
                                                                                   userid: FFAppState().userID,
-                                                                                  storeID: FFAppState().storeID,
+                                                                                  storeID: getJsonField(
+                                                                                    FFAppState().zoneInfo,
+                                                                                    r'''$.store_id''',
+                                                                                  ).toString(),
                                                                                   varientID: getJsonField(
                                                                                     productModelItem,
                                                                                     r'''$.varient_id''',
@@ -6052,7 +6295,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                   logFirebaseEvent('Icon1_backend_call');
                                                                                   _model.apiResulttest11 = await QuickartGroup.catproductCall.call(
                                                                                     userid: FFAppState().userID,
-                                                                                    storeid: FFAppState().storeID,
+                                                                                    storeid: getJsonField(
+                                                                                      FFAppState().zoneInfo,
+                                                                                      r'''$.store_id''',
+                                                                                    ).toString(),
                                                                                     catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                     byName: FFAppState().byName,
                                                                                     minPrice: FFAppState().minPrice,
@@ -6201,7 +6447,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                     logFirebaseEvent('Icon2_backend_call');
                                                                                     _model.addRemoveAPIResult111 = await QuickartGroup.addremwishlistCall.call(
                                                                                       userid: FFAppState().userID,
-                                                                                      storeID: FFAppState().storeID,
+                                                                                      storeID: getJsonField(
+                                                                                        FFAppState().zoneInfo,
+                                                                                        r'''$.store_id''',
+                                                                                      ).toString(),
                                                                                       varientID: getJsonField(
                                                                                         productModelItem,
                                                                                         r'''$.varient_id''',
@@ -6222,7 +6471,10 @@ class _SubCategoriesScreenWidgetState extends State<SubCategoriesScreenWidget>
                                                                                       logFirebaseEvent('Icon2_backend_call');
                                                                                       _model.apiResultCartProduct22 = await QuickartGroup.catproductCall.call(
                                                                                         userid: FFAppState().userID,
-                                                                                        storeid: FFAppState().storeID,
+                                                                                        storeid: getJsonField(
+                                                                                          FFAppState().zoneInfo,
+                                                                                          r'''$.store_id''',
+                                                                                        ).toString(),
                                                                                         catid: widget!.catid == null || widget!.catid == '' ? FFAppState().catID : widget!.catid,
                                                                                         byName: FFAppState().byName,
                                                                                         minPrice: FFAppState().minPrice,

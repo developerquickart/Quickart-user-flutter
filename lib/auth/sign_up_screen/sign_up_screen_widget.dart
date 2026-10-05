@@ -168,8 +168,8 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                           onPressed: () async {
                             logFirebaseEvent(
                                 'SIGN_UP_SCREEN_backIconButton_ON_TAP');
-                            if (widget!.refCode != null &&
-                                widget!.refCode != '') {
+                            if (widget!.refCode == null ||
+                                widget!.refCode == '') {
                               logFirebaseEvent('backIconButton_navigate_back');
                               context.safePop();
                             } else {
@@ -393,10 +393,10 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF5F5F5),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(5.0),
-                                  bottomRight: Radius.circular(5.0),
                                   topLeft: Radius.circular(5.0),
                                   topRight: Radius.circular(5.0),
+                                  bottomLeft: Radius.circular(5.0),
+                                  bottomRight: Radius.circular(5.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFE0E0E0),
@@ -657,10 +657,10 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                               decoration: BoxDecoration(
                                 color: Color(0xFFF5F5F5),
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(5.0),
-                                  bottomRight: Radius.circular(5.0),
                                   topLeft: Radius.circular(5.0),
                                   topRight: Radius.circular(5.0),
+                                  bottomLeft: Radius.circular(5.0),
+                                  bottomRight: Radius.circular(5.0),
                                 ),
                                 border: Border.all(
                                   color: Color(0xFFE0E0E0),
@@ -813,10 +813,10 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                                 decoration: BoxDecoration(
                                   color: Color(0xFFF5F5F5),
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(5.0),
-                                    bottomRight: Radius.circular(5.0),
                                     topLeft: Radius.circular(5.0),
                                     topRight: Radius.circular(5.0),
+                                    bottomLeft: Radius.circular(5.0),
+                                    bottomRight: Radius.circular(5.0),
                                   ),
                                   border: Border.all(
                                     color: Color(0xFFE0E0E0),
@@ -1131,6 +1131,32 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                                           'API Name': 'Register Detail',
                                         },
                                       );
+                                      logFirebaseEvent(
+                                          'btnSignUp_custom_action');
+                                      await actions.facebookEventClass(
+                                        _model.txtEmailTextController.text,
+                                        _model.txtNameTextController.text,
+                                        _model
+                                            .txtReferralCodeTextController.text,
+                                        0.0,
+                                        0,
+                                        0.0,
+                                        'registerStart',
+                                        FFAppState().emptyJson,
+                                        FFAppState().phoneNo,
+                                        FFAppState().phoneNo,
+                                        ' ',
+                                        ' ',
+                                        ' ',
+                                      );
+                                      logFirebaseEvent(
+                                          'btnSignUp_update_app_state');
+                                      FFAppState().countryCode =
+                                          FFAppState().countryCode;
+                                      FFAppState().phoneNo =
+                                          FFAppState().phoneNo;
+                                      FFAppState().screenName = 'register';
+                                      safeSetState(() {});
                                       logFirebaseEvent('btnSignUp_navigate_to');
 
                                       context.pushNamed(
@@ -1155,14 +1181,6 @@ class _SignUpScreenWidgetState extends State<SignUpScreenWidget> {
                                           ),
                                         }.withoutNulls,
                                       );
-
-                                      logFirebaseEvent(
-                                          'btnSignUp_update_app_state');
-                                      FFAppState().countryCode =
-                                          FFAppState().countryCode;
-                                      FFAppState().phoneNo =
-                                          FFAppState().phoneNo;
-                                      safeSetState(() {});
                                     } else {
                                       logFirebaseEvent(
                                           'btnSignUp_show_snack_bar');

@@ -2,6 +2,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/components/products_list_view/products_list_view_widget.dart';
+import '/components/save_letterproducts_list/save_letterproducts_list_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -33,8 +34,6 @@ class CartSubscriptionScreenCopyModel
   ///  Local state fields for this page.
 
   String selectedPaymentMethod = '';
-
-  String? isWalletCheckBoxSelected = 'remove';
 
   bool isScheduleSelected = false;
 
@@ -80,7 +79,7 @@ class CartSubscriptionScreenCopyModel
 
   String? featureID;
 
-  String isRefWalletCheckBoxSelected = 'remove';
+  String isRefSubWalletCheckBoxSelected = 'remove';
 
   ///  State fields for stateful widgets in this page.
 
@@ -98,18 +97,18 @@ class CartSubscriptionScreenCopyModel
   // Stores action output result for [Backend Call - API (timeslot)] action in Row widget.
   ApiCallResponse? apiResultTimeSlot1;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
+  bool? networkCheck1;
+  // Stores action output result for [Backend Call - API (addtosavesubcart)] action in Button widget.
+  ApiCallResponse? addtoSaveLetter;
+  Completer<ApiCallResponse>? apiRequestCompleter;
+  // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? internet;
   // Stores action output result for [Backend Call - API (addtosubcart)] action in Button widget.
   ApiCallResponse? addtosubCart;
-  Completer<ApiCallResponse>? apiRequestCompleter;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? checkinternet;
   // Stores action output result for [Backend Call - API (addtosubcart)] action in Button widget.
   ApiCallResponse? apiResultAddsubCart12;
-  // Stores action output result for [Custom Action - checkInternetConnection] action in IconButton widget.
-  bool? internetsubcart;
-  // Stores action output result for [Backend Call - API (addtosubcart)] action in IconButton widget.
-  ApiCallResponse? addtosubCart1;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? isInternet;
   // Stores action output result for [Backend Call - API (updatessubcart )] action in Container widget.
@@ -121,15 +120,23 @@ class CartSubscriptionScreenCopyModel
   // Model for productsListView component.
   late ProductsListViewModel productsListViewModel;
   // State field(s) for CheckboxWallet widget.
-  bool? checkboxWalletValue;
+  bool? checkboxWalletValue1;
+  // State field(s) for CheckboxWallet widget.
+  bool? checkboxWalletValue2;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // Model for saveLetterproductsList component.
+  late SaveLetterproductsListModel saveLetterproductsListModel;
   // State field(s) for SubPaymentRadioButton widget.
   FormFieldController<String>? subPaymentRadioButtonValueController;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in AppleContainer widget.
+  bool? isVpnONAP;
   // Stores action output result for [Backend Call - API (subpayment)] action in AppleContainer widget.
   ApiCallResponse? apiResultapplePaynew;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in QuickPayContainer widget.
+  bool? isVpnONQP;
   // Stores action output result for [Backend Call - API (subpayment)] action in QuickPayContainer widget.
   ApiCallResponse? apiResult44bquickPay;
   // Stores action output result for [Custom Action - checkInternetConnection] action in PaymentContainer widget.
@@ -167,6 +174,8 @@ class CartSubscriptionScreenCopyModel
   @override
   void initState(BuildContext context) {
     productsListViewModel = createModel(context, () => ProductsListViewModel());
+    saveLetterproductsListModel =
+        createModel(context, () => SaveLetterproductsListModel());
     emptyDataTwoLineComponentModel =
         createModel(context, () => EmptyDataTwoLineComponentModel());
   }
@@ -178,6 +187,7 @@ class CartSubscriptionScreenCopyModel
     textFieldFocusNode?.dispose();
     textController?.dispose();
 
+    saveLetterproductsListModel.dispose();
     emptyDataTwoLineComponentModel.dispose();
   }
 

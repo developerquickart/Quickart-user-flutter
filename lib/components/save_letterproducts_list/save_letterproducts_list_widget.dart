@@ -91,7 +91,7 @@ class _SaveLetterproductsListWidgetState
               hoverColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () async {
-                logFirebaseEvent('SAVE_LETTERPRODUCTS_LIST_Container_vorha');
+                logFirebaseEvent('SAVE_LETTERPRODUCTS_LIST_Container_deh95');
                 logFirebaseEvent('Container_navigate_to');
 
                 context.pushNamed(ProductDetailsScreenWidget.routeName);
@@ -384,7 +384,8 @@ class _SaveLetterproductsListWidgetState
                                                     text: TextSpan(
                                                       children: [
                                                         TextSpan(
-                                                          text: 'AED ',
+                                                          text: FFAppConstants
+                                                              .currancyAED,
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyMedium
@@ -484,7 +485,8 @@ class _SaveLetterproductsListWidgetState
                                                             MainAxisSize.max,
                                                         children: [
                                                           Text(
-                                                            'AED ',
+                                                            FFAppConstants
+                                                                .currancyAED,
                                                             textAlign:
                                                                 TextAlign.start,
                                                             style: FlutterFlowTheme
@@ -630,7 +632,7 @@ class _SaveLetterproductsListWidgetState
                                           'Button_haptic_feedback');
                                       HapticFeedback.heavyImpact();
                                       logFirebaseEvent('Button_backend_call');
-                                      _model.remvoeSaveLater =
+                                      _model.removeSaveCart =
                                           await QuickartGroup.removesavecartCall
                                               .call(
                                         userID: FFAppState().userID,
@@ -644,15 +646,18 @@ class _SaveLetterproductsListWidgetState
                                                 : '0',
                                       );
 
-                                      if ((_model.remvoeSaveLater?.succeeded ??
+                                      if ((_model.removeSaveCart?.succeeded ??
                                           true)) {
                                         if (FFAppConstants.checkStatus ==
                                             QuickartGroup.removesavecartCall
                                                 .status(
-                                              (_model.remvoeSaveLater
+                                              (_model.removeSaveCart
                                                       ?.jsonBody ??
                                                   ''),
                                             )) {
+                                          logFirebaseEvent(
+                                              'Button_execute_callback');
+                                          await widget.isReload?.call();
                                           logFirebaseEvent(
                                               'Button_show_snack_bar');
                                           ScaffoldMessenger.of(context)
@@ -661,7 +666,7 @@ class _SaveLetterproductsListWidgetState
                                               content: Text(
                                                 QuickartGroup.removesavecartCall
                                                     .message(
-                                                  (_model.remvoeSaveLater
+                                                  (_model.removeSaveCart
                                                           ?.jsonBody ??
                                                       ''),
                                                 )!,
@@ -678,9 +683,6 @@ class _SaveLetterproductsListWidgetState
                                                   .primaryPurpleE4D8F5,
                                             ),
                                           );
-                                          logFirebaseEvent(
-                                              'Button_execute_callback');
-                                          await widget.isReload?.call();
                                         } else {
                                           logFirebaseEvent(
                                               'Button_show_snack_bar');
@@ -690,7 +692,7 @@ class _SaveLetterproductsListWidgetState
                                               content: Text(
                                                 QuickartGroup.removesavecartCall
                                                     .message(
-                                                  (_model.remvoeSaveLater
+                                                  (_model.removeSaveCart
                                                           ?.jsonBody ??
                                                       ''),
                                                 )!,
@@ -717,7 +719,7 @@ class _SaveLetterproductsListWidgetState
                                             content: Text(
                                               QuickartGroup.removesavecartCall
                                                   .message(
-                                                (_model.remvoeSaveLater
+                                                (_model.removeSaveCart
                                                         ?.jsonBody ??
                                                     ''),
                                               )!,
@@ -837,10 +839,6 @@ class _SaveLetterproductsListWidgetState
                                                   (_model.addtoCart?.jsonBody ??
                                                       ''),
                                                 )) {
-                                              logFirebaseEvent(
-                                                  'Button_update_component_state');
-
-                                              _model.updatePage(() {});
                                               logFirebaseEvent(
                                                   'Button_execute_callback');
                                               await widget.isReload?.call();

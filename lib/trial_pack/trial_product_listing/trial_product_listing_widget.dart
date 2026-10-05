@@ -7,6 +7,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:math';
 import 'dart:ui';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'dart:async';
@@ -100,6 +101,14 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
               trialId: FFAppState().trialId,
               userId: FFAppState().userID,
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.zone_id''',
+              ).toString(),
+              storeID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
             )))
           .future,
       builder: (context, snapshot) {
@@ -147,36 +156,36 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
-                                child: FlutterFlowIconButton(
-                                  borderColor: Colors.transparent,
-                                  borderRadius: 30.0,
-                                  borderWidth: 1.0,
-                                  buttonSize: 46.0,
-                                  icon: Icon(
-                                    Icons.chevron_left,
-                                    color:
-                                        FFAppConstants.appBarIconandTitleColor,
-                                    size: FFAppConstants.appBarIconFont
-                                        .toDouble(),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    10.0, 0.0, 0.0, 0.0),
+                                child: Container(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(25.0),
                                   ),
-                                  onPressed: () async {
-                                    logFirebaseEvent(
-                                        'TRIAL_PRODUCT_LISTING_chevron_left_ICN_O');
-                                    logFirebaseEvent('IconButton_navigate_to');
-
-                                    context.pushNamed(
-                                        TrialPackcategoriesWidget.routeName);
-
-                                    logFirebaseEvent(
-                                        'IconButton_update_app_state');
-                                    FFAppState().isCartShow = false;
-                                    safeSetState(() {});
-                                  },
+                                  child: FlutterFlowIconButton(
+                                    borderColor: Colors.transparent,
+                                    borderRadius: 40.0,
+                                    borderWidth: 1.0,
+                                    buttonSize: 50.0,
+                                    icon: Icon(
+                                      Icons.chevron_left,
+                                      color: FFAppConstants
+                                          .appBarIconandTitleColor,
+                                      size: FFAppConstants.appBarIconFont
+                                          .toDouble(),
+                                    ),
+                                    onPressed: () async {
+                                      logFirebaseEvent(
+                                          'TRIAL_PRODUCT_LISTING_chevron_left_ICN_O');
+                                      logFirebaseEvent(
+                                          'IconButton_navigate_back');
+                                      context.safePop();
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -477,7 +486,7 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                                                     text: TextSpan(
                                                                                       children: [
                                                                                         TextSpan(
-                                                                                          text: 'AED ',
+                                                                                          text: FFAppConstants.currancyAED,
                                                                                           style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                                 font: GoogleFonts.montserrat(
                                                                                                   fontWeight: FontWeight.w600,
@@ -524,7 +533,7 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                                                       text: TextSpan(
                                                                                         children: [
                                                                                           TextSpan(
-                                                                                            text: 'AED ',
+                                                                                            text: FFAppConstants.currancyAED,
                                                                                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                                   font: GoogleFonts.montserrat(
                                                                                                     fontWeight: FontWeight.w600,
@@ -754,7 +763,8 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                   text: TextSpan(
                                                     children: [
                                                       TextSpan(
-                                                        text: 'AED ',
+                                                        text: FFAppConstants
+                                                            .currancyAED,
                                                         style: FlutterFlowTheme
                                                                 .of(context)
                                                             .bodyMedium
@@ -891,6 +901,10 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                 qty: '1',
                                                 platform:
                                                     isiOS ? 'ios' : 'android',
+                                                storeID: getJsonField(
+                                                  FFAppState().zoneInfo,
+                                                  r'''$.store_id''',
+                                                ).toString(),
                                               );
 
                                               if ((_model.apiResultcAddCart31
@@ -903,6 +917,45 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                         null);
                                                 await _model
                                                     .waitForApiRequestCompleted();
+                                                logFirebaseEvent(
+                                                    'Button_update_app_state');
+                                                FFAppState().isCartShow = false;
+                                                FFAppState().cartTotalCount =
+                                                    getJsonField(
+                                                  (_model.apiResultcAddCart31
+                                                          ?.jsonBody ??
+                                                      ''),
+                                                  r'''$.data.total_items''',
+                                                );
+                                                FFAppState().cartSavingPrice =
+                                                    functions.stringToDouble(
+                                                        getJsonField(
+                                                  (_model.apiResultcAddCart31
+                                                          ?.jsonBody ??
+                                                      ''),
+                                                  r'''$.data.saving_price''',
+                                                ).toString());
+                                                FFAppState().cartTotalPrice =
+                                                    functions.stringToDouble(
+                                                        getJsonField(
+                                                  (_model.apiResultcAddCart31
+                                                          ?.jsonBody ??
+                                                      ''),
+                                                  r'''$.data.total_price''',
+                                                ).toString());
+                                                FFAppState().refreshTrigger =
+                                                    true;
+                                                FFAppState().update(() {});
+                                                logFirebaseEvent(
+                                                    'Button_google_analytics_event');
+                                                logFirebaseEvent(
+                                                  'Remove From Cart',
+                                                  parameters: {
+                                                    'API Name': 'Add To Cart',
+                                                    'Screen Name':
+                                                        'Fresh Food Screen',
+                                                  },
+                                                );
                                               } else {
                                                 logFirebaseEvent(
                                                     'Button_alert_dialog');
@@ -950,8 +1003,32 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                                   'Button_navigate_to');
 
                                               context.pushNamed(
-                                                  TrialProductCartScreenWidget
+                                                  DailyCartScreenWidget
                                                       .routeName);
+
+                                              logFirebaseEvent(
+                                                  'Button_update_app_state');
+                                              FFAppState().isCartShow = false;
+                                              FFAppState().screenName =
+                                                  'dailyCart';
+                                              safeSetState(() {});
+                                              logFirebaseEvent(
+                                                  'Button_custom_action');
+                                              await actions.facebookEventClass(
+                                                FFAppState().userID,
+                                                ' ',
+                                                ' ',
+                                                FFAppState().cartTotalPrice,
+                                                FFAppState().cartTotalCount,
+                                                0.0,
+                                                'cart',
+                                                FFAppState().emptyJson,
+                                                'daily cart',
+                                                ' ',
+                                                ' ',
+                                                ' ',
+                                                ' ',
+                                              );
                                             }
 
                                             safeSetState(() {});
@@ -1005,141 +1082,6 @@ class _TrialProductListingWidgetState extends State<TrialProductListingWidget>
                                           ),
                                         ),
                                       ),
-                                      if (FFAppState().qtyZeroCheck ==
-                                          getJsonField(
-                                            trialProductListingTrialPackDetailsResponse
-                                                .jsonBody,
-                                            r'''$.data.cartQty''',
-                                          ))
-                                        Builder(
-                                          builder: (context) => FFButtonWidget(
-                                            onPressed: () async {
-                                              logFirebaseEvent(
-                                                  'TRIAL_PRODUCT_LISTING_BUY_NOW_BTN_ON_TAP');
-                                              if (FFAppState().qtyZeroCheck ==
-                                                  getJsonField(
-                                                    trialProductListingTrialPackDetailsResponse
-                                                        .jsonBody,
-                                                    r'''$.data.cartQty''',
-                                                  )) {
-                                                logFirebaseEvent(
-                                                    'Button_backend_call');
-                                                _model.apiResultcAddCart3 =
-                                                    await QuickartGroup
-                                                        .addtrailpackCall
-                                                        .call(
-                                                  trialid: FFAppState().trialId,
-                                                  userid: FFAppState().userID,
-                                                  qty: '1',
-                                                  platform:
-                                                      isiOS ? 'ios' : 'android',
-                                                );
-
-                                                if ((_model.apiResultcAddCart3
-                                                        ?.succeeded ??
-                                                    true)) {
-                                                  logFirebaseEvent(
-                                                      'Button_navigate_to');
-
-                                                  context.pushNamed(
-                                                      TrialProductCartScreenWidget
-                                                          .routeName);
-                                                } else {
-                                                  logFirebaseEvent(
-                                                      'Button_alert_dialog');
-                                                  await showDialog(
-                                                    context: context,
-                                                    builder: (dialogContext) {
-                                                      return Dialog(
-                                                        elevation: 0,
-                                                        insetPadding:
-                                                            EdgeInsets.zero,
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                    0.0, 0.0)
-                                                                .resolve(
-                                                                    Directionality.of(
-                                                                        context)),
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            FocusScope.of(
-                                                                    dialogContext)
-                                                                .unfocus();
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                          },
-                                                          child:
-                                                              CustomAlertDailogWidget(
-                                                            des: getJsonField(
-                                                              (_model.apiResultcAddCart3
-                                                                      ?.jsonBody ??
-                                                                  ''),
-                                                              r'''$.message''',
-                                                            ).toString(),
-                                                            height: 200.0,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                }
-                                              } else {
-                                                logFirebaseEvent(
-                                                    'Button_navigate_to');
-
-                                                context.pushNamed(
-                                                    TrialProductCartScreenWidget
-                                                        .routeName);
-                                              }
-
-                                              safeSetState(() {});
-                                            },
-                                            text: 'BUY NOW',
-                                            options: FFButtonOptions(
-                                              width: MediaQuery.sizeOf(context)
-                                                      .width *
-                                                  0.45,
-                                              height: 40.0,
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                              iconPadding: EdgeInsetsDirectional
-                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
-                                              color: FFAppConstants.indigoColor,
-                                              textStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .titleSmall
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .fontStyle,
-                                                    ),
-                                                    color: FFAppConstants
-                                                        .whiteColor,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .titleSmall
-                                                            .fontStyle,
-                                                  ),
-                                              elevation: 0.0,
-                                              borderRadius:
-                                                  BorderRadius.circular(24.0),
-                                            ),
-                                          ),
-                                        ),
                                     ].divide(SizedBox(width: 5.0)),
                                   ),
                                 ),

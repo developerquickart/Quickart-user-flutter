@@ -204,10 +204,10 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                   width: MediaQuery.sizeOf(context).width * 1.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8.0),
-                      bottomRight: Radius.circular(8.0),
                       topLeft: Radius.circular(8.0),
                       topRight: Radius.circular(8.0),
+                      bottomLeft: Radius.circular(8.0),
+                      bottomRight: Radius.circular(8.0),
                     ),
                   ),
                   child: Align(
@@ -463,10 +463,29 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                           fontSize: 10.0,
                                         ),
                                       ),
-                                      duration: Duration(milliseconds: 1000),
+                                      duration: Duration(milliseconds: 4500),
                                       backgroundColor:
                                           FFAppConstants.primaryPurpleE4D8F5,
                                     ),
+                                  );
+                                  logFirebaseEvent('Button_custom_action');
+                                  await actions.facebookEventClass(
+                                    'Mobile',
+                                    FFAppState().phoneNo,
+                                    getJsonField(
+                                      (_model.apiResultqrg?.jsonBody ?? ''),
+                                      r'''$.message''',
+                                    ).toString(),
+                                    0.0,
+                                    0,
+                                    0.0,
+                                    'login',
+                                    FFAppState().emptyJson,
+                                    ' ',
+                                    ' ',
+                                    ' ',
+                                    ' ',
+                                    ' ',
                                   );
                                 }
                               }
@@ -511,10 +530,29 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                         fontSize: 10.0,
                                       ),
                                     ),
-                                    duration: Duration(milliseconds: 1000),
+                                    duration: Duration(milliseconds: 3950),
                                     backgroundColor:
                                         FFAppConstants.primaryPurpleE4D8F5,
                                   ),
+                                );
+                                logFirebaseEvent('Button_custom_action');
+                                await actions.facebookEventClass(
+                                  'Mobile',
+                                  FFAppState().phoneNo,
+                                  getJsonField(
+                                    (_model.apiResultqrg?.jsonBody ?? ''),
+                                    r'''$.message''',
+                                  ).toString(),
+                                  0.0,
+                                  0,
+                                  0.0,
+                                  'login',
+                                  FFAppState().emptyJson,
+                                  ' ',
+                                  ' ',
+                                  ' ',
+                                  ' ',
+                                  ' ',
                                 );
                               }
                             }
@@ -588,10 +626,10 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                           width: 1.0,
                         ),
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(6.0),
-                          bottomRight: Radius.circular(6.0),
                           topLeft: Radius.circular(6.0),
                           topRight: Radius.circular(6.0),
+                          bottomLeft: Radius.circular(6.0),
+                          bottomRight: Radius.circular(6.0),
                         ),
                         hoverColor: FFAppConstants.indigoColor,
                         hoverTextColor: FFAppConstants.yellowColor,

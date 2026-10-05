@@ -57,7 +57,7 @@ class BrandProductListScreenWidget extends StatefulWidget {
 }
 
 class _BrandProductListScreenWidgetState
-    extends State<BrandProductListScreenWidget> {
+    extends State<BrandProductListScreenWidget> with WidgetsBindingObserver {
   late BrandProductListScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -65,92 +65,110 @@ class _BrandProductListScreenWidgetState
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => BrandProductListScreenModel());
-
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'BrandProductListScreen'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('BRAND_PRODUCT_LIST_SCREEN_BrandProductLi');
-      logFirebaseEvent('BrandProductListScreen_update_app_state');
-      FFAppState().brandID = widget!.id != null && widget!.id != ''
-          ? widget!.id!
-          : FFAppState().brandID;
-      FFAppState().byName = widget!.name != null && widget!.name != ''
-          ? widget!.name!
-          : FFAppState().byName;
-      safeSetState(() {});
-      if (widget!.id != null && widget!.id != '') {
-        logFirebaseEvent('BrandProductListScreen_backend_call');
-        _model.apiResultSeoSource = await QuickartGroup.seosourceCall.call(
-          utmSource: widget!.utmSource,
-          utmcampaign: widget!.utmCampaign,
-          utmnetwork: widget!.utmNetwork,
-          utmmedium: widget!.utmMedium,
-          utmkeyword: FFAppState().utmKeyword,
-          placement: widget!.utmPlacement,
-          userid: FFAppState().userID,
-          deviceid: FFAppState().deviceID,
-          fcmtoken: FFAppState().fcmToken,
-          platform: FFAppState().platform,
-        );
-
-        if ((_model.apiResultSeoSource?.succeeded ?? true)) {
-          logFirebaseEvent('BrandProductListScreen_google_analytics_');
-          logFirebaseEvent(
-            'SearchScreenAnalytics',
-            parameters: {
-              'API Name': 'searchbystoreproduct',
-              'Keyword': FFAppState().keyword,
-            },
-          );
-          logFirebaseEvent('BrandProductListScreen_custom_action');
-          await actions.facebookEventClass(
-            widget!.utmKeyword!,
-            widget!.utmPlacement!,
-            FFAppState().userID,
-            0.0,
-            0,
-            0.0,
-            'utmSource',
-            FFAppState().emptyJson,
-            'brand listing product',
-            widget!.utmSource,
-            widget!.utmCampaign,
-            widget!.utmNetwork,
-            widget!.utmMedium,
-          );
-        } else {
-          logFirebaseEvent('BrandProductListScreen_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultSeoSource?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 1200),
-              backgroundColor: FFAppConstants.NeutralBlack50Color,
-            ),
-          );
-        }
-      }
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    WidgetsBinding.instance.addObserver(this);
+    _reloadPage();
   }
 
   @override
   void dispose() {
     _model.dispose();
-
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  //Page Load bacome in foreground...G1
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App has come back to foreground
+      _reloadPage();
+    }
+  }
+
+//Page Load setup...G1
+  void _reloadPage() {
+    setState(() {
+      //Add initstate code
+      _model = createModel(context, () => BrandProductListScreenModel());
+
+      logFirebaseEvent('screen_view',
+          parameters: {'screen_name': 'BrandProductListScreen'});
+      // On page load action.
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        logFirebaseEvent('BRAND_PRODUCT_LIST_SCREEN_BrandProductLi');
+        logFirebaseEvent('BrandProductListScreen_update_app_state');
+        FFAppState().brandID = widget!.id != null && widget!.id != ''
+            ? widget!.id!
+            : FFAppState().brandID;
+        FFAppState().byName = widget!.name != null && widget!.name != ''
+            ? widget!.name!
+            : FFAppState().byName;
+        safeSetState(() {});
+        if (widget!.id != null && widget!.id != '') {
+          logFirebaseEvent('BrandProductListScreen_backend_call');
+          _model.apiResultSeoSource = await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmMedium,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
+
+          if ((_model.apiResultSeoSource?.succeeded ?? true)) {
+            logFirebaseEvent('BrandProductListScreen_google_analytics_');
+            logFirebaseEvent(
+              'SearchScreenAnalytics',
+              parameters: {
+                'API Name': 'searchbystoreproduct',
+                'Keyword': FFAppState().keyword,
+              },
+            );
+            logFirebaseEvent('BrandProductListScreen_custom_action');
+            await actions.facebookEventClass(
+              widget!.utmKeyword!,
+              widget!.utmPlacement!,
+              FFAppState().userID,
+              0.0,
+              0,
+              0.0,
+              'utmSource',
+              FFAppState().emptyJson,
+              'brand listing product',
+              widget!.utmSource,
+              widget!.utmCampaign,
+              widget!.utmNetwork,
+              widget!.utmMedium,
+            );
+          } else {
+            logFirebaseEvent('BrandProductListScreen_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeoSource?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        }
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+    });
   }
 
   @override
@@ -336,7 +354,10 @@ class _BrandProductListScreenWidgetState
                                       ..complete(
                                           QuickartGroup.searchbybrandsCall.call(
                                         userid: FFAppState().userID,
-                                        storeid: FFAppState().storeID,
+                                        storeid: getJsonField(
+                                          FFAppState().zoneInfo,
+                                          r'''$.store_id''',
+                                        ).toString(),
                                         keyword: FFAppState().searchText,
                                         byName: widget!.id != null &&
                                                 widget!.id != ''
@@ -713,7 +734,10 @@ class _BrandProductListScreenWidgetState
                                                                                       _model.addtocart = await QuickartGroup.addToCartCall.call(
                                                                                         userid: FFAppState().userID,
                                                                                         qty: '1',
-                                                                                        storeid: FFAppState().storeID,
+                                                                                        storeid: getJsonField(
+                                                                                          FFAppState().zoneInfo,
+                                                                                          r'''$.store_id''',
+                                                                                        ).toString(),
                                                                                         varientid: getJsonField(
                                                                                           searchProductListItem,
                                                                                           r'''$.varient_id''',
@@ -971,7 +995,10 @@ class _BrandProductListScreenWidgetState
                                                                                             logFirebaseEvent('Button_backend_call');
                                                                                             _model.addtoCartAPI1 = await QuickartGroup.addToCartCall.call(
                                                                                               userid: FFAppState().userID,
-                                                                                              storeid: FFAppState().storeID,
+                                                                                              storeid: getJsonField(
+                                                                                                FFAppState().zoneInfo,
+                                                                                                r'''$.store_id''',
+                                                                                              ).toString(),
                                                                                               deviceid: FFAppState().deviceID,
                                                                                               qty: functions.addRemoveQTY(
                                                                                                   getJsonField(
@@ -1262,7 +1289,10 @@ class _BrandProductListScreenWidgetState
                                                                                                       r'''$.cart_qty''',
                                                                                                     ),
                                                                                                     'add'),
-                                                                                                storeid: FFAppState().storeID,
+                                                                                                storeid: getJsonField(
+                                                                                                  FFAppState().zoneInfo,
+                                                                                                  r'''$.store_id''',
+                                                                                                ).toString(),
                                                                                                 varientid: getJsonField(
                                                                                                   searchProductListItem,
                                                                                                   r'''$.varient_id''',
@@ -2778,8 +2808,11 @@ class _BrandProductListScreenWidgetState
                                                                       FFAppState()
                                                                           .userID,
                                                                   storeID:
-                                                                      FFAppState()
-                                                                          .storeID,
+                                                                      getJsonField(
+                                                                    FFAppState()
+                                                                        .zoneInfo,
+                                                                    r'''$.store_id''',
+                                                                  ).toString(),
                                                                   varientID:
                                                                       getJsonField(
                                                                     searchProductListItem,
@@ -2974,8 +3007,11 @@ class _BrandProductListScreenWidgetState
                                                                       FFAppState()
                                                                           .userID,
                                                                   storeID:
-                                                                      FFAppState()
-                                                                          .storeID,
+                                                                      getJsonField(
+                                                                    FFAppState()
+                                                                        .zoneInfo,
+                                                                    r'''$.store_id''',
+                                                                  ).toString(),
                                                                   varientID:
                                                                       getJsonField(
                                                                     searchProductListItem,

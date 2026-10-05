@@ -35,7 +35,7 @@ class AppStateNotifier extends ChangeNotifier {
 
   BaseAuthUser? initialUser;
   BaseAuthUser? user;
-  bool showSplashImage = false;
+  bool showSplashImage = true;
   String? _redirectLocation;
 
   /// Determines whether the app will refresh and build again when a sign
@@ -601,6 +601,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'orderType',
               ParamType.String,
             ),
+            groupID: params.getParam(
+              'groupID',
+              ParamType.String,
+            ),
           ),
         ),
         FFRoute(
@@ -996,14 +1000,44 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: GoogleMapsRedirectCopyWidget.routeName,
-          path: GoogleMapsRedirectCopyWidget.routePath,
-          builder: (context, params) => GoogleMapsRedirectCopyWidget(),
-        ),
-        FFRoute(
           name: DailyCartScreenCopyWidget.routeName,
           path: DailyCartScreenCopyWidget.routePath,
           builder: (context, params) => DailyCartScreenCopyWidget(),
+        ),
+        FFRoute(
+          name: CartSubscriptionScreenCopyWidget.routeName,
+          path: CartSubscriptionScreenCopyWidget.routePath,
+          builder: (context, params) => CartSubscriptionScreenCopyWidget(),
+        ),
+        FFRoute(
+          name: RatingOrderScreenCopy1Widget.routeName,
+          path: RatingOrderScreenCopy1Widget.routePath,
+          builder: (context, params) => RatingOrderScreenCopy1Widget(
+            productList: params.getParam(
+              'productList',
+              ParamType.JSON,
+            ),
+            cartId: params.getParam(
+              'cartId',
+              ParamType.String,
+            ),
+            subscriptionID: params.getParam(
+              'subscriptionID',
+              ParamType.String,
+            ),
+            screenName: params.getParam(
+              'screenName',
+              ParamType.String,
+            ),
+            rating: params.getParam(
+              'rating',
+              ParamType.int,
+            ),
+            reviewStr: params.getParam(
+              'reviewStr',
+              ParamType.String,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -1190,16 +1224,16 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Container(
-                  color: Colors.white,
-                  // child: Center(
-                  //   child: Image.asset(
-                  //     'assets/images/Quickart_Icon.png',
-                  //     width: 300.0,
-                  //     height: 300.0,
-                  //     fit: BoxFit.cover,
-                  //   ),
-                  // ),
+              ? Center(
+                  child: SizedBox(
+                    width: 60.0,
+                    height: 60.0,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xFF2E317E),
+                      ),
+                    ),
+                  ),
                 )
               : PushNotificationsHandler(child: page);
 
@@ -1207,6 +1241,7 @@ class FFRoute {
           return transitionInfo.hasTransition
               ? CustomTransitionPage(
                   key: state.pageKey,
+                  name: state.name,
                   child: child,
                   transitionDuration: transitionInfo.duration,
                   transitionsBuilder:
@@ -1224,7 +1259,8 @@ class FFRoute {
                     child,
                   ),
                 )
-              : MaterialPage(key: state.pageKey, child: child);
+              : MaterialPage(
+                  key: state.pageKey, name: state.name, child: child);
         },
         routes: routes,
       );

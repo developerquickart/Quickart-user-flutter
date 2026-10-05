@@ -94,6 +94,10 @@ class _TrialProductCartScreenWidgetState
               userid: FFAppState().userID,
               deviceid: FFAppState().deviceID,
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.zone_id''',
+              ).toString(),
             )))
           .future,
       builder: (context, snapshot) {
@@ -142,32 +146,22 @@ class _TrialProductCartScreenWidgetState
                   context.pushNamed(TrialProductListingWidget.routeName);
                 },
               ),
-              title: InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () async {
-                  logFirebaseEvent('TRIAL_PRODUCT_CART_SCREEN_Text_j7w42ut6_');
-                },
-                child: Text(
-                  'Trial Pack Cart',
-                  style: FlutterFlowTheme.of(context).headlineMedium.override(
-                        font: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .fontStyle,
-                        ),
-                        color: FFAppConstants.appBarIconandTitleColor,
-                        fontSize: FFAppConstants.appBartitleFont.toDouble(),
-                        letterSpacing: 0.0,
+              title: Text(
+                'Trial Pack Cart',
+                style: FlutterFlowTheme.of(context).headlineMedium.override(
+                      font: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontStyle: FlutterFlowTheme.of(context)
                             .headlineMedium
                             .fontStyle,
                       ),
-                ),
+                      color: FFAppConstants.appBarIconandTitleColor,
+                      fontSize: FFAppConstants.appBartitleFont.toDouble(),
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w600,
+                      fontStyle:
+                          FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+                    ),
               ),
               actions: [],
               centerTitle: false,
@@ -2135,13 +2129,7 @@ class _TrialProductCartScreenWidgetState
                                           width:
                                               MediaQuery.sizeOf(context).width *
                                                   1.0,
-                                          height: valueOrDefault<double>(
-                                            _model.trialCartPaymentRadioButtonValue ==
-                                                    'COD'
-                                                ? 165.0
-                                                : 120.0,
-                                            280.0,
-                                          ),
+                                          height: 160.0,
                                           decoration: BoxDecoration(
                                             color: FFAppConstants.whiteColor,
                                           ),
@@ -4237,7 +4225,10 @@ class _TrialProductCartScreenWidgetState
                                                                           addressid:
                                                                               FFAppState().selectedAddresID,
                                                                           storeid:
-                                                                              FFAppState().storeID,
+                                                                              getJsonField(
+                                                                            FFAppState().zoneInfo,
+                                                                            r'''$.store_id''',
+                                                                          ).toString(),
                                                                           paymentMethod:
                                                                               'applepay',
                                                                           deliveryDate:
@@ -4308,6 +4299,13 @@ class _TrialProductCartScreenWidgetState
                                                                               ),
                                                                               'orderType': serializeParam(
                                                                                 'trail packk order apple pay',
+                                                                                ParamType.String,
+                                                                              ),
+                                                                              'groupID': serializeParam(
+                                                                                getJsonField(
+                                                                                  (_model.apiResultTrialPackPayment1?.jsonBody ?? ''),
+                                                                                  r'''$.data.group_id''',
+                                                                                ).toString(),
                                                                                 ParamType.String,
                                                                               ),
                                                                             }.withoutNulls,
@@ -5239,9 +5237,9 @@ class _TrialProductCartScreenWidgetState
                                                                 child:
                                                                     FFButtonWidget(
                                                                   onPressed:
-                                                                      () async {
-                                                                    logFirebaseEvent(
-                                                                        'TRIAL_PRODUCT_CART_SCREEN_APPLE_PAY_BTN_');
+                                                                      () {
+                                                                    print(
+                                                                        'Button pressed ...');
                                                                   },
                                                                   text:
                                                                       'Apple Pay',
@@ -5479,8 +5477,11 @@ class _TrialProductCartScreenWidgetState
                                                                           FFAppState()
                                                                               .selectedAddresID,
                                                                       storeid:
-                                                                          FFAppState()
-                                                                              .storeID,
+                                                                          getJsonField(
+                                                                        FFAppState()
+                                                                            .zoneInfo,
+                                                                        r'''$.store_id''',
+                                                                      ).toString(),
                                                                       paymentMethod:
                                                                           'Card',
                                                                       deliveryDate:
@@ -5565,6 +5566,14 @@ class _TrialProductCartScreenWidgetState
                                                                           'orderType':
                                                                               serializeParam(
                                                                             'trail pack order card',
+                                                                            ParamType.String,
+                                                                          ),
+                                                                          'groupID':
+                                                                              serializeParam(
+                                                                            getJsonField(
+                                                                              (_model.apiResultTrialPackPayment?.jsonBody ?? ''),
+                                                                              r'''$.data.group_id''',
+                                                                            ).toString(),
                                                                             ParamType.String,
                                                                           ),
                                                                         }.withoutNulls,
@@ -6847,8 +6856,11 @@ class _TrialProductCartScreenWidgetState
                                                                           FFAppState()
                                                                               .selectedAddresID,
                                                                       storeid:
-                                                                          FFAppState()
-                                                                              .storeID,
+                                                                          getJsonField(
+                                                                        FFAppState()
+                                                                            .zoneInfo,
+                                                                        r'''$.store_id''',
+                                                                      ).toString(),
                                                                       paymentMethod:
                                                                           FFAppState()
                                                                               .paymentMethod,
@@ -7039,7 +7051,11 @@ class _TrialProductCartScreenWidgetState
                                                                         addressid:
                                                                             FFAppState().selectedAddresID,
                                                                         storeid:
-                                                                            FFAppState().storeID,
+                                                                            getJsonField(
+                                                                          FFAppState()
+                                                                              .zoneInfo,
+                                                                          r'''$.store_id''',
+                                                                        ).toString(),
                                                                         paymentMethod:
                                                                             FFAppState().paymentMethod,
                                                                         deliveryDate:

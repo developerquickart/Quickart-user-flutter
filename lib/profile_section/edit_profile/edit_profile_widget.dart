@@ -1165,6 +1165,22 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                       FFAppConstants.primaryPurpleE4D8F5,
                                 ),
                               );
+                              logFirebaseEvent('Row_custom_action');
+                              await actions.facebookEventClass(
+                                FFAppState().userID,
+                                '0',
+                                FFAppState().referralCode,
+                                0.0,
+                                0,
+                                0.0,
+                                'accountDeleted',
+                                FFAppState().emptyJson,
+                                '0',
+                                '0',
+                                '0',
+                                '0',
+                                '0',
+                              );
                               logFirebaseEvent('Row_navigate_to');
 
                               context.pushNamed(LoginScreenWidget.routeName);

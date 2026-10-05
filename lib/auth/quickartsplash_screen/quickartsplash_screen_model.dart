@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/custom_retry_alert/custom_retry_alert_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -6,6 +7,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'quickartsplash_screen_widget.dart' show QuickartsplashScreenWidget;
 import 'package:flutter/material.dart';
@@ -21,10 +23,10 @@ class QuickartsplashScreenModel
   bool? connectivityResultCopy;
   // Stores action output result for [Custom Action - getFcmToken] action in QuickartsplashScreen widget.
   String? fcmTokenNew;
+  // Stores action output result for [Backend Call - API (getZoneID)] action in QuickartsplashScreen widget.
+  ApiCallResponse? getZoneIDResult;
   // Stores action output result for [Backend Call - API (appinfo)] action in QuickartsplashScreen widget.
   ApiCallResponse? apiResultzwxIOS;
-  // Stores action output result for [Backend Call - API (appinfo)] action in QuickartsplashScreen widget.
-  ApiCallResponse? apiResultso1IOS;
   // Stores action output result for [Backend Call - API (appinfo)] action in QuickartsplashScreen widget.
   ApiCallResponse? apiResultAppInfo3;
   // Stores action output result for [Backend Call - API (appinfo)] action in QuickartsplashScreen widget.

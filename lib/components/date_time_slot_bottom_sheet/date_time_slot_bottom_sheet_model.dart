@@ -35,6 +35,10 @@ class DateTimeSlotBottomSheetModel
           int index, Function(DailyDateTimeSlotsStruct) updateFn) =>
       selectedArrayJson[index] = updateFn(selectedArrayJson[index]);
 
+  String surgeCharge = 'surge_charge';
+
+  String valueType = '0';
+
   ///  State fields for stateful widgets in this component.
 
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.

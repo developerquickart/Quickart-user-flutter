@@ -1711,6 +1711,52 @@ class FFAppState extends ChangeNotifier {
   set afProductName(String value) {
     _afProductName = value;
   }
+
+  List<dynamic> _spentAnlysis = [
+    jsonDecode(
+        '{\"year\":2026,\"items\":[{\"id\":1,\"type\":\"added\",\"amount\":200,\"date\":\"2026-01-05\",\"expiry_date\":\"2026-12-31\"},{\"id\":2,\"type\":\"used\",\"amount\":50,\"date\":\"2026-01-10\",\"expiry_date\":\"2026-12-31\"},{\"id\":3,\"type\":\"deducted\",\"amount\":30,\"date\":\"2026-02-01\",\"expiry_date\":\"2026-12-31\"},{\"id\":4,\"type\":\"expired\",\"amount\":100,\"date\":\"2026-03-15\",\"expiry_date\":\"2026-03-15\"},{\"id\":5,\"type\":\"added\",\"amount\":500,\"date\":\"2026-04-10\",\"expiry_date\":\"2026-12-31\"},{\"id\":6,\"type\":\"used\",\"amount\":120,\"date\":\"2026-05-02\",\"expiry_date\":\"2026-12-31\"},{\"id\":7,\"type\":\"deducted\",\"amount\":80,\"date\":\"2026-06-18\",\"expiry_date\":\"2026-12-31\"},{\"id\":8,\"type\":\"added\",\"amount\":300,\"date\":\"2026-07-01\",\"expiry_date\":\"2026-12-31\"}]}'),
+    jsonDecode(
+        '{\"year\":2025,\"items\":[{\"id\":9,\"type\":\"added\",\"amount\":150,\"date\":\"2025-01-12\",\"expiry_date\":\"2025-12-31\"},{\"id\":10,\"type\":\"used\",\"amount\":40,\"date\":\"2025-02-05\",\"expiry_date\":\"2025-12-31\"},{\"id\":11,\"type\":\"deducted\",\"amount\":20,\"date\":\"2025-03-09\",\"expiry_date\":\"2025-12-31\"},{\"id\":12,\"type\":\"expired\",\"amount\":60,\"date\":\"2025-04-01\",\"expiry_date\":\"2025-04-01\"},{\"id\":13,\"type\":\"added\",\"amount\":400,\"date\":\"2025-06-10\",\"expiry_date\":\"2025-12-31\"},{\"id\":14,\"type\":\"used\",\"amount\":90,\"date\":\"2025-08-21\",\"expiry_date\":\"2025-12-31\"},{\"id\":15,\"type\":\"deducted\",\"amount\":70,\"date\":\"2025-10-03\",\"expiry_date\":\"2025-12-31\"}]}')
+  ];
+  List<dynamic> get spentAnlysis => _spentAnlysis;
+  set spentAnlysis(List<dynamic> value) {
+    _spentAnlysis = value;
+  }
+
+  void addToSpentAnlysis(dynamic value) {
+    spentAnlysis.add(value);
+  }
+
+  void removeFromSpentAnlysis(dynamic value) {
+    spentAnlysis.remove(value);
+  }
+
+  void removeAtIndexFromSpentAnlysis(int index) {
+    spentAnlysis.removeAt(index);
+  }
+
+  void updateSpentAnlysisAtIndex(
+    int index,
+    dynamic Function(dynamic) updateFn,
+  ) {
+    spentAnlysis[index] = updateFn(_spentAnlysis[index]);
+  }
+
+  void insertAtIndexInSpentAnlysis(int index, dynamic value) {
+    spentAnlysis.insert(index, value);
+  }
+
+  dynamic _zoneInfo;
+  dynamic get zoneInfo => _zoneInfo;
+  set zoneInfo(dynamic value) {
+    _zoneInfo = value;
+  }
+
+  String _mapAddress = '';
+  String get mapAddress => _mapAddress;
+  set mapAddress(String value) {
+    _mapAddress = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

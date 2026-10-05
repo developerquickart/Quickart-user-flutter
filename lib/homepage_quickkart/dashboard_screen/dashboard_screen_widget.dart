@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
-
 import '/backend/api_requests/api_calls.dart';
 import '/components/bottomnav_bar/bottomnav_bar_widget.dart';
 import '/components/brand_widget/brand_widget_widget.dart';
@@ -9,6 +7,7 @@ import '/components/custom_alert_signup_dailog/custom_alert_signup_dailog_widget
 import '/components/order_again_list_view/order_again_list_view_widget.dart';
 import '/components/products_list_view/products_list_view_widget.dart';
 import '/components/top_category_widget/top_category_widget_widget.dart';
+import '/flutter_flow/ff_builtin_enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_timer.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -66,27 +65,288 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addObserver(this);
-    // updateFC();
     _model = createModel(context, () => DashboardScreenModel());
+    print("G1---->splash load-home---->${DateTime.now()}");
     // Load data on first open
     loadDashboard();
   }
 
-  // updateFC() async {
-  //   await FirebaseAnalytics.instance.logEvent(
-  //     name: 'ios_debug_test',
-  //     parameters: {'platform': 'ios'},
-  //   );
-  // }
+  // ✅ API CALL METHOD
+  void loadDashboard() {
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'DashboardScreen'});
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('DASHBOARD_SCREEN_DashboardScreen_ON_INIT');
+      logFirebaseEvent('DashboardScreen_refresh_database_request');
+      safeSetState(() => _model.apiRequestCompleter = null);
+      await _model.waitForApiRequestCompleted(maxWait: 5000);
+      logFirebaseEvent('DashboardScreen_custom_action');
+      await actions.facebookEventClass(
+        FFAppState().userID,
+        ' ',
+        ' ',
+        0.0,
+        0,
+        0.0,
+        'home',
+        FFAppState().emptyJson,
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+      );
+      logFirebaseEvent('DashboardScreen_custom_action');
+      await actions.setAppsFlyerCUID(
+        FFAppState().userID,
+      );
+      logFirebaseEvent('DashboardScreen_custom_action');
+      await actions.facebookEventClass(
+        FFAppState().userID,
+        ' ',
+        ' ',
+        0.0,
+        0,
+        0.0,
+        'location',
+        FFAppState().emptyJson,
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+      );
+      logFirebaseEvent('DashboardScreen_backend_call');
+      _model.apiResultCartCount =
+          await QuickartGroup.updateproductdetailsCall.call(
+        userid: FFAppState().userID,
+        platform: FFAppState().platform,
+        storeId: getJsonField(
+          FFAppState().zoneInfo,
+          r'''$.store_id''',
+        ).toString(),
+      );
 
-  @override
-  void dispose() {
-    _model.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+      if ((_model.apiResultCartCount?.succeeded ?? true)) {
+        logFirebaseEvent('DashboardScreen_update_app_state');
+        FFAppState().cartTotalCount = getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.dailycartCount''',
+        );
+        FFAppState().cartTotalPrice = functions.checkDoubleValue(getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.dailytotalPrice''',
+        ).toString())!;
+        FFAppState().cartSavingPrice = functions.checkDoubleValue(getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.dailydiscountOnMrp''',
+        ).toString())!;
+        FFAppState().subCartTotalItem = getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.subscriptioncartCount''',
+        );
+        FFAppState().subCartTotalPrice =
+            functions.checkDoubleValue(getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.subscriptiontotalPrice''',
+        ).toString())!;
+        FFAppState().subCartSavingAmount =
+            functions.checkDoubleValue(getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.subscriptiondiscountOnMrp''',
+        ).toString())!;
+        FFAppState().userWalletstr = getJsonField(
+          (_model.apiResultCartCount?.jsonBody ?? ''),
+          r'''$.data.userwallet''',
+        ).toString();
+        FFAppState().isCartShow = false;
+        FFAppState().nullValue = 'null';
+        safeSetState(() {});
+        if (widget!.utmSource != null && widget!.utmSource != '') {
+          logFirebaseEvent('DashboardScreen_backend_call');
+          _model.apiResultSeoSouDashboard =
+              await QuickartGroup.seosourceCall.call(
+            utmSource: widget!.utmSource,
+            utmcampaign: widget!.utmCampaign,
+            utmnetwork: widget!.utmNetwork,
+            utmmedium: widget!.utmNetwork,
+            utmkeyword: FFAppState().utmKeyword,
+            placement: widget!.utmPlacement,
+            userid: FFAppState().userID,
+            deviceid: FFAppState().deviceID,
+            fcmtoken: FFAppState().fcmToken,
+            platform: FFAppState().platform,
+          );
 
-    super.dispose();
+          if ((_model.apiResultSeoSouDashboard?.succeeded ?? true)) {
+            logFirebaseEvent('DashboardScreen_google_analytics_event');
+            logFirebaseEvent(
+              'DashboardAnalytics',
+              parameters: {
+                'API Name': 'Dashboard',
+                'Keyword': FFAppState().keyword,
+              },
+            );
+            logFirebaseEvent('DashboardScreen_custom_action');
+            await actions.facebookEventClass(
+              widget!.utmKeyword!,
+              widget!.utmPlacement!,
+              FFAppState().userID,
+              0.0,
+              0,
+              0.0,
+              'utmSource',
+              FFAppState().emptyJson,
+              ' dashboard',
+              widget!.utmSource,
+              widget!.utmCampaign,
+              widget!.utmNetwork,
+              widget!.utmMedium,
+            );
+          } else {
+            logFirebaseEvent('DashboardScreen_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  getJsonField(
+                    (_model.apiResultSeoSouDashboard?.jsonBody ?? ''),
+                    r'''$.message''',
+                  ).toString(),
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0,
+                  ),
+                ),
+                duration: Duration(milliseconds: 1200),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+
+          logFirebaseEvent('DashboardScreen_backend_call');
+          _model.apiResultso1IOS = await QuickartGroup.appinfoCall.call(
+            userid: FFAppState().userID,
+            stroreid: getJsonField(
+              FFAppState().zoneInfo,
+              r'''$.store_id''',
+            ).toString(),
+            platform: 'ios',
+            fcmToken: FFAppState().fcmToken,
+            deviceid: FFAppState().deviceID,
+          );
+
+          if ((_model.apiResultso1IOS?.succeeded ?? true)) {
+            logFirebaseEvent('DashboardScreen_update_app_state');
+            FFAppState().appInfo = getJsonField(
+              (_model.apiResultSeoSouDashboard?.jsonBody ?? ''),
+              r'''$.data''',
+            );
+            FFAppState().userWalletstr = getJsonField(
+              (_model.apiResultso1IOS?.jsonBody ?? ''),
+              r'''$.data.userwallet''',
+            ).toString();
+            FFAppState().dashboardBanner = getJsonField(
+              (_model.apiResultso1IOS?.jsonBody ?? ''),
+              r'''$.oneapi_bg_first_image''',
+            ).toString();
+            FFAppState().trialPackBannerImage = getJsonField(
+              (_model.apiResultso1IOS?.jsonBody ?? ''),
+              r'''$.trailpackimage''',
+            ).toString();
+            FFAppState().update(() {});
+          } else {
+            logFirebaseEvent('DashboardScreen_show_snack_bar');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  QuickartGroup.appinfoCall.message(
+                    (_model.apiResultso1IOS?.jsonBody ?? ''),
+                  )!,
+                  style: GoogleFonts.montserrat(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FFAppConstants.NeutralBlack50Color,
+              ),
+            );
+          }
+        } else {
+          logFirebaseEvent('DashboardScreen_backend_call');
+          _model.apiResultso = await QuickartGroup.appinfoCall.call(
+            userid: FFAppState().userID,
+            stroreid: getJsonField(
+              FFAppState().zoneInfo,
+              r'''$.store_id''',
+            ).toString(),
+            platform: 'ios',
+            fcmToken: FFAppState().fcmToken,
+            deviceid: FFAppState().deviceID,
+          );
+
+          if ((_model.apiResultso?.succeeded ?? true)) {
+            logFirebaseEvent('DashboardScreen_update_app_state');
+            FFAppState().appInfo = QuickartGroup.appinfoCall.data(
+              (_model.apiResultso?.jsonBody ?? ''),
+            );
+            FFAppState().userWalletstr = getJsonField(
+              (_model.apiResultso?.jsonBody ?? ''),
+              r'''$.data.userwallet''',
+            ).toString();
+            FFAppState().dashboardBanner = getJsonField(
+              (_model.apiResultso?.jsonBody ?? ''),
+              r'''$.oneapi_bg_first_image''',
+            ).toString();
+            FFAppState().trialPackBannerImage = getJsonField(
+              (_model.apiResultso?.jsonBody ?? ''),
+              r'''$.trailpackimage''',
+            ).toString();
+            FFAppState().update(() {});
+          }
+        }
+
+        logFirebaseEvent('DashboardScreen_custom_action');
+        _model.refCodew = await actions.generateReferralLink(
+          getJsonField(
+            FFAppState().appInfo,
+            r'''$.referral_code''',
+          ).toString(),
+        );
+      } else {
+        logFirebaseEvent('DashboardScreen_show_snack_bar');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              getJsonField(
+                (_model.apiResultCartCount?.jsonBody ?? ''),
+                r'''$.message''',
+              ).toString(),
+              style: GoogleFonts.montserrat(
+                color: FFAppConstants.indigoColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 12.0,
+              ),
+            ),
+            duration: Duration(milliseconds: 3000),
+            backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+          ),
+        );
+      }
+
+      if (getJsonField(
+            FFAppState().zoneInfo,
+            r'''$.address''',
+          ) ==
+          null) {
+        logFirebaseEvent('DashboardScreen_custom_action');
+        _model.selectedAddressNew = await actions.getAddressFormLatLng();
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -96,268 +356,13 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
     }
   }
 
-  // ✅ API CALL METHOD
-  void loadDashboard() {
-    setState(() {
-      _model = createModel(context, () => DashboardScreenModel());
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
 
-      logFirebaseEvent('screen_view',
-          parameters: {'screen_name': 'DashboardScreen'});
-      // On page load action.
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        logFirebaseEvent('DASHBOARD_SCREEN_DashboardScreen_ON_INIT');
-        logFirebaseEvent('DashboardScreen_refresh_database_request');
-        safeSetState(() => _model.apiRequestCompleter = null);
-        await _model.waitForApiRequestCompleted(maxWait: 5000);
-        logFirebaseEvent('DashboardScreen_custom_action');
-        await actions.facebookEventClass(
-          FFAppState().userID,
-          ' ',
-          ' ',
-          0.0,
-          0,
-          0.0,
-          'home',
-          FFAppState().emptyJson,
-          ' ',
-          ' ',
-          ' ',
-          ' ',
-          ' ',
-        );
-        logFirebaseEvent('DashboardScreen_custom_action');
-        await actions.setAppsFlyerCUID(
-          FFAppState().userID,
-        );
-        logFirebaseEvent('DashboardScreen_custom_action');
-        await actions.facebookEventClass(
-          FFAppState().userID,
-          ' ',
-          ' ',
-          0.0,
-          0,
-          0.0,
-          'location',
-          FFAppState().emptyJson,
-          ' ',
-          ' ',
-          ' ',
-          ' ',
-          ' ',
-        );
-        logFirebaseEvent('DashboardScreen_backend_call');
-        _model.apiResultCartCount =
-            await QuickartGroup.updateproductdetailsCall.call(
-          userid: (FFAppState().userID == null || FFAppState().userID.isEmpty)
-              ? "0"
-              : FFAppState().userID,
-        );
+    _model.dispose();
 
-        if ((_model.apiResultCartCount?.succeeded ?? true)) {
-          logFirebaseEvent('DashboardScreen_update_app_state');
-          FFAppState().cartTotalCount = getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.dailycartCount''',
-          );
-          FFAppState().cartTotalPrice = functions.checkDoubleValue(getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.dailytotalPrice''',
-          ).toString())!;
-          FFAppState().cartSavingPrice =
-              functions.checkDoubleValue(getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.dailydiscountOnMrp''',
-          ).toString())!;
-          FFAppState().subCartTotalItem = getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.subscriptioncartCount''',
-          );
-          FFAppState().subCartTotalPrice =
-              functions.checkDoubleValue(getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.subscriptiontotalPrice''',
-          ).toString())!;
-          FFAppState().subCartSavingAmount =
-              functions.checkDoubleValue(getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.subscriptiondiscountOnMrp''',
-          ).toString())!;
-          FFAppState().userWalletstr = getJsonField(
-            (_model.apiResultCartCount?.jsonBody ?? ''),
-            r'''$.data.userwallet''',
-          ).toString();
-          FFAppState().isCartShow = false;
-          FFAppState().nullValue = 'null';
-          safeSetState(() {});
-          if (widget!.utmSource != null && widget!.utmSource != '') {
-            logFirebaseEvent('DashboardScreen_backend_call');
-            _model.apiResultSeoSouDashboard =
-                await QuickartGroup.seosourceCall.call(
-              utmSource: widget!.utmSource,
-              utmcampaign: widget!.utmCampaign,
-              utmnetwork: widget!.utmNetwork,
-              utmmedium: widget!.utmNetwork,
-              utmkeyword: FFAppState().utmKeyword,
-              placement: widget!.utmPlacement,
-              userid: FFAppState().userID,
-              deviceid: FFAppState().deviceID,
-              fcmtoken: FFAppState().fcmToken,
-              platform: FFAppState().platform,
-            );
-
-            if ((_model.apiResultSeoSouDashboard?.succeeded ?? true)) {
-              logFirebaseEvent('DashboardScreen_google_analytics_event');
-              logFirebaseEvent(
-                'DashboardAnalytics',
-                parameters: {
-                  'API Name': 'Dashboard',
-                  'Keyword': FFAppState().keyword,
-                },
-              );
-              logFirebaseEvent('DashboardScreen_custom_action');
-              await actions.facebookEventClass(
-                widget!.utmKeyword!,
-                widget!.utmPlacement!,
-                FFAppState().userID,
-                0.0,
-                0,
-                0.0,
-                'utmSource',
-                FFAppState().emptyJson,
-                ' dashboard',
-                widget!.utmSource,
-                widget!.utmCampaign,
-                widget!.utmNetwork,
-                widget!.utmMedium,
-              );
-            } else {
-              logFirebaseEvent('DashboardScreen_show_snack_bar');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    getJsonField(
-                      (_model.apiResultSeoSouDashboard?.jsonBody ?? ''),
-                      r'''$.message''',
-                    ).toString(),
-                    style: GoogleFonts.montserrat(
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  duration: Duration(milliseconds: 1200),
-                  backgroundColor: FFAppConstants.NeutralBlack50Color,
-                ),
-              );
-            }
-
-            logFirebaseEvent('DashboardScreen_backend_call');
-            _model.apiResultso1IOS = await QuickartGroup.appinfoCall.call(
-              userid: FFAppState().userID,
-              stroreid: FFAppState().storeID,
-              platform: 'ios',
-              fcmToken: FFAppState().fcmToken,
-              deviceid: FFAppState().deviceID,
-            );
-
-            if ((_model.apiResultso1IOS?.succeeded ?? true)) {
-              logFirebaseEvent('DashboardScreen_update_app_state');
-              FFAppState().appInfo = getJsonField(
-                (_model.apiResultSeoSouDashboard?.jsonBody ?? ''),
-                r'''$.data''',
-              );
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultso1IOS?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().update(() {});
-            } else {
-              logFirebaseEvent('DashboardScreen_show_snack_bar');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    QuickartGroup.appinfoCall.message(
-                      (_model.apiResultso1IOS?.jsonBody ?? ''),
-                    )!,
-                    style: GoogleFonts.montserrat(
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  duration: Duration(milliseconds: 4000),
-                  backgroundColor: FFAppConstants.NeutralBlack50Color,
-                ),
-              );
-            }
-          } else {
-            logFirebaseEvent('DashboardScreen_backend_call');
-            _model.apiResultso = await QuickartGroup.appinfoCall.call(
-              userid: FFAppState().userID,
-              stroreid: FFAppState().storeID,
-              platform: 'ios',
-              fcmToken: FFAppState().fcmToken,
-              deviceid: FFAppState().deviceID,
-            );
-
-            if ((_model.apiResultso?.succeeded ?? true)) {
-              logFirebaseEvent('DashboardScreen_update_app_state');
-              FFAppState().appInfo = QuickartGroup.appinfoCall.data(
-                (_model.apiResultso?.jsonBody ?? ''),
-              );
-              FFAppState().userWalletstr = getJsonField(
-                (_model.apiResultso?.jsonBody ?? ''),
-                r'''$.data.userwallet''',
-              ).toString();
-              FFAppState().dashboardBanner = getJsonField(
-                (_model.apiResultso?.jsonBody ?? ''),
-                r'''$.oneapi_bg_first_image''',
-              ).toString();
-              FFAppState().trialPackBannerImage = getJsonField(
-                (_model.apiResultso?.jsonBody ?? ''),
-                r'''$.trailpackimage''',
-              ).toString();
-              FFAppState().update(() {});
-            }
-          }
-          logFirebaseEvent('DashboardScreen_custom_action');
-          _model.refCodew = await actions.generateReferralLink(
-            getJsonField(
-              FFAppState().appInfo,
-              r'''$.referral_code''',
-            ).toString(),
-          );
-        } else {
-          logFirebaseEvent('DashboardScreen_show_snack_bar');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                getJsonField(
-                  (_model.apiResultCartCount?.jsonBody ?? ''),
-                  r'''$.message''',
-                ).toString(),
-                style: GoogleFonts.montserrat(
-                  color: FFAppConstants.indigoColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 3000),
-              backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
-            ),
-          );
-        }
-      });
-
-      WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
-    });
+    super.dispose();
   }
 
   @override
@@ -367,34 +372,39 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
     return FutureBuilder<ApiCallResponse>(
       future: (_model.apiRequestCompleter ??= Completer<ApiCallResponse>()
             ..complete(QuickartGroup.oneAPICall.call(
-              storeID: FFAppState().storeID,
-              userID:
-                  (FFAppState().userID == null || FFAppState().userID.isEmpty)
-                      ? "0"
-                      : FFAppState().userID,
+              storeID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
+              userID: FFAppState().userID,
               deviceID: FFAppState().deviceID,
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.zone_id''',
+              ).toString(),
             )))
           .future,
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: Image.asset(
-                'assets/images/new_loader.gif',
-                width: MediaQuery.sizeOf(context).width * 0.25,
-                height: MediaQuery.sizeOf(context).height * 0.25,
+          return SafeArea(
+            top: false,
+            bottom: Platform.isAndroid ? true : false,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                child: Image.asset(
+                  'assets/images/new_loader.gif',
+                  width: MediaQuery.sizeOf(context).width * 0.25,
+                  height: MediaQuery.sizeOf(context).height * 0.25,
+                ),
               ),
             ),
           );
         }
         final dashboardScreenOneAPIResponse = snapshot.data!;
-        print("OneAPI Response: ${(getJsonField(
-              dashboardScreenOneAPIResponse.jsonBody,
-              r'''$.message''',
-            ) ?? '').toString()}");
+
         return GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -413,10 +423,10 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                   children: [
                     Builder(
                       builder: (context) {
-                        if ("Internal Server Error" !=
+                        if (FFAppConstants.userStatus !=
                             getJsonField(
                               dashboardScreenOneAPIResponse.jsonBody,
-                              r'''$.message''',
+                              r'''$.user_active_status''',
                             ).toString()) {
                           return Align(
                             alignment: AlignmentDirectional(0.0, -1.0),
@@ -454,44 +464,6 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                               .height *
                                                           1.065,
                                                   fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(0.0),
-                                                child: CachedNetworkImage(
-                                                  fadeInDuration: Duration(
-                                                      milliseconds: 50),
-                                                  fadeOutDuration: Duration(
-                                                      milliseconds: 50),
-                                                  imageUrl: getJsonField(
-                                                    dashboardScreenOneAPIResponse
-                                                        .jsonBody,
-                                                    r'''$.oneapi_bg_first_image.home_bg_image''',
-                                                  ).toString(),
-                                                  width:
-                                                      MediaQuery.sizeOf(context)
-                                                              .width *
-                                                          1.0,
-                                                  height:
-                                                      MediaQuery.sizeOf(context)
-                                                              .height *
-                                                          1.065,
-                                                  fit: BoxFit.cover,
-                                                  errorWidget: (context, error,
-                                                          stackTrace) =>
-                                                      Image.asset(
-                                                    'assets/images/error_image.png',
-                                                    width: MediaQuery.sizeOf(
-                                                                context)
-                                                            .width *
-                                                        1.0,
-                                                    height: MediaQuery.sizeOf(
-                                                                context)
-                                                            .height *
-                                                        1.065,
-                                                    fit: BoxFit.cover,
-                                                  ),
                                                 ),
                                               ),
                                               Container(
@@ -565,33 +537,18 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                         5.0,
                                                                         5.0,
                                                                         0.0),
-                                                            child: InkWell(
-                                                              splashColor: Colors
-                                                                  .transparent,
-                                                              focusColor: Colors
-                                                                  .transparent,
-                                                              hoverColor: Colors
-                                                                  .transparent,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              onTap: () async {
-                                                                logFirebaseEvent(
-                                                                    'DASHBOARD_SCREEN_Image_4n0hoim8_ON_TAP');
-                                                              },
-                                                              child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
-                                                                child:
-                                                                    Image.asset(
-                                                                  'assets/images/Quickart_Icon.png',
-                                                                  width: 25.0,
-                                                                  height: 25.0,
-                                                                  fit: BoxFit
-                                                                      .contain,
-                                                                ),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/Quickart_Icon.png',
+                                                                width: 25.0,
+                                                                height: 25.0,
+                                                                fit: BoxFit
+                                                                    .contain,
                                                               ),
                                                             ),
                                                           ),
@@ -636,9 +593,9 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                 ),
                                                                 TextSpan(
                                                                   text: functions
-                                                                          .extractFirstName(
-                                                                              FFAppState().userName) ??
-                                                                      "",
+                                                                      .extractFirstName(
+                                                                          FFAppState()
+                                                                              .userName)!,
                                                                   style: GoogleFonts
                                                                       .montserrat(
                                                                     color:
@@ -695,12 +652,12 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                       mainAxisSize:
                                                           MainAxisSize.min,
                                                       children: [
-                                                        if ((FFAppState()
-                                                                    .usserType !=
-                                                                'guest') ||
-                                                            (FFAppState()
-                                                                    .userName !=
-                                                                'Guest'))
+                                                        if (getJsonField(
+                                                              FFAppState()
+                                                                  .appInfo,
+                                                              r'''$.user_type''',
+                                                            ) ==
+                                                            null)
                                                           Padding(
                                                             padding:
                                                                 EdgeInsetsDirectional
@@ -816,12 +773,12 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                               ),
                                                             ),
                                                           ),
-                                                        if ((FFAppState()
-                                                                    .usserType !=
-                                                                'guest') ||
-                                                            (FFAppState()
-                                                                    .userName !=
-                                                                'Guest'))
+                                                        if (getJsonField(
+                                                              FFAppState()
+                                                                  .appInfo,
+                                                              r'''$.user_type''',
+                                                            ) ==
+                                                            null)
                                                           Padding(
                                                             padding:
                                                                 EdgeInsetsDirectional
@@ -852,14 +809,17 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                               },
                                                               child: Icon(
                                                                 FFIcons.kwallet,
-                                                                color:  colorFromCssString(
-                                                                          getJsonField(
-                                                                            dashboardScreenOneAPIResponse.jsonBody,
-                                                                            r'''$.oneapi_bg_first_image.bg_icon_color''',
-                                                                          ).toString(),
-                                                                          defaultColor:
-                                                                              Colors.black,
-                                                                        ),
+                                                                color:
+                                                                    colorFromCssString(
+                                                                  getJsonField(
+                                                                    dashboardScreenOneAPIResponse
+                                                                        .jsonBody,
+                                                                    r'''$.oneapi_bg_first_image.bg_icon_color''',
+                                                                  ).toString(),
+                                                                  defaultColor:
+                                                                      Colors
+                                                                          .black,
+                                                                ),
                                                                 size: 25.0,
                                                               ),
                                                             ),
@@ -900,14 +860,17 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                             child: Icon(
                                                               Icons
                                                                   .notifications_sharp,
-                                                              color: colorFromCssString(
-                                                                          getJsonField(
-                                                                            dashboardScreenOneAPIResponse.jsonBody,
-                                                                            r'''$.oneapi_bg_first_image.bg_icon_color''',
-                                                                          ).toString(),
-                                                                          defaultColor:
-                                                                              Colors.black,
-                                                                        ),
+                                                              color:
+                                                                  colorFromCssString(
+                                                                getJsonField(
+                                                                  dashboardScreenOneAPIResponse
+                                                                      .jsonBody,
+                                                                  r'''$.oneapi_bg_first_image.bg_icon_color''',
+                                                                ).toString(),
+                                                                defaultColor:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
                                                               size: 30.0,
                                                             ),
                                                           ),
@@ -1066,39 +1029,49 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                     10.0,
                                                                     0.0,
                                                                     0.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          13.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                onTap:
-                                                                    () async {
-                                                                  logFirebaseEvent(
-                                                                      'DASHBOARD_SCREEN_Icon_7juhrwuo_ON_TAP');
-                                                                  logFirebaseEvent(
-                                                                      'Icon_update_app_state');
-                                                                  FFAppState()
-                                                                      .categoryName = '';
-                                                                  safeSetState(
-                                                                      () {});
-                                                                },
+                                                        child: InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          onTap: () async {
+                                                            logFirebaseEvent(
+                                                                'DASHBOARD_SCREEN_Row_omcsafy2_ON_TAP');
+                                                            logFirebaseEvent(
+                                                                'Row_navigate_to');
+
+                                                            context.pushNamed(
+                                                                AddressListScreenWidget
+                                                                    .routeName);
+
+                                                            logFirebaseEvent(
+                                                                'Row_update_app_state');
+                                                            FFAppState()
+                                                                    .screenName =
+                                                                'dashboard';
+                                                            safeSetState(() {});
+                                                            logFirebaseEvent(
+                                                                'Row_google_analytics_event');
+                                                            logFirebaseEvent(
+                                                                'AddressListScreenFromDashboardAnalytics');
+                                                          },
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            13.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
                                                                 child: Icon(
                                                                   Icons.house,
                                                                   color:
@@ -1115,59 +1088,44 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                   size: 20.0,
                                                                 ),
                                                               ),
-                                                            ),
-                                                            Align(
-                                                              alignment:
-                                                                  AlignmentDirectional(
-                                                                      -1.0,
-                                                                      0.0),
-                                                              child: Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            5.0,
-                                                                            2.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                child: InkWell(
-                                                                  splashColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    logFirebaseEvent(
-                                                                        'DASHBOARD_SCREEN_Text_0c4x2k90_ON_TAP');
-                                                                    logFirebaseEvent(
-                                                                        'Text_navigate_to');
-
-                                                                    context.pushNamed(
-                                                                        AddressListScreenWidget
-                                                                            .routeName);
-
-                                                                    logFirebaseEvent(
-                                                                        'Text_google_analytics_event');
-                                                                    logFirebaseEvent(
-                                                                        'AddressListScreenFromDashboardAnalytics');
-                                                                  },
+                                                              Align(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        -1.0,
+                                                                        0.0),
+                                                                child: Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          5.0,
+                                                                          2.0,
+                                                                          0.0,
+                                                                          0.0),
                                                                   child: Text(
-                                                                    valueOrDefault<
-                                                                        String>(
-                                                                      FFAppState()
-                                                                          .selectedAddress,
-                                                                      'Dubai',
-                                                                    ).maybeHandleOverflow(
-                                                                      maxChars:
-                                                                          25,
-                                                                      replacement:
-                                                                          '…',
-                                                                    ),
+                                                                    getJsonField(
+                                                                              FFAppState().zoneInfo,
+                                                                              r'''$.address''',
+                                                                            ) !=
+                                                                            null
+                                                                        ? getJsonField(
+                                                                            FFAppState().zoneInfo,
+                                                                            r'''$.address.house_no''',
+                                                                          ).toString()
+                                                                        : () {
+                                                                            if (FFAppState().selectedMapAddress != null &&
+                                                                                FFAppState().selectedMapAddress != '') {
+                                                                              return FFAppState().selectedMapAddress;
+                                                                            } else if (_model.selectedAddressNew != null && _model.selectedAddressNew != '') {
+                                                                              return _model.selectedAddressNew!;
+                                                                            } else {
+                                                                              return '';
+                                                                            }
+                                                                          }()
+                                                                            .maybeHandleOverflow(
+                                                                            maxChars:
+                                                                                25,
+                                                                            replacement:
+                                                                                '…',
+                                                                          ),
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyMedium
@@ -1201,41 +1159,14 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          5.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                              child: InkWell(
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                focusColor: Colors
-                                                                    .transparent,
-                                                                hoverColor: Colors
-                                                                    .transparent,
-                                                                highlightColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                onTap:
-                                                                    () async {
-                                                                  logFirebaseEvent(
-                                                                      'DASHBOARD_SCREEN_Icon_7pfuwx6l_ON_TAP');
-                                                                  logFirebaseEvent(
-                                                                      'Icon_navigate_to');
-
-                                                                  context.pushNamed(
-                                                                      AddressListScreenWidget
-                                                                          .routeName);
-
-                                                                  logFirebaseEvent(
-                                                                      'Icon_google_analytics_event');
-                                                                  logFirebaseEvent(
-                                                                      'AddressListScreenFromDashboardAnalytics');
-                                                                },
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            5.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
                                                                 child: Icon(
                                                                   Icons
                                                                       .keyboard_arrow_down_rounded,
@@ -1253,8 +1184,8 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                   size: 20.0,
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                       Padding(
@@ -1303,16 +1234,16 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        8.0),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        8.0),
                                                                 topLeft: Radius
                                                                     .circular(
                                                                         8.0),
                                                                 topRight: Radius
+                                                                    .circular(
+                                                                        8.0),
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        8.0),
+                                                                bottomRight: Radius
                                                                     .circular(
                                                                         8.0),
                                                               ),
@@ -1390,6 +1321,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                         ? 235.0
                                                         : 240.0,
                                                 decoration: BoxDecoration(
+                                                  color: Colors.transparent,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           0.0),
@@ -1450,8 +1382,7 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                           .usserType !=
                                                                       'guest') {
                                                                     logFirebaseEvent(
-                                                                        'Image_custom_action');
-
+                                                                        'Image_share');
                                                                     await Share
                                                                         .share(
                                                                       '${getJsonField(
@@ -1715,49 +1646,23 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
                                                           0.0, 5.0, 0.0, 0.0),
-                                                  child: InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      logFirebaseEvent(
-                                                          'DASHBOARD_SCREEN_Text_p8lvroor_ON_TAP');
-                                                    },
-                                                    child: Text(
-                                                      functions.getArrayCount(
-                                                                  getJsonField(
-                                                                dashboardScreenOneAPIResponse
-                                                                    .jsonBody,
-                                                                r'''$.activesub_ordlist''',
-                                                              )) ==
-                                                              '1'
-                                                          ? 'YOUR ACTIVE SUBSCRIPTION'
-                                                          : 'YOUR ACTIVE SUBSCRIPTION\'S',
-                                                      maxLines: 2,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyMedium
-                                                          .override(
-                                                            font: GoogleFonts
-                                                                .montserrat(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .fontStyle,
-                                                            ),
-                                                            color: FFAppConstants
-                                                                .blackColor0A0A0A,
-                                                            fontSize: 17.0,
-                                                            letterSpacing: 0.0,
+                                                  child: Text(
+                                                    functions.getArrayCount(
+                                                                getJsonField(
+                                                              dashboardScreenOneAPIResponse
+                                                                  .jsonBody,
+                                                              r'''$.activesub_ordlist''',
+                                                            )) ==
+                                                            '1'
+                                                        ? 'YOUR ACTIVE SUBSCRIPTION'
+                                                        : 'YOUR ACTIVE SUBSCRIPTION\'S',
+                                                    maxLines: 2,
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             fontStyle:
@@ -1766,7 +1671,18 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                     .bodyMedium
                                                                     .fontStyle,
                                                           ),
-                                                    ),
+                                                          color: FFAppConstants
+                                                              .blackColor0A0A0A,
+                                                          fontSize: 17.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
                                                   ),
                                                 ),
                                               ),
@@ -2064,18 +1980,12 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .only(
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            0.0),
-                                                                    bottomRight:
-                                                                        Radius.circular(
-                                                                            8.0),
                                                                     topLeft: Radius
                                                                         .circular(
                                                                             8.0),
-                                                                    topRight: Radius
-                                                                        .circular(
-                                                                            0.0),
+                                                                    bottomRight:
+                                                                        Radius.circular(
+                                                                            8.0),
                                                                   ),
                                                                   border: Border
                                                                       .all(
@@ -3417,6 +3327,8 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                     if (FFAppState()
                                                                             .usserType !=
                                                                         'guest') {
+                                                                      logFirebaseEvent(
+                                                                          'Image_share');
                                                                       await Share
                                                                           .share(
                                                                         '${getJsonField(
@@ -3900,21 +3812,13 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                         '${getJsonField(
                                                           FFAppState().appInfo,
                                                           r'''$.referral_message''',
-                                                        ).toString()}  ${_model.refCodew}',
+                                                        ).toString()}  https://www.quickart.ae/SignUpScreen?refCode=${getJsonField(
+                                                          FFAppState().appInfo,
+                                                          r'''$.referral_code''',
+                                                        ).toString()}',
                                                         sharePositionOrigin:
                                                             getWidgetBoundingBox(
                                                                 context),
-                                                      );
-                                                      logFirebaseEvent(
-                                                          'Image_google_analytics_event');
-                                                      logFirebaseEvent(
-                                                        'Share',
-                                                        parameters: {
-                                                          'Screen Name':
-                                                              'Profile',
-                                                          'Share To':
-                                                              'Refer a Friend',
-                                                        },
                                                       );
                                                     } else {
                                                       logFirebaseEvent(
@@ -4387,10 +4291,6 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                             if (shouldUpdate)
                                               safeSetState(() {});
                                           },
-                                          onEnded: () async {
-                                            logFirebaseEvent(
-                                                'DASHBOARD_SCREEN_Timer_zlk7axkq_ON_TIMER');
-                                          },
                                           textAlign: TextAlign.start,
                                           style: FlutterFlowTheme.of(context)
                                               .headlineSmall
@@ -4427,119 +4327,295 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                             ),
                           );
                         } else {
-                          return Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Text(
-                              'Something went wrong..',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.readexPro(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
+                          return Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment:
+                                (FFMainAxisAlignment.center).flutterValue,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Text(
+                                  'Something went wrong..\nPlease login again',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 20.0, 0.0, 0.0),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    logFirebaseEvent(
+                                        'DASHBOARD_SCREEN_PAGE_LOGIN_BTN_ON_TAP');
+                                    logFirebaseEvent('Button_custom_action');
+                                    await actions.facebookEventClass(
+                                      '0',
+                                      FFAppState().userID,
+                                      '0',
+                                      0.0,
+                                      0,
+                                      0.0,
+                                      'logout',
+                                      FFAppState().emptyJson,
+                                      '0',
+                                      '',
+                                      '0',
+                                      '0',
+                                      '0',
+                                    );
+                                    logFirebaseEvent('Button_custom_action');
+                                    await actions.clearSharePrefeData();
+                                    logFirebaseEvent('Button_navigate_to');
+
+                                    context.goNamed(
+                                        LoginOnBoardScreenWidget.routeName);
+
+                                    logFirebaseEvent('Button_wait__delay');
+                                    await Future.delayed(
+                                      Duration(
+                                        milliseconds: 300,
+                                      ),
+                                    );
+                                    logFirebaseEvent('Button_update_app_state');
+                                    FFAppState().isUserLogin = false;
+                                    FFAppState().deletePhoneNo();
+                                    FFAppState().phoneNo = '';
+
+                                    FFAppState().deleteUserID();
+                                    FFAppState().userID = '';
+
+                                    FFAppState().deleteUserEmail();
+                                    FFAppState().userEmail = '';
+
+                                    FFAppState().deleteUserName();
+                                    FFAppState().userName = '';
+
+                                    FFAppState().deleteIsverified();
+                                    FFAppState().isverified = 1;
+
+                                    FFAppState().countryCode = '971';
+                                    FFAppState().categoryName = '';
+                                    FFAppState().deleteProfileImage();
+                                    FFAppState().profileImage = '';
+
+                                    FFAppState().deleteProfileImageBytes();
+                                    FFAppState().profileImageBytes =
+                                        'https://media.istockphoto.com/id/1916685823/photo/businesswoman-using-laptop-with-banking-applications-via-internet-network.jpg?s=612x612&w=0&k=20&c=L9wQekG3TJ-6fSFlUCUelo5xOCYkm9SVE5ER5J8QiK0=';
+
+                                    FFAppState().deleteUserPhoneNo();
+                                    FFAppState().userPhoneNo = '';
+
+                                    FFAppState().deleteUserCountryCode();
+                                    FFAppState().userCountryCode = '';
+
+                                    FFAppState().deleteUserPhoneEP();
+                                    FFAppState().userPhoneEP = '';
+
+                                    FFAppState().deleteUserPhoneProfile();
+                                    FFAppState().userPhoneProfile = '';
+
+                                    FFAppState().deleteUserCountryCodeEP();
+                                    FFAppState().userCountryCodeEP = '';
+
+                                    FFAppState().deleteUsserType();
+                                    FFAppState().usserType = '';
+
+                                    FFAppState().subCartSavingAmount = 0.0;
+                                    FFAppState().subCartTotalPrice = 0.0;
+                                    FFAppState().subCartTotalItem = 0;
+                                    FFAppState().cartTotalCount = 0;
+                                    FFAppState().cartTotalPrice = 0.0;
+                                    FFAppState().cartAmount = '';
+                                    FFAppState().cartTotal = '';
+                                    FFAppState().userWallet = 0.0;
+                                    FFAppState().userWalletstr = '';
+                                    FFAppState().cartSavingPrice = 0.0;
+                                    FFAppState().selectedCardNumber = '';
+                                    FFAppState().selectedCardID = '';
+                                    FFAppState().deleteSelectedAddresID();
+                                    FFAppState().selectedAddresID = '';
+
+                                    FFAppState().selectedAddress1 = '';
+                                    FFAppState().selectedAddress = 'Dubai';
+                                    FFAppState().selectedAddressType = '';
+                                    FFAppState().selectedCartAddress = '';
+                                    FFAppState().deleteDialCode();
+                                    FFAppState().dialCode = 'AE';
+
+                                    safeSetState(() {});
+                                    logFirebaseEvent(
+                                        'Button_google_analytics_event');
+                                    logFirebaseEvent(
+                                      'Navigation',
+                                      parameters: {
+                                        'Screen Name': 'Profile',
+                                        'Navigate To': 'Login Onboard Screen',
+                                      },
+                                    );
+                                  },
+                                  text: 'Login',
+                                  options: FFButtonOptions(
+                                    height: 40.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        26.0, 0.0, 26.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FFAppConstants.indigoColor,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          font: GoogleFonts.montserrat(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleSmall
+                                                    .fontStyle,
+                                          ),
+                                          color: Colors.white,
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .titleSmall
+                                                  .fontStyle,
+                                        ),
+                                    elevation: 0.0,
+                                    borderRadius: BorderRadius.circular(24.0),
                                   ),
-                            ),
+                                ),
+                              ),
+                            ],
                           );
                         }
                       },
                     ),
-                    Align(
-                      alignment: AlignmentDirectional(1.0, 1.0),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 0.0, 15.0, 150.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            logFirebaseEvent(
-                                'DASHBOARD_SCREEN_cartbtnContainer_ON_TAP');
-                            if ((FFAppState().cartTotalCount == 0) &&
-                                (FFAppState().subCartTotalItem == 0)) {
-                              logFirebaseEvent('cartbtnContainer_navigate_to');
+                    if (FFAppConstants.userStatus !=
+                        getJsonField(
+                          dashboardScreenOneAPIResponse.jsonBody,
+                          r'''$.user_active_status''',
+                        ).toString())
+                      Align(
+                        alignment: AlignmentDirectional(1.0, 1.0),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 15.0, 150.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              logFirebaseEvent(
+                                  'DASHBOARD_SCREEN_cartbtnContainer_ON_TAP');
+                              if ((FFAppState().cartTotalCount == 0) &&
+                                  (FFAppState().subCartTotalItem == 0)) {
+                                logFirebaseEvent(
+                                    'cartbtnContainer_navigate_to');
 
-                              context
-                                  .pushNamed(DailyCartScreenWidget.routeName);
+                                context
+                                    .pushNamed(DailyCartScreenWidget.routeName);
 
-                              logFirebaseEvent(
-                                  'cartbtnContainer_google_analytics_event');
-                              logFirebaseEvent(
-                                  'CartScreenFromDashboardAnalytics');
-                            } else {
-                              logFirebaseEvent(
-                                  'cartbtnContainer_update_app_state');
-                              FFAppState().isCartShow =
-                                  !(FFAppState().isCartShow ?? true);
-                              safeSetState(() {});
-                            }
-                          },
-                          child: Container(
-                            width: 50.0,
-                            height: 50.0,
-                            decoration: BoxDecoration(
-                              color: FFAppConstants.indigoColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
-                                    child: Icon(
-                                      Icons.shopping_cart_sharp,
-                                      color: Color(0xFFFEDF31),
-                                      size: 24.0,
-                                    ),
-                                  ),
-                                  if (functions
-                                          .setIngeterValue(functions
-                                              .additionFunctionInt(
-                                                  FFAppState().cartTotalCount,
-                                                  FFAppState().subCartTotalItem)
-                                              .toString())
-                                          .toString() !=
-                                      '0')
+                                logFirebaseEvent(
+                                    'cartbtnContainer_google_analytics_event');
+                                logFirebaseEvent(
+                                    'CartScreenFromDashboardAnalytics');
+                              } else {
+                                logFirebaseEvent(
+                                    'cartbtnContainer_update_app_state');
+                                FFAppState().isCartShow =
+                                    !(FFAppState().isCartShow ?? true);
+                                safeSetState(() {});
+                              }
+                            },
+                            child: Container(
+                              width: 50.0,
+                              height: 50.0,
+                              decoration: BoxDecoration(
+                                color: FFAppConstants.indigoColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Stack(
+                                  children: [
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 20.0,
-                                        height: 20.0,
-                                        decoration: BoxDecoration(
-                                          color: FFAppConstants
-                                              .NeutralBlack50Color,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            functions
+                                          0.0, 10.0, 0.0, 0.0),
+                                      child: Icon(
+                                        Icons.shopping_cart_sharp,
+                                        color: Color(0xFFFEDF31),
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                    if (functions
+                                            .setIngeterValue(functions
                                                 .additionFunctionInt(
                                                     FFAppState().cartTotalCount,
                                                     FFAppState()
                                                         .subCartTotalItem)
-                                                .toString(),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.montserrat(
+                                                .toString())
+                                            .toString() !=
+                                        '0')
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8.0, 0.0, 0.0, 0.0),
+                                        child: Container(
+                                          width: 20.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: FFAppConstants
+                                                .NeutralBlack50Color,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Text(
+                                              functions
+                                                  .additionFunctionInt(
+                                                      FFAppState()
+                                                          .cartTotalCount,
+                                                      FFAppState()
+                                                          .subCartTotalItem)
+                                                  .toString(),
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    color: FFAppConstants
+                                                        .blackColor0A0A0A,
+                                                    fontSize: 10.0,
+                                                    letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -4547,46 +4623,40 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                             .bodyMedium
                                                             .fontStyle,
                                                   ),
-                                                  color: FFAppConstants
-                                                      .blackColor0A0A0A,
-                                                  fontSize: 10.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.0, 1.0),
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width * 1.0,
-                        height: MediaQuery.sizeOf(context).height * 0.1,
-                        decoration: BoxDecoration(),
-                        child: Align(
-                          alignment: AlignmentDirectional(0.0, 1.0),
-                          child: wrapWithModel(
-                            model: _model.bottomnavBarModel,
-                            updateCallback: () => safeSetState(() {}),
-                            child: BottomnavBarWidget(
-                              pageName: 'home',
+                    if (FFAppConstants.userStatus !=
+                        getJsonField(
+                          dashboardScreenOneAPIResponse.jsonBody,
+                          r'''$.user_active_status''',
+                        ).toString())
+                      Align(
+                        alignment: AlignmentDirectional(0.0, 1.0),
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width * 1.0,
+                          height: MediaQuery.sizeOf(context).height * 0.1,
+                          decoration: BoxDecoration(),
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 1.0),
+                            child: wrapWithModel(
+                              model: _model.bottomnavBarModel,
+                              updateCallback: () => safeSetState(() {}),
+                              child: BottomnavBarWidget(
+                                pageName: 'home',
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                     if (FFAppState().isCartShow == true)
                       Align(
                         alignment: AlignmentDirectional(0.0, 1.0),
@@ -4599,10 +4669,10 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                               decoration: BoxDecoration(
                                 color: FFAppConstants.indigoColor,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
                                   topLeft: Radius.circular(10.0),
                                   topRight: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
                               ),
                               child: Padding(
@@ -5170,7 +5240,12 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                               dashboardScreenOneAPIResponse.jsonBody,
                               r'''$.popup_banner''',
                             ).toString()) &&
-                        (FFAppState().isPopUpShow != false))
+                        (FFAppState().isPopUpShow != false) &&
+                        (FFAppConstants.userStatus !=
+                            getJsonField(
+                              dashboardScreenOneAPIResponse.jsonBody,
+                              r'''$.user_active_status''',
+                            ).toString()))
                       InkWell(
                         splashColor: Colors.transparent,
                         focusColor: Colors.transparent,
@@ -5291,21 +5366,13 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                         '${getJsonField(
                                                           FFAppState().appInfo,
                                                           r'''$.referral_message''',
-                                                        ).toString()}  ${_model.refCodew}',
+                                                        ).toString()}  https://www.quickart.ae/SignUpScreen?refCode=${getJsonField(
+                                                          FFAppState().appInfo,
+                                                          r'''$.referral_code''',
+                                                        ).toString()}',
                                                         sharePositionOrigin:
                                                             getWidgetBoundingBox(
                                                                 context),
-                                                      );
-                                                      logFirebaseEvent(
-                                                          'Image_google_analytics_event');
-                                                      logFirebaseEvent(
-                                                        'Share',
-                                                        parameters: {
-                                                          'Screen Name':
-                                                              'Profile',
-                                                          'Share To':
-                                                              'Refer a Friend',
-                                                        },
                                                       );
                                                     } else {
                                                       logFirebaseEvent(
@@ -5521,12 +5588,10 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                             alignment: AlignmentDirectional(0.0, 1.0),
                             child: Container(
                               width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: 450.0,
+                              height: 440.0,
                               decoration: BoxDecoration(
                                 color: FFAppConstants.whiteColor,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(0.0),
-                                  bottomRight: Radius.circular(0.0),
                                   topLeft: Radius.circular(15.0),
                                   topRight: Radius.circular(15.0),
                                 ),
@@ -5689,34 +5754,46 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                           ),
                                       ],
                                     ),
-                                     Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 20.0, 0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            logFirebaseEvent(
-                                                'DASHBOARD_SCREEN_Text_vdypy756_ON_TAP');
-                                            logFirebaseEvent(
-                                                'Text_update_app_state');
-                                            FFAppState().updateContainer =
-                                                false;
-                                            safeSetState(() {});
-                                          },
-                                          child: Text(
-                                            'Update available',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.montserrat(
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 20.0, 0.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              logFirebaseEvent(
+                                                  'DASHBOARD_SCREEN_Text_vdypy756_ON_TAP');
+                                              logFirebaseEvent(
+                                                  'Text_update_app_state');
+                                              FFAppState().updateContainer =
+                                                  false;
+                                              safeSetState(() {});
+                                            },
+                                            child: Text(
+                                              'Update available',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    fontSize: 20.0,
+                                                    letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -5724,27 +5801,32 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                             .bodyMedium
                                                             .fontStyle,
                                                   ),
-                                                  fontSize: 20.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                            ),
                                           ),
-                                        ),
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(0.0, 0.0),
-                                          child: Text(
-                                            'App version: ${isiOS ? FFAppConstants.appVersioniOS : FFAppConstants.appVersionAndroid}',
-                                            textAlign: TextAlign.start,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.montserrat(
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Text(
+                                              'App version: ${isiOS ? FFAppConstants.appVersioniOS : FFAppConstants.appVersionAndroid}',
+                                              textAlign: TextAlign.start,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    font:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .fontStyle,
+                                                    ),
+                                                    color: FFAppConstants
+                                                        .blackColor0A0A0A,
+                                                    fontSize: 14.0,
+                                                    letterSpacing: 0.0,
                                                     fontWeight: FontWeight.w500,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
@@ -5752,22 +5834,11 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                             .bodyMedium
                                                             .fontStyle,
                                                   ),
-                                                  color: FFAppConstants
-                                                      .blackColor0A0A0A,
-                                                  fontSize: 14.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           0.0, 10.0, 0.0, 0.0),
@@ -5814,26 +5885,47 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                               fit: BoxFit.cover,
                                             ),
                                           ),
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              RichText(
-                                                textScaler:
-                                                    MediaQuery.of(context)
-                                                        .textScaler,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'Quickart: ',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .montserrat(
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    3.0, 0.0, 0.0, 0.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                RichText(
+                                                  textScaler:
+                                                      MediaQuery.of(context)
+                                                          .textScaler,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: 'Quickart: ',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: FFAppConstants
+                                                                      .blackColor0A0A0A,
+                                                                  fontSize:
+                                                                      MediaQuery.sizeOf(context).width <
+                                                                              370.0
+                                                                          ? 14.0
+                                                                          : 16.0,
+                                                                  letterSpacing:
+                                                                      0.0,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w600,
@@ -5842,47 +5934,40 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                       .bodyMedium
                                                                       .fontStyle,
                                                                 ),
-                                                                color: FFAppConstants
-                                                                    .blackColor0A0A0A,
-                                                                fontSize:
-                                                                    MediaQuery.sizeOf(context).width <
-                                                                            370.0
-                                                                        ? 14.0
-                                                                        : 16.0,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontStyle: FlutterFlowTheme.of(
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            'Freshness Delivered Daily',
+                                                        style: TextStyle(
+                                                          color: FFAppConstants
+                                                              .blackColor0A0A0A,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .width <
+                                                                  370.0
+                                                              ? 10.0
+                                                              : 12.0,
+                                                        ),
+                                                      )
+                                                    ],
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          font: GoogleFonts
+                                                              .montserrat(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
                                                                         context)
                                                                     .bodyMedium
                                                                     .fontStyle,
-                                                              ),
-                                                    ),
-                                                    TextSpan(
-                                                      text:
-                                                          'Freshness Delivered Daily',
-                                                      style: TextStyle(
-                                                        color: FFAppConstants
-                                                            .blackColor0A0A0A,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .width <
-                                                                370.0
-                                                            ? 12.0
-                                                            : 14.0,
-                                                      ),
-                                                    )
-                                                  ],
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        font: GoogleFonts
-                                                            .montserrat(
+                                                          ),
+                                                          fontSize: 14.0,
+                                                          letterSpacing: 0.0,
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           fontStyle:
@@ -5891,37 +5976,42 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                   .bodyMedium
                                                                   .fontStyle,
                                                         ),
-                                                        fontSize: 14.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontStyle:
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  2.0,
+                                                                  0.0),
+                                                      child: Text(
+                                                        '5.0',
+                                                        style:
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .bodyMedium
-                                                                .fontStyle,
-                                                      ),
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                2.0, 0.0),
-                                                    child: Text(
-                                                      '5.0',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                font: GoogleFonts
-                                                                    .readexPro(
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .readexPro(
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  letterSpacing:
+                                                                      0.0,
                                                                   fontWeight: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyMedium
@@ -5931,38 +6021,64 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                       .bodyMedium
                                                                       .fontStyle,
                                                                 ),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                                fontStyle: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                              ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                10.0, 0.0),
-                                                    child: Icon(
-                                                      Icons.star_sharp,
-                                                      color: FFAppConstants
-                                                          .blackColor666666,
-                                                      size: 16.0,
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  10.0,
+                                                                  0.0),
+                                                      child: Icon(
+                                                        Icons.star_sharp,
+                                                        color: FFAppConstants
+                                                            .blackColor666666,
+                                                        size: 16.0,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                10.0, 0.0),
-                                                    child: Text(
-                                                      '',
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  10.0,
+                                                                  0.0),
+                                                      child: Text(
+                                                        '',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontWeight: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontWeight,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontWeight,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                                ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'Rated for 3+',
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -5991,42 +6107,10 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                                                     .fontStyle,
                                                               ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    'Rated for 3+',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font: GoogleFonts
-                                                              .montserrat(
-                                                            fontWeight:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontWeight,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontWeight,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -6166,6 +6250,354 @@ class _DashboardScreenWidgetState extends State<DashboardScreenWidget>
                                   ],
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if ((FFAppState().zoneInfo == null) &&
+                        (FFAppConstants.userStatus !=
+                            getJsonField(
+                              dashboardScreenOneAPIResponse.jsonBody,
+                              r'''$.user_active_status''',
+                            ).toString()))
+                      Container(
+                        width: MediaQuery.sizeOf(context).width * 1.0,
+                        height: MediaQuery.sizeOf(context).height * 1.0,
+                        decoration: BoxDecoration(
+                          color: Color(0x3E14181B),
+                        ),
+                        child: Align(
+                          alignment: AlignmentDirectional(0.0, 1.0),
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width * 1.0,
+                            height: MediaQuery.sizeOf(context).height * 0.7,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50.0),
+                                topRight: Radius.circular(50.0),
+                              ),
+                            ),
+                            alignment: AlignmentDirectional(0.0, 1.0),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 1.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    child: Image.asset(
+                                      'assets/images/6-new.png',
+                                      width: MediaQuery.sizeOf(context).width *
+                                          1.0,
+                                      height:
+                                          MediaQuery.sizeOf(context).height *
+                                              0.58,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 30.0, 0.0, 0.0),
+                                          child: Container(
+                                            height: MediaQuery.sizeOf(context)
+                                                    .height *
+                                                0.4,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(50.0),
+                                                topRight: Radius.circular(50.0),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      20.0, 0.0, 20.0, 0.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 50.0,
+                                                                0.0, 0.0),
+                                                    child: Text(
+                                                      'Where should we deliver?',
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .montserrat(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                            ),
+                                                            color: FFAppConstants
+                                                                .blackColor0A0A0A,
+                                                            fontSize: 21.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 20.0,
+                                                                0.0, 0.0),
+                                                    child: Text(
+                                                      'Add your address to see products, prices, and delivery options available in your area.',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .bodyMedium
+                                                          .override(
+                                                            font: GoogleFonts
+                                                                .montserrat(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyMedium
+                                                                      .fontStyle,
+                                                            ),
+                                                            color: FFAppConstants
+                                                                .blackColor0A0A0A,
+                                                            fontSize: 17.0,
+                                                            letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMedium
+                                                                    .fontStyle,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 20.0,
+                                                                0.0, 0.0),
+                                                    child: FFButtonWidget(
+                                                      onPressed: () async {
+                                                        logFirebaseEvent(
+                                                            'DASHBOARD_SCREEN_ADD_ADDRESS__START_ORDE');
+                                                        logFirebaseEvent(
+                                                            'Button_update_app_state');
+                                                        FFAppState()
+                                                                .screenName =
+                                                            'homeScreen';
+                                                        safeSetState(() {});
+                                                        logFirebaseEvent(
+                                                            'Button_navigate_to');
+
+                                                        context.pushNamed(
+                                                            AddressListScreenWidget
+                                                                .routeName);
+
+                                                        logFirebaseEvent(
+                                                            'Button_google_analytics_event');
+                                                        logFirebaseEvent(
+                                                            'AddressListScreenFromDashboardAnalytics');
+                                                      },
+                                                      text:
+                                                          'Add Address & Start Ordering',
+                                                      options: FFButtonOptions(
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.8,
+                                                        height: 45.0,
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    0.0,
+                                                                    16.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color: FFAppConstants
+                                                            .indigoColor,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .titleSmall
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmall
+                                                                      .fontStyle,
+                                                                ),
+                                                        elevation: 2.0,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 20.0,
+                                                                0.0, 0.0),
+                                                    child: FFButtonWidget(
+                                                      onPressed: () async {
+                                                        logFirebaseEvent(
+                                                            'DASHBOARD_SCREEN_CHOOSE_ON_MAP_BTN_ON_TA');
+                                                        logFirebaseEvent(
+                                                            'Button_update_app_state');
+                                                        FFAppState()
+                                                                .screenName =
+                                                            'dashbaord';
+                                                        safeSetState(() {});
+                                                        logFirebaseEvent(
+                                                            'Button_navigate_to');
+
+                                                        context.pushNamed(
+                                                            GoogleMapsRedirectWidget
+                                                                .routeName);
+
+                                                        logFirebaseEvent(
+                                                            'Button_google_analytics_event');
+                                                        logFirebaseEvent(
+                                                            'AddressListScreenFromDashboardAnalytics');
+                                                      },
+                                                      text: 'Choose on map',
+                                                      icon: Icon(
+                                                        Icons.location_on,
+                                                        size: 24.0,
+                                                      ),
+                                                      options: FFButtonOptions(
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.8,
+                                                        height: 45.0,
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    16.0,
+                                                                    0.0,
+                                                                    16.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color: FFAppConstants
+                                                            .darkGreen,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  font: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontStyle: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .titleSmall
+                                                                        .fontStyle,
+                                                                  ),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmall
+                                                                      .fontStyle,
+                                                                ),
+                                                        elevation: 2.0,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(24.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, -1.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: Image.asset(
+                                              'assets/images/q2.png',
+                                              width: 50.0,
+                                              height: 50.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),

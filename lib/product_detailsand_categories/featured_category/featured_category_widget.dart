@@ -155,7 +155,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
     return FutureBuilder<ApiCallResponse>(
       future: (_model.apiRequestCompleter2 ??= Completer<ApiCallResponse>()
             ..complete(QuickartGroup.featuredCategoryCall.call(
-              storedId: FFAppState().storeID,
+              storedId: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.store_id''',
+              ).toString(),
               fcatId: widget!.id == null || widget!.id == ''
                   ? FFAppState().catID
                   : (_model.isSelectedCat == true
@@ -186,6 +189,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                   ? '99.99'
                   : FFAppState().maxDiscount,
               platform: isiOS ? 'ios' : 'android',
+              zoneID: getJsonField(
+                FFAppState().zoneInfo,
+                r'''$.zone_id''',
+              ).toString(),
             )))
           .future,
       builder: (context, snapshot) {
@@ -370,7 +377,12 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                                       Completer<ApiCallResponse>()
                                         ..complete(QuickartGroup
                                             .featurecategoryCall
-                                            .call()))
+                                            .call(
+                                          zoneID: getJsonField(
+                                            FFAppState().zoneInfo,
+                                            r'''$.zone_id''',
+                                          ).toString(),
+                                        )))
                                   .future,
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -936,7 +948,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                                                                                     _model.cartAdd = await QuickartGroup.addToCartCall.call(
                                                                                       userid: FFAppState().userID,
                                                                                       qty: '1',
-                                                                                      storeid: FFAppState().storeID,
+                                                                                      storeid: getJsonField(
+                                                                                        FFAppState().zoneInfo,
+                                                                                        r'''$.store_id''',
+                                                                                      ).toString(),
                                                                                       varientid: getJsonField(
                                                                                         productModelItem,
                                                                                         r'''$.varient_id''',
@@ -1196,7 +1211,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                                                                                         logFirebaseEvent('Button_backend_call');
                                                                                         _model.addtoCartAPI1 = await QuickartGroup.addToCartCall.call(
                                                                                           userid: FFAppState().userID,
-                                                                                          storeid: FFAppState().storeID,
+                                                                                          storeid: getJsonField(
+                                                                                            FFAppState().zoneInfo,
+                                                                                            r'''$.store_id''',
+                                                                                          ).toString(),
                                                                                           deviceid: FFAppState().deviceID,
                                                                                           qty: functions.addRemoveQTY(
                                                                                               getJsonField(
@@ -1460,7 +1478,10 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                                                                                                   r'''$.cart_qty''',
                                                                                                 ),
                                                                                                 'add'),
-                                                                                            storeid: FFAppState().storeID,
+                                                                                            storeid: getJsonField(
+                                                                                              FFAppState().zoneInfo,
+                                                                                              r'''$.store_id''',
+                                                                                            ).toString(),
                                                                                             varientid: getJsonField(
                                                                                               productModelItem,
                                                                                               r'''$.varient_id''',
@@ -3033,8 +3054,11 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                                                                     FFAppState()
                                                                         .userID,
                                                                 storeID:
-                                                                    FFAppState()
-                                                                        .storeID,
+                                                                    getJsonField(
+                                                                  FFAppState()
+                                                                      .zoneInfo,
+                                                                  r'''$.store_id''',
+                                                                ).toString(),
                                                                 varientID:
                                                                     getJsonField(
                                                                   productModelItem,
@@ -3237,8 +3261,11 @@ class _FeaturedCategoryWidgetState extends State<FeaturedCategoryWidget>
                                                                     FFAppState()
                                                                         .userID,
                                                                 storeID:
-                                                                    FFAppState()
-                                                                        .storeID,
+                                                                    getJsonField(
+                                                                  FFAppState()
+                                                                      .zoneInfo,
+                                                                  r'''$.store_id''',
+                                                                ).toString(),
                                                                 varientID:
                                                                     getJsonField(
                                                                   productModelItem,

@@ -69,7 +69,7 @@ class _TrendingProductsScreenWidgetState
     super.dispose();
   }
 
-  //Page Load bacome in foreground...G1
+//Page Load bacome in foreground...G1
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -177,19 +177,8 @@ class _TrendingProductsScreenWidgetState
                 context.pop();
               } else {
                 logFirebaseEvent('IconButton_navigate_to');
-                if (FFAppState().isUserLogin == true) {
-                  logFirebaseEvent('IconButton_navigate_to');
 
-                  context.pushNamed(DashboardScreenWidget.routeName);
-
-                  logFirebaseEvent('IconButton_update_app_state');
-                  FFAppState().isCartShow = false;
-                  safeSetState(() {});
-                } else {
-                  logFirebaseEvent('IconButton_navigate_to');
-
-                  context.pushNamed(LoginOnBoardScreenWidget.routeName);
-                }
+                context.pushNamed(LoginOnBoardScreenWidget.routeName);
               }
             },
           ),
@@ -304,7 +293,10 @@ class _TrendingProductsScreenWidgetState
                                   ..complete(
                                       QuickartGroup.recentsellingCall.call(
                                     userid: FFAppState().userID,
-                                    storeid: FFAppState().storeID,
+                                    storeid: getJsonField(
+                                      FFAppState().zoneInfo,
+                                      r'''$.store_id''',
+                                    ).toString(),
                                     byname: FFAppState().byName,
                                     minPrice: FFAppState().minPrice,
                                     maxPrice: FFAppState().maxPrice,
@@ -331,6 +323,10 @@ class _TrendingProductsScreenWidgetState
                                     page: 1,
                                     pageper: 100,
                                     platform: isiOS ? 'ios' : 'android',
+                                    zoneid: getJsonField(
+                                      FFAppState().zoneInfo,
+                                      r'''$.zone_id''',
+                                    ).toString(),
                                   )))
                                 .future,
                             builder: (context, snapshot) {
@@ -693,7 +689,10 @@ class _TrendingProductsScreenWidgetState
                                                                                       _model.cartAdd = await QuickartGroup.addToCartCall.call(
                                                                                         userid: FFAppState().userID,
                                                                                         qty: '1',
-                                                                                        storeid: FFAppState().storeID,
+                                                                                        storeid: getJsonField(
+                                                                                          FFAppState().zoneInfo,
+                                                                                          r'''$.store_id''',
+                                                                                        ).toString(),
                                                                                         varientid: getJsonField(
                                                                                           productModelItem,
                                                                                           r'''$.varient_id''',
@@ -960,7 +959,10 @@ class _TrendingProductsScreenWidgetState
                                                                                           logFirebaseEvent('Button_backend_call');
                                                                                           _model.addtoCartAPI1 = await QuickartGroup.addToCartCall.call(
                                                                                             userid: FFAppState().userID,
-                                                                                            storeid: FFAppState().storeID,
+                                                                                            storeid: getJsonField(
+                                                                                              FFAppState().zoneInfo,
+                                                                                              r'''$.store_id''',
+                                                                                            ).toString(),
                                                                                             deviceid: FFAppState().deviceID,
                                                                                             qty: functions.addRemoveQTY(
                                                                                                 getJsonField(
@@ -1229,7 +1231,10 @@ class _TrendingProductsScreenWidgetState
                                                                                                     r'''$.cart_qty''',
                                                                                                   ),
                                                                                                   'add'),
-                                                                                              storeid: FFAppState().storeID,
+                                                                                              storeid: getJsonField(
+                                                                                                FFAppState().zoneInfo,
+                                                                                                r'''$.store_id''',
+                                                                                              ).toString(),
                                                                                               varientid: getJsonField(
                                                                                                 productModelItem,
                                                                                                 r'''$.varient_id''',
@@ -2760,8 +2765,11 @@ class _TrendingProductsScreenWidgetState
                                                                       FFAppState()
                                                                           .userID,
                                                                   storeID:
-                                                                      FFAppState()
-                                                                          .storeID,
+                                                                      getJsonField(
+                                                                    FFAppState()
+                                                                        .zoneInfo,
+                                                                    r'''$.store_id''',
+                                                                  ).toString(),
                                                                   varientID:
                                                                       getJsonField(
                                                                     productModelItem,
@@ -2963,8 +2971,11 @@ class _TrendingProductsScreenWidgetState
                                                                       userid: FFAppState()
                                                                           .userID,
                                                                       storeID:
-                                                                          FFAppState()
-                                                                              .storeID,
+                                                                          getJsonField(
+                                                                        FFAppState()
+                                                                            .zoneInfo,
+                                                                        r'''$.store_id''',
+                                                                      ).toString(),
                                                                       varientID:
                                                                           getJsonField(
                                                                         productModelItem,

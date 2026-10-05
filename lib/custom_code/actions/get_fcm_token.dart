@@ -1,9 +1,10 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
+import '/flutter_flow/ff_builtin_enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
+import '/custom_code/actions/index.dart'; // Imports other custom actions
 import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -32,7 +33,6 @@ Future<String?> getFcmToken() async {
 
     // Get token
     String? token = await fcm.getToken();
-     FFAppState().fcmToken = "$token";
     print("FCM Token: $token");
     return token;
   } catch (e) {

@@ -1,9 +1,4 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:quic_kart/custom_code/actions/initialize_push_notification.dart';
 
 import '/custom_code/actions/index.dart' as actions;
 import 'package:provider/provider.dart';
@@ -28,6 +23,7 @@ import 'index.dart';
 late FirebaseAnalytics analytics;
 void main() async {
   print("G1---->splash load-0---->${DateTime.now()}");
+
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
@@ -38,24 +34,25 @@ void main() async {
   await initFirebase();
 
   // Start initial custom actions code
+  await actions.lockOrientation();
+  await actions.initializeAppsflyer();
+  await actions.setFBEvent();
 
+  await actions.initReferrerDetails();
+  await actions.initializeAmplitude();
   // End initial custom actions code
-  analytics = FirebaseAnalytics.instance;
+  // analytics = FirebaseAnalytics.instance;
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
-  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
-     actions.initializePushNotification();
-  // print("G1---->splash load-01---->${DateTime.now()}");
-//  GoogleFonts.config.allowRuntimeFetching = false;
+  await actions.initializePushNotification();
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
     child: MyApp(),
   ));
-  // Background initialization
-  // unawaited(_initializeBackgroundServices());
 }
 
 Future<void> _initializeBackgroundServices() async {
@@ -91,6 +88,7 @@ class MyAppScrollBehavior extends MaterialScrollBehavior {
   Set<PointerDeviceKind> get dragDevices => {
         PointerDeviceKind.touch,
         PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
       };
 }
 
@@ -105,7 +103,7 @@ class _MyAppState extends State<MyApp> {
     final RouteMatchList matchList = lastMatch is ImperativeRouteMatch
         ? lastMatch.matches
         : _router.routerDelegate.currentConfiguration;
-    return matchList.uri.toString();
+    return matchList.uri.path;
   }
 
   List<String> getRouteStack() =>
@@ -115,7 +113,14 @@ class _MyAppState extends State<MyApp> {
   late Stream<BaseAuthUser> userStream;
 
   final authUserSub = authenticatedUserStream.listen((_) {});
-  final fcmTokenSub = fcmTokenUserStream.listen((_) {});
+  final fcmTokenSub = fcmTokenUserStream.listen(
+    (_) {},
+    // Registering a token can fail for reasons outside the app's control (a
+    // browser without the Notification API, a revoked permission, a blocked
+    // cloud call). Swallow it here so it can't surface as an unhandled zone
+    // error and take down the app on login.
+    onError: (e) => print('Error registering FCM token: $e'),
+  );
 
   @override
   void initState() {
@@ -129,9 +134,10 @@ class _MyAppState extends State<MyApp> {
       });
     jwtTokenStream.listen((_) {});
     // Future.delayed(
-    //   Duration(milliseconds: 1000),
+    //   Duration(milliseconds: 100),
     //   () => _appStateNotifier.stopShowingSplashImage(),
     // );
+    _appStateNotifier.stopShowingSplashImage();
   }
 
   @override
@@ -161,7 +167,7 @@ class _MyAppState extends State<MyApp> {
           child: child!,
         );
       },
-      localizationsDelegates: const [
+      localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

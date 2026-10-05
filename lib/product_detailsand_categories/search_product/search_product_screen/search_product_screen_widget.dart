@@ -156,12 +156,32 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                       FFAppState().searchLoader = false;
                                       safeSetState(() {});
                                       logFirebaseEvent(
+                                          'TextField_custom_action');
+                                      await actions.facebookEventClass(
+                                        FFAppState().userID,
+                                        _model.textController.text,
+                                        '0',
+                                        0.0,
+                                        0,
+                                        0.0,
+                                        'searchStart',
+                                        FFAppState().emptyJson,
+                                        '0',
+                                        '0',
+                                        '0',
+                                        '0',
+                                        '0',
+                                      );
+                                      logFirebaseEvent(
                                           'TextField_backend_call');
                                       _model.searchProductAPIResponsefil =
                                           await ProductsearchCall.call(
                                         userid: FFAppState().userID,
                                         keyword: _model.textController.text,
-                                        storeid: FFAppState().storeID,
+                                        storeid: getJsonField(
+                                          FFAppState().zoneInfo,
+                                          r'''$.store_id''',
+                                        ).toString(),
                                         platform: FFAppState().platform,
                                         sortPrice: () {
                                           if (_model.selectedFilterSearch ==
@@ -183,6 +203,10 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                             _model.selectedFilterSearch == 3
                                                 ? '99.99'
                                                 : FFAppState().minDiscount,
+                                        zoneId: getJsonField(
+                                          FFAppState().zoneInfo,
+                                          r'''$.zone_id''',
+                                        ).toString(),
                                       );
 
                                       if ((_model.searchProductAPIResponsefil
@@ -436,7 +460,10 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                               await ProductsearchCall.call(
                             userid: FFAppState().userID,
                             keyword: _model.textController.text,
-                            storeid: FFAppState().storeID,
+                            storeid: getJsonField(
+                              FFAppState().zoneInfo,
+                              r'''$.store_id''',
+                            ).toString(),
                             platform: FFAppState().platform,
                             sortPrice: () {
                               if (_model.selectedFilterSearch == 1) {
@@ -904,7 +931,10 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                           _model.apiResultsmdc1 = await QuickartGroup.addToCartCall.call(
                                                                                             userid: FFAppState().userID,
                                                                                             qty: '1',
-                                                                                            storeid: FFAppState().storeID,
+                                                                                            storeid: getJsonField(
+                                                                                              FFAppState().zoneInfo,
+                                                                                              r'''$.store_id''',
+                                                                                            ).toString(),
                                                                                             varientid: getJsonField(
                                                                                               productModelItem,
                                                                                               r'''$.varient_id''',
@@ -959,73 +989,87 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                               }(),
                                                                                             );
                                                                                             logFirebaseEvent('Button_backend_call');
-                                                                                            _model.apiResultbf5 = await QuickartGroup.searchbystoreproductCall.call(
+                                                                                            _model.searchProductAPIResponsefilter1 = await ProductsearchCall.call(
                                                                                               userid: FFAppState().userID,
-                                                                                              storeid: FFAppState().storeID,
                                                                                               keyword: _model.textController.text,
-                                                                                              minPrice: FFAppState().minPrice,
-                                                                                              maxPrice: FFAppState().maxPrice,
-                                                                                              byName: FFAppState().byName,
-                                                                                              stock: FFAppState().stock,
-                                                                                              minDiscount: FFAppState().minDiscount,
-                                                                                              maxDiscount: FFAppState().maxDiscount,
-                                                                                              sort: FFAppState().sort,
-                                                                                              sortPrice: FFAppState().sortPrice,
-                                                                                              sortName: FFAppState().sortName,
-                                                                                              subCatId: FFAppState().subCateID,
-                                                                                              catId: 'null',
-                                                                                              minRating: FFAppState().minRating,
-                                                                                              maxRating: FFAppState().maxRating,
-                                                                                              perpage: 100,
-                                                                                              page: 1,
-                                                                                              platform: isiOS ? 'ios' : 'android',
+                                                                                              storeid: getJsonField(
+                                                                                                FFAppState().zoneInfo,
+                                                                                                r'''$.store_id''',
+                                                                                              ).toString(),
+                                                                                              platform: FFAppState().platform,
+                                                                                              sortPrice: () {
+                                                                                                if (_model.selectedFilterSearch == 1) {
+                                                                                                  return 'htol';
+                                                                                                } else if (_model.selectedFilterSearch == 2) {
+                                                                                                  return 'ltoh';
+                                                                                                } else {
+                                                                                                  return FFAppState().sortPrice;
+                                                                                                }
+                                                                                              }(),
+                                                                                              minDiscount: _model.selectedFilterSearch == 3 ? '0.0' : FFAppState().maxDiscount,
+                                                                                              maxDiscount: _model.selectedFilterSearch == 3 ? '99.99' : FFAppState().maxDiscount,
                                                                                             );
 
-                                                                                            if ((_model.apiResultbf5?.succeeded ?? true)) {
+                                                                                            if ((_model.searchProductAPIResponsefilter1?.succeeded ?? true)) {
                                                                                               logFirebaseEvent('Button_update_page_state');
                                                                                               _model.productModel1 = getJsonField(
-                                                                                                (_model.apiResultbf5?.jsonBody ?? ''),
+                                                                                                (_model.searchProductAPIResponsefilter1?.jsonBody ?? ''),
                                                                                                 r'''$.data''',
                                                                                               );
-                                                                                              safeSetState(() {});
                                                                                               logFirebaseEvent('Button_update_app_state');
-                                                                                              FFAppState().isCartShow = false;
-                                                                                              FFAppState().cartTotalCount = QuickartGroup.addToCartCall.totalItems(
-                                                                                                (_model.apiResultsmdc1?.jsonBody ?? ''),
-                                                                                              )!;
-                                                                                              FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                  .savingPrice(
-                                                                                                    (_model.apiResultsmdc1?.jsonBody ?? ''),
-                                                                                                  )!
-                                                                                                  .toString());
-                                                                                              FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                  .totalPrice(
-                                                                                                    (_model.apiResultsmdc1?.jsonBody ?? ''),
-                                                                                                  )!
-                                                                                                  .toString());
-                                                                                              FFAppState().refreshTrigger = true;
+                                                                                              FFAppState().searchLoader = true;
                                                                                               safeSetState(() {});
+                                                                                              logFirebaseEvent('Button_custom_action');
+                                                                                              await actions.facebookEventClass(
+                                                                                                '0',
+                                                                                                widget!.keywordPage == null || widget!.keywordPage == '' ? (_model.textController.text.trimRight()) : widget!.keywordPage!,
+                                                                                                'search product',
+                                                                                                0.0,
+                                                                                                (getJsonField(
+                                                                                                  (_model.searchProductAPIResponsefilter1?.jsonBody ?? ''),
+                                                                                                  r'''$.data''',
+                                                                                                ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
+                                                                                                    .withoutNulls
+                                                                                                    .length,
+                                                                                                0.0,
+                                                                                                'search',
+                                                                                                FFAppState().emptyJson,
+                                                                                                ' ',
+                                                                                                ' ',
+                                                                                                ' ',
+                                                                                                ' ',
+                                                                                                ' ',
+                                                                                              );
                                                                                               logFirebaseEvent('Button_google_analytics_event');
-                                                                                              logFirebaseEvent('AddToCartButtonAnalytics');
+                                                                                              logFirebaseEvent(
+                                                                                                'SearchScreenAnalytics',
+                                                                                                parameters: {
+                                                                                                  'Keyword': FFAppState().keyword,
+                                                                                                  'apiName': 'searchbystoreproduct',
+                                                                                                },
+                                                                                              );
                                                                                             } else {
                                                                                               logFirebaseEvent('Button_show_snack_bar');
                                                                                               ScaffoldMessenger.of(context).showSnackBar(
                                                                                                 SnackBar(
                                                                                                   content: Text(
                                                                                                     getJsonField(
-                                                                                                      (_model.apiResultbf5?.jsonBody ?? ''),
+                                                                                                      (_model.searchProductAPIResponsefilter1?.jsonBody ?? ''),
                                                                                                       r'''$.message''',
                                                                                                     ).toString(),
                                                                                                     style: GoogleFonts.montserrat(
-                                                                                                      color: FFAppConstants.indigoColor,
+                                                                                                      color: FFAppConstants.blackColor0A0A0A,
                                                                                                       fontWeight: FontWeight.w500,
-                                                                                                      fontSize: 15.0,
+                                                                                                      fontSize: 12.0,
                                                                                                     ),
                                                                                                   ),
-                                                                                                  duration: Duration(milliseconds: 1500),
-                                                                                                  backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                  duration: Duration(milliseconds: 4000),
+                                                                                                  backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                                                 ),
                                                                                               );
+                                                                                              logFirebaseEvent('Button_update_app_state');
+                                                                                              FFAppState().searchLoader = true;
+                                                                                              safeSetState(() {});
                                                                                             }
                                                                                           } else {
                                                                                             logFirebaseEvent('Button_show_snack_bar');
@@ -1171,7 +1215,10 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                                       r'''$.cart_qty''',
                                                                                                     ),
                                                                                                     'remove'),
-                                                                                                storeid: FFAppState().storeID,
+                                                                                                storeid: getJsonField(
+                                                                                                  FFAppState().zoneInfo,
+                                                                                                  r'''$.store_id''',
+                                                                                                ).toString(),
                                                                                                 varientid: getJsonField(
                                                                                                   productModelItem,
                                                                                                   r'''$.varient_id''',
@@ -1222,58 +1269,63 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                                   ' ',
                                                                                                 );
                                                                                                 logFirebaseEvent('Button_backend_call');
-                                                                                                _model.apiResultbf55 = await QuickartGroup.searchbystoreproductCall.call(
+                                                                                                _model.searchProductAPIResponsefilter3 = await ProductsearchCall.call(
                                                                                                   userid: FFAppState().userID,
-                                                                                                  storeid: FFAppState().storeID,
                                                                                                   keyword: _model.textController.text,
-                                                                                                  minPrice: FFAppState().minPrice,
-                                                                                                  maxPrice: FFAppState().maxPrice,
-                                                                                                  byName: FFAppState().byName,
-                                                                                                  stock: FFAppState().stock,
-                                                                                                  minDiscount: FFAppState().minDiscount,
-                                                                                                  maxDiscount: FFAppState().maxDiscount,
-                                                                                                  sort: FFAppState().sort,
-                                                                                                  sortPrice: FFAppState().sortPrice,
-                                                                                                  sortName: FFAppState().sortName,
-                                                                                                  subCatId: FFAppState().subCateID,
-                                                                                                  catId: 'null',
-                                                                                                  minRating: FFAppState().minRating,
-                                                                                                  maxRating: FFAppState().maxRating,
-                                                                                                  perpage: 100,
-                                                                                                  page: 1,
-                                                                                                  platform: isiOS ? 'ios' : 'android',
+                                                                                                  storeid: getJsonField(
+                                                                                                    FFAppState().zoneInfo,
+                                                                                                    r'''$.store_id''',
+                                                                                                  ).toString(),
+                                                                                                  platform: FFAppState().platform,
+                                                                                                  sortPrice: () {
+                                                                                                    if (_model.selectedFilterSearch == 1) {
+                                                                                                      return 'htol';
+                                                                                                    } else if (_model.selectedFilterSearch == 2) {
+                                                                                                      return 'ltoh';
+                                                                                                    } else {
+                                                                                                      return FFAppState().sortPrice;
+                                                                                                    }
+                                                                                                  }(),
+                                                                                                  minDiscount: _model.selectedFilterSearch == 3 ? '0.0' : FFAppState().maxDiscount,
+                                                                                                  maxDiscount: _model.selectedFilterSearch == 3 ? '99.99' : FFAppState().maxDiscount,
                                                                                                 );
 
-                                                                                                if ((_model.apiResultbf55?.succeeded ?? true)) {
+                                                                                                if ((_model.searchProductAPIResponsefilter3?.succeeded ?? true)) {
                                                                                                   logFirebaseEvent('Button_update_page_state');
                                                                                                   _model.productModel1 = getJsonField(
-                                                                                                    (_model.apiResultbf55?.jsonBody ?? ''),
+                                                                                                    (_model.searchProductAPIResponsefilter3?.jsonBody ?? ''),
                                                                                                     r'''$.data''',
                                                                                                   );
-                                                                                                  safeSetState(() {});
                                                                                                   logFirebaseEvent('Button_update_app_state');
-                                                                                                  FFAppState().isCartShow = false;
-                                                                                                  FFAppState().cartTotalCount = QuickartGroup.addToCartCall.totalItems(
-                                                                                                    (_model.addtocartResult?.jsonBody ?? ''),
-                                                                                                  )!;
-                                                                                                  FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                      .savingPrice(
-                                                                                                        (_model.addtocartResult?.jsonBody ?? ''),
-                                                                                                      )!
-                                                                                                      .toString());
-                                                                                                  FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                      .totalPrice(
-                                                                                                        (_model.addtocartResult?.jsonBody ?? ''),
-                                                                                                      )!
-                                                                                                      .toString());
-                                                                                                  FFAppState().refreshTrigger = true;
+                                                                                                  FFAppState().searchLoader = true;
                                                                                                   safeSetState(() {});
+                                                                                                  logFirebaseEvent('Button_custom_action');
+                                                                                                  await actions.facebookEventClass(
+                                                                                                    '0',
+                                                                                                    widget!.keywordPage == null || widget!.keywordPage == '' ? (_model.textController.text.trimRight()) : widget!.keywordPage!,
+                                                                                                    'search product',
+                                                                                                    0.0,
+                                                                                                    (getJsonField(
+                                                                                                      (_model.searchProductAPIResponsefilter3?.jsonBody ?? ''),
+                                                                                                      r'''$.data''',
+                                                                                                    ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
+                                                                                                        .withoutNulls
+                                                                                                        .length,
+                                                                                                    0.0,
+                                                                                                    'search',
+                                                                                                    FFAppState().emptyJson,
+                                                                                                    ' ',
+                                                                                                    ' ',
+                                                                                                    ' ',
+                                                                                                    ' ',
+                                                                                                    ' ',
+                                                                                                  );
                                                                                                   logFirebaseEvent('Button_google_analytics_event');
                                                                                                   logFirebaseEvent(
-                                                                                                    'Remove From Cart',
+                                                                                                    'SearchScreenAnalytics',
                                                                                                     parameters: {
-                                                                                                      'API Name': 'Add To Cart',
-                                                                                                      'Screen Name': 'Search Product Screen',
+                                                                                                      'Keyword': FFAppState().keyword,
+                                                                                                      'apiName': 'searchbystoreproduct',
                                                                                                     },
                                                                                                   );
                                                                                                 } else {
@@ -1282,19 +1334,22 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                                     SnackBar(
                                                                                                       content: Text(
                                                                                                         getJsonField(
-                                                                                                          (_model.apiResultbf55?.jsonBody ?? ''),
+                                                                                                          (_model.searchProductAPIResponsefilter3?.jsonBody ?? ''),
                                                                                                           r'''$.message''',
                                                                                                         ).toString(),
                                                                                                         style: GoogleFonts.montserrat(
-                                                                                                          color: FFAppConstants.indigoColor,
+                                                                                                          color: FFAppConstants.blackColor0A0A0A,
                                                                                                           fontWeight: FontWeight.w500,
-                                                                                                          fontSize: 15.0,
+                                                                                                          fontSize: 12.0,
                                                                                                         ),
                                                                                                       ),
-                                                                                                      duration: Duration(milliseconds: 1500),
-                                                                                                      backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                      duration: Duration(milliseconds: 4000),
+                                                                                                      backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                                                     ),
                                                                                                   );
+                                                                                                  logFirebaseEvent('Button_update_app_state');
+                                                                                                  FFAppState().searchLoader = true;
+                                                                                                  safeSetState(() {});
                                                                                                 }
                                                                                               } else {
                                                                                                 logFirebaseEvent('Button_show_snack_bar');
@@ -1481,7 +1536,10 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                                           r'''$.cart_qty''',
                                                                                                         ),
                                                                                                         'add'),
-                                                                                                    storeid: FFAppState().storeID,
+                                                                                                    storeid: getJsonField(
+                                                                                                      FFAppState().zoneInfo,
+                                                                                                      r'''$.store_id''',
+                                                                                                    ).toString(),
                                                                                                     varientid: getJsonField(
                                                                                                       productModelItem,
                                                                                                       r'''$.varient_id''',
@@ -1532,58 +1590,63 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                                       ' ',
                                                                                                     );
                                                                                                     logFirebaseEvent('Button_backend_call');
-                                                                                                    _model.apiResultbf555 = await QuickartGroup.searchbystoreproductCall.call(
+                                                                                                    _model.searchProductAPIResponsefilter2 = await ProductsearchCall.call(
                                                                                                       userid: FFAppState().userID,
-                                                                                                      storeid: FFAppState().storeID,
                                                                                                       keyword: _model.textController.text,
-                                                                                                      minPrice: FFAppState().minPrice,
-                                                                                                      maxPrice: FFAppState().maxPrice,
-                                                                                                      byName: FFAppState().byName,
-                                                                                                      stock: FFAppState().stock,
-                                                                                                      minDiscount: FFAppState().minDiscount,
-                                                                                                      maxDiscount: FFAppState().maxDiscount,
-                                                                                                      sort: FFAppState().sort,
-                                                                                                      sortPrice: FFAppState().sortPrice,
-                                                                                                      sortName: FFAppState().sortName,
-                                                                                                      subCatId: FFAppState().subCateID,
-                                                                                                      catId: 'null',
-                                                                                                      minRating: FFAppState().minRating,
-                                                                                                      maxRating: FFAppState().maxRating,
-                                                                                                      perpage: 100,
-                                                                                                      page: 1,
-                                                                                                      platform: isiOS ? 'ios' : 'android',
+                                                                                                      storeid: getJsonField(
+                                                                                                        FFAppState().zoneInfo,
+                                                                                                        r'''$.store_id''',
+                                                                                                      ).toString(),
+                                                                                                      platform: FFAppState().platform,
+                                                                                                      sortPrice: () {
+                                                                                                        if (_model.selectedFilterSearch == 1) {
+                                                                                                          return 'htol';
+                                                                                                        } else if (_model.selectedFilterSearch == 2) {
+                                                                                                          return 'ltoh';
+                                                                                                        } else {
+                                                                                                          return FFAppState().sortPrice;
+                                                                                                        }
+                                                                                                      }(),
+                                                                                                      minDiscount: _model.selectedFilterSearch == 3 ? '0.0' : FFAppState().maxDiscount,
+                                                                                                      maxDiscount: _model.selectedFilterSearch == 3 ? '99.99' : FFAppState().maxDiscount,
                                                                                                     );
 
-                                                                                                    if ((_model.apiResultbf555?.succeeded ?? true)) {
+                                                                                                    if ((_model.searchProductAPIResponsefilter2?.succeeded ?? true)) {
                                                                                                       logFirebaseEvent('Button_update_page_state');
                                                                                                       _model.productModel1 = getJsonField(
-                                                                                                        (_model.apiResultbf555?.jsonBody ?? ''),
+                                                                                                        (_model.searchProductAPIResponsefilter2?.jsonBody ?? ''),
                                                                                                         r'''$.data''',
                                                                                                       );
-                                                                                                      safeSetState(() {});
                                                                                                       logFirebaseEvent('Button_update_app_state');
-                                                                                                      FFAppState().isCartShow = false;
-                                                                                                      FFAppState().cartTotalCount = QuickartGroup.addToCartCall.totalItems(
-                                                                                                        (_model.apiResultAddCart123?.jsonBody ?? ''),
-                                                                                                      )!;
-                                                                                                      FFAppState().cartSavingPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                          .savingPrice(
-                                                                                                            (_model.apiResultAddCart123?.jsonBody ?? ''),
-                                                                                                          )!
-                                                                                                          .toString());
-                                                                                                      FFAppState().cartTotalPrice = functions.stringToDouble(QuickartGroup.addToCartCall
-                                                                                                          .totalPrice(
-                                                                                                            (_model.apiResultAddCart123?.jsonBody ?? ''),
-                                                                                                          )!
-                                                                                                          .toString());
-                                                                                                      FFAppState().refreshTrigger = true;
+                                                                                                      FFAppState().searchLoader = true;
                                                                                                       safeSetState(() {});
+                                                                                                      logFirebaseEvent('Button_custom_action');
+                                                                                                      await actions.facebookEventClass(
+                                                                                                        '0',
+                                                                                                        widget!.keywordPage == null || widget!.keywordPage == '' ? (_model.textController.text.trimRight()) : widget!.keywordPage!,
+                                                                                                        'search product',
+                                                                                                        0.0,
+                                                                                                        (getJsonField(
+                                                                                                          (_model.searchProductAPIResponsefilter2?.jsonBody ?? ''),
+                                                                                                          r'''$.data''',
+                                                                                                        ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
+                                                                                                            .withoutNulls
+                                                                                                            .length,
+                                                                                                        0.0,
+                                                                                                        'search',
+                                                                                                        FFAppState().emptyJson,
+                                                                                                        ' ',
+                                                                                                        ' ',
+                                                                                                        ' ',
+                                                                                                        ' ',
+                                                                                                        ' ',
+                                                                                                      );
                                                                                                       logFirebaseEvent('Button_google_analytics_event');
                                                                                                       logFirebaseEvent(
-                                                                                                        'Add To Cart',
+                                                                                                        'SearchScreenAnalytics',
                                                                                                         parameters: {
-                                                                                                          'API Name': 'Add To Cart',
-                                                                                                          'Screen Name': 'Search Product Screen',
+                                                                                                          'Keyword': FFAppState().keyword,
+                                                                                                          'apiName': 'searchbystoreproduct',
                                                                                                         },
                                                                                                       );
                                                                                                     } else {
@@ -1592,19 +1655,22 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                                         SnackBar(
                                                                                                           content: Text(
                                                                                                             getJsonField(
-                                                                                                              (_model.apiResultbf5?.jsonBody ?? ''),
+                                                                                                              (_model.searchProductAPIResponsefilter2?.jsonBody ?? ''),
                                                                                                               r'''$.message''',
                                                                                                             ).toString(),
                                                                                                             style: GoogleFonts.montserrat(
-                                                                                                              color: FFAppConstants.indigoColor,
+                                                                                                              color: FFAppConstants.blackColor0A0A0A,
                                                                                                               fontWeight: FontWeight.w500,
-                                                                                                              fontSize: 15.0,
+                                                                                                              fontSize: 12.0,
                                                                                                             ),
                                                                                                           ),
-                                                                                                          duration: Duration(milliseconds: 1500),
-                                                                                                          backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                                          duration: Duration(milliseconds: 4000),
+                                                                                                          backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                                                         ),
                                                                                                       );
+                                                                                                      logFirebaseEvent('Button_update_app_state');
+                                                                                                      FFAppState().searchLoader = true;
+                                                                                                      safeSetState(() {});
                                                                                                     }
                                                                                                   } else {
                                                                                                     logFirebaseEvent('Button_show_snack_bar');
@@ -2385,40 +2451,63 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
 
                                                                                   if ((_model.aPInotify?.succeeded ?? true)) {
                                                                                     logFirebaseEvent('IconButton_backend_call');
-                                                                                    _model.apiResultnotify = await QuickartGroup.searchbystoreproductCall.call(
+                                                                                    _model.searchProductAPIResponsefilter6 = await ProductsearchCall.call(
                                                                                       userid: FFAppState().userID,
-                                                                                      storeid: FFAppState().storeID,
                                                                                       keyword: _model.textController.text,
-                                                                                      minPrice: FFAppState().minPrice,
-                                                                                      maxPrice: FFAppState().maxPrice,
-                                                                                      byName: FFAppState().byName,
-                                                                                      stock: FFAppState().stock,
-                                                                                      minDiscount: FFAppState().minDiscount,
-                                                                                      maxDiscount: FFAppState().maxDiscount,
-                                                                                      sort: FFAppState().sort,
-                                                                                      sortPrice: FFAppState().sortPrice,
-                                                                                      sortName: FFAppState().sortName,
-                                                                                      subCatId: FFAppState().subCateID,
-                                                                                      catId: 'null',
-                                                                                      minRating: FFAppState().minRating,
-                                                                                      maxRating: FFAppState().maxRating,
-                                                                                      perpage: 100,
-                                                                                      page: 1,
+                                                                                      storeid: getJsonField(
+                                                                                        FFAppState().zoneInfo,
+                                                                                        r'''$.store_id''',
+                                                                                      ).toString(),
+                                                                                      platform: FFAppState().platform,
+                                                                                      sortPrice: () {
+                                                                                        if (_model.selectedFilterSearch == 1) {
+                                                                                          return 'htol';
+                                                                                        } else if (_model.selectedFilterSearch == 2) {
+                                                                                          return 'ltoh';
+                                                                                        } else {
+                                                                                          return FFAppState().sortPrice;
+                                                                                        }
+                                                                                      }(),
+                                                                                      minDiscount: _model.selectedFilterSearch == 3 ? '0.0' : FFAppState().maxDiscount,
+                                                                                      maxDiscount: _model.selectedFilterSearch == 3 ? '99.99' : FFAppState().maxDiscount,
                                                                                     );
 
-                                                                                    if ((_model.apiResultnotify?.succeeded ?? true)) {
+                                                                                    if ((_model.searchProductAPIResponsefilter6?.succeeded ?? true)) {
                                                                                       logFirebaseEvent('IconButton_update_page_state');
                                                                                       _model.productModel1 = getJsonField(
-                                                                                        (_model.apiResultnotify?.jsonBody ?? ''),
+                                                                                        (_model.searchProductAPIResponsefilter6?.jsonBody ?? ''),
                                                                                         r'''$.data''',
                                                                                       );
+                                                                                      logFirebaseEvent('IconButton_update_app_state');
+                                                                                      FFAppState().searchLoader = true;
                                                                                       safeSetState(() {});
+                                                                                      logFirebaseEvent('IconButton_custom_action');
+                                                                                      await actions.facebookEventClass(
+                                                                                        '0',
+                                                                                        widget!.keywordPage == null || widget!.keywordPage == '' ? (_model.textController.text.trimRight()) : widget!.keywordPage!,
+                                                                                        'search product',
+                                                                                        0.0,
+                                                                                        (getJsonField(
+                                                                                          (_model.searchProductAPIResponsefilter6?.jsonBody ?? ''),
+                                                                                          r'''$.data''',
+                                                                                        ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
+                                                                                            .withoutNulls
+                                                                                            .length,
+                                                                                        0.0,
+                                                                                        'search',
+                                                                                        FFAppState().emptyJson,
+                                                                                        ' ',
+                                                                                        ' ',
+                                                                                        ' ',
+                                                                                        ' ',
+                                                                                        ' ',
+                                                                                      );
                                                                                       logFirebaseEvent('IconButton_google_analytics_event');
                                                                                       logFirebaseEvent(
-                                                                                        'Add To Cart',
+                                                                                        'SearchScreenAnalytics',
                                                                                         parameters: {
-                                                                                          'API Name': 'Add To Cart',
-                                                                                          'Screen Name': 'Search Product Screen',
+                                                                                          'Keyword': FFAppState().keyword,
+                                                                                          'apiName': 'searchbystoreproduct',
                                                                                         },
                                                                                       );
                                                                                     } else {
@@ -2427,19 +2516,22 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                                         SnackBar(
                                                                                           content: Text(
                                                                                             getJsonField(
-                                                                                              (_model.apiResultbf5?.jsonBody ?? ''),
+                                                                                              (_model.searchProductAPIResponsefilter6?.jsonBody ?? ''),
                                                                                               r'''$.message''',
                                                                                             ).toString(),
                                                                                             style: GoogleFonts.montserrat(
-                                                                                              color: FFAppConstants.indigoColor,
+                                                                                              color: FFAppConstants.blackColor0A0A0A,
                                                                                               fontWeight: FontWeight.w500,
-                                                                                              fontSize: 15.0,
+                                                                                              fontSize: 12.0,
                                                                                             ),
                                                                                           ),
-                                                                                          duration: Duration(milliseconds: 1500),
-                                                                                          backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                                          duration: Duration(milliseconds: 4000),
+                                                                                          backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                                         ),
                                                                                       );
+                                                                                      logFirebaseEvent('IconButton_update_app_state');
+                                                                                      FFAppState().searchLoader = true;
+                                                                                      safeSetState(() {});
                                                                                     }
                                                                                   } else {
                                                                                     logFirebaseEvent('IconButton_show_snack_bar');
@@ -2931,7 +3023,11 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                         userid:
                                                                             FFAppState().userID,
                                                                         storeID:
-                                                                            FFAppState().storeID,
+                                                                            getJsonField(
+                                                                          FFAppState()
+                                                                              .zoneInfo,
+                                                                          r'''$.store_id''',
+                                                                        ).toString(),
                                                                         varientID:
                                                                             getJsonField(
                                                                           productModelItem,
@@ -2950,95 +3046,89 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                           true)) {
                                                                         logFirebaseEvent(
                                                                             'Icon1_backend_call');
-                                                                        _model.apiResultbf1 = await QuickartGroup
-                                                                            .searchbystoreproductCall
-                                                                            .call(
+                                                                        _model.searchProductAPIResponsefilter4 =
+                                                                            await ProductsearchCall.call(
                                                                           userid:
                                                                               FFAppState().userID,
-                                                                          storeid:
-                                                                              FFAppState().storeID,
                                                                           keyword: _model
                                                                               .textController
                                                                               .text,
-                                                                          minPrice:
-                                                                              FFAppState().minPrice,
-                                                                          maxPrice:
-                                                                              FFAppState().maxPrice,
-                                                                          byName:
-                                                                              FFAppState().byName,
-                                                                          stock:
-                                                                              FFAppState().stock,
-                                                                          minDiscount:
-                                                                              FFAppState().minDiscount,
-                                                                          maxDiscount:
-                                                                              FFAppState().maxDiscount,
-                                                                          sort:
-                                                                              FFAppState().sort,
+                                                                          storeid:
+                                                                              getJsonField(
+                                                                            FFAppState().zoneInfo,
+                                                                            r'''$.store_id''',
+                                                                          ).toString(),
+                                                                          platform:
+                                                                              FFAppState().platform,
                                                                           sortPrice:
-                                                                              FFAppState().sortPrice,
-                                                                          sortName:
-                                                                              FFAppState().sortName,
-                                                                          subCatId:
-                                                                              FFAppState().subCateID,
-                                                                          catId:
-                                                                              'null',
-                                                                          minRating:
-                                                                              FFAppState().minRating,
-                                                                          maxRating:
-                                                                              FFAppState().maxRating,
-                                                                          perpage:
-                                                                              100,
-                                                                          page:
-                                                                              1,
+                                                                              () {
+                                                                            if (_model.selectedFilterSearch ==
+                                                                                1) {
+                                                                              return 'htol';
+                                                                            } else if (_model.selectedFilterSearch ==
+                                                                                2) {
+                                                                              return 'ltoh';
+                                                                            } else {
+                                                                              return FFAppState().sortPrice;
+                                                                            }
+                                                                          }(),
+                                                                          minDiscount: _model.selectedFilterSearch == 3
+                                                                              ? '0.0'
+                                                                              : FFAppState().maxDiscount,
+                                                                          maxDiscount: _model.selectedFilterSearch == 3
+                                                                              ? '99.99'
+                                                                              : FFAppState().maxDiscount,
                                                                         );
 
-                                                                        if ((_model.apiResultbf1?.succeeded ??
+                                                                        if ((_model.searchProductAPIResponsefilter4?.succeeded ??
                                                                             true)) {
                                                                           logFirebaseEvent(
                                                                               'Icon1_update_page_state');
                                                                           _model.productModel1 =
                                                                               getJsonField(
-                                                                            (_model.apiResultbf1?.jsonBody ??
+                                                                            (_model.searchProductAPIResponsefilter4?.jsonBody ??
                                                                                 ''),
                                                                             r'''$.data''',
                                                                           );
+                                                                          logFirebaseEvent(
+                                                                              'Icon1_update_app_state');
+                                                                          FFAppState().searchLoader =
+                                                                              true;
                                                                           safeSetState(
                                                                               () {});
-                                                                          logFirebaseEvent(
-                                                                              'Icon1_google_analytics_event');
-                                                                          logFirebaseEvent(
-                                                                            'Remove From Wishlist',
-                                                                            parameters: {
-                                                                              'API Name': 'Add Remove Wishlist',
-                                                                              'Screen Name': 'Search Product Screen',
-                                                                            },
-                                                                          );
                                                                           logFirebaseEvent(
                                                                               'Icon1_custom_action');
                                                                           await actions
                                                                               .facebookEventClass(
-                                                                            getJsonField(
-                                                                              productModelItem,
-                                                                              r'''$.varient_id''',
-                                                                            ).toString(),
-                                                                            getJsonField(
-                                                                              productModelItem,
-                                                                              r'''$.product_name''',
-                                                                            ).toString(),
-                                                                            'remove',
-                                                                            getJsonField(
-                                                                              productModelItem,
-                                                                              r'''$.price''',
-                                                                            ),
-                                                                            0,
+                                                                            '0',
+                                                                            widget!.keywordPage == null || widget!.keywordPage == ''
+                                                                                ? (_model.textController.text.trimRight())
+                                                                                : widget!.keywordPage!,
+                                                                            'search product',
                                                                             0.0,
-                                                                            'wishList',
+                                                                            (getJsonField(
+                                                                              (_model.searchProductAPIResponsefilter4?.jsonBody ?? ''),
+                                                                              r'''$.data''',
+                                                                            ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
+                                                                                .withoutNulls
+                                                                                .length,
+                                                                            0.0,
+                                                                            'search',
                                                                             FFAppState().emptyJson,
-                                                                            'c',
                                                                             ' ',
                                                                             ' ',
                                                                             ' ',
                                                                             ' ',
+                                                                            ' ',
+                                                                          );
+                                                                          logFirebaseEvent(
+                                                                              'Icon1_google_analytics_event');
+                                                                          logFirebaseEvent(
+                                                                            'SearchScreenAnalytics',
+                                                                            parameters: {
+                                                                              'Keyword': FFAppState().keyword,
+                                                                              'apiName': 'searchbystoreproduct',
+                                                                            },
                                                                           );
                                                                         } else {
                                                                           logFirebaseEvent(
@@ -3048,19 +3138,25 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                             SnackBar(
                                                                               content: Text(
                                                                                 getJsonField(
-                                                                                  (_model.apiResultbf1?.jsonBody ?? ''),
+                                                                                  (_model.searchProductAPIResponsefilter4?.jsonBody ?? ''),
                                                                                   r'''$.message''',
                                                                                 ).toString(),
                                                                                 style: GoogleFonts.montserrat(
-                                                                                  color: FFAppConstants.indigoColor,
+                                                                                  color: FFAppConstants.blackColor0A0A0A,
                                                                                   fontWeight: FontWeight.w500,
-                                                                                  fontSize: 15.0,
+                                                                                  fontSize: 12.0,
                                                                                 ),
                                                                               ),
-                                                                              duration: Duration(milliseconds: 1500),
-                                                                              backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                              duration: Duration(milliseconds: 4000),
+                                                                              backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                             ),
                                                                           );
+                                                                          logFirebaseEvent(
+                                                                              'Icon1_update_app_state');
+                                                                          FFAppState().searchLoader =
+                                                                              true;
+                                                                          safeSetState(
+                                                                              () {});
                                                                         }
                                                                       } else {
                                                                         logFirebaseEvent(
@@ -3184,7 +3280,11 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                         userid:
                                                                             FFAppState().userID,
                                                                         storeID:
-                                                                            FFAppState().storeID,
+                                                                            getJsonField(
+                                                                          FFAppState()
+                                                                              .zoneInfo,
+                                                                          r'''$.store_id''',
+                                                                        ).toString(),
                                                                         varientID:
                                                                             getJsonField(
                                                                           productModelItem,
@@ -3203,95 +3303,89 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                           true)) {
                                                                         logFirebaseEvent(
                                                                             'Icon2_backend_call');
-                                                                        _model.apiResultbf11 = await QuickartGroup
-                                                                            .searchbystoreproductCall
-                                                                            .call(
+                                                                        _model.searchProductAPIResponsefilter5 =
+                                                                            await ProductsearchCall.call(
                                                                           userid:
                                                                               FFAppState().userID,
-                                                                          storeid:
-                                                                              FFAppState().storeID,
                                                                           keyword: _model
                                                                               .textController
                                                                               .text,
-                                                                          minPrice:
-                                                                              FFAppState().minPrice,
-                                                                          maxPrice:
-                                                                              FFAppState().maxPrice,
-                                                                          byName:
-                                                                              FFAppState().byName,
-                                                                          stock:
-                                                                              FFAppState().stock,
-                                                                          minDiscount:
-                                                                              FFAppState().minDiscount,
-                                                                          maxDiscount:
-                                                                              FFAppState().maxDiscount,
-                                                                          sort:
-                                                                              FFAppState().sort,
+                                                                          storeid:
+                                                                              getJsonField(
+                                                                            FFAppState().zoneInfo,
+                                                                            r'''$.store_id''',
+                                                                          ).toString(),
+                                                                          platform:
+                                                                              FFAppState().platform,
                                                                           sortPrice:
-                                                                              FFAppState().sortPrice,
-                                                                          sortName:
-                                                                              FFAppState().sortName,
-                                                                          subCatId:
-                                                                              FFAppState().subCateID,
-                                                                          catId:
-                                                                              'null',
-                                                                          minRating:
-                                                                              FFAppState().minRating,
-                                                                          maxRating:
-                                                                              FFAppState().maxRating,
-                                                                          perpage:
-                                                                              100,
-                                                                          page:
-                                                                              1,
+                                                                              () {
+                                                                            if (_model.selectedFilterSearch ==
+                                                                                1) {
+                                                                              return 'htol';
+                                                                            } else if (_model.selectedFilterSearch ==
+                                                                                2) {
+                                                                              return 'ltoh';
+                                                                            } else {
+                                                                              return FFAppState().sortPrice;
+                                                                            }
+                                                                          }(),
+                                                                          minDiscount: _model.selectedFilterSearch == 3
+                                                                              ? '0.0'
+                                                                              : FFAppState().maxDiscount,
+                                                                          maxDiscount: _model.selectedFilterSearch == 3
+                                                                              ? '99.99'
+                                                                              : FFAppState().maxDiscount,
                                                                         );
 
-                                                                        if ((_model.apiResultbf11?.succeeded ??
+                                                                        if ((_model.searchProductAPIResponsefilter5?.succeeded ??
                                                                             true)) {
                                                                           logFirebaseEvent(
                                                                               'Icon2_update_page_state');
                                                                           _model.productModel1 =
                                                                               getJsonField(
-                                                                            (_model.apiResultbf11?.jsonBody ??
+                                                                            (_model.searchProductAPIResponsefilter5?.jsonBody ??
                                                                                 ''),
                                                                             r'''$.data''',
                                                                           );
+                                                                          logFirebaseEvent(
+                                                                              'Icon2_update_app_state');
+                                                                          FFAppState().searchLoader =
+                                                                              true;
                                                                           safeSetState(
                                                                               () {});
-                                                                          logFirebaseEvent(
-                                                                              'Icon2_google_analytics_event');
-                                                                          logFirebaseEvent(
-                                                                            'Add To Wishlist',
-                                                                            parameters: {
-                                                                              'API Name': 'Add Remove Wishlist',
-                                                                              'Screen Name': 'Search Product Screen',
-                                                                            },
-                                                                          );
                                                                           logFirebaseEvent(
                                                                               'Icon2_custom_action');
                                                                           await actions
                                                                               .facebookEventClass(
-                                                                            getJsonField(
-                                                                              productModelItem,
-                                                                              r'''$.varient_id''',
-                                                                            ).toString(),
-                                                                            getJsonField(
-                                                                              productModelItem,
-                                                                              r'''$.product_name''',
-                                                                            ).toString(),
-                                                                            'add',
-                                                                            getJsonField(
-                                                                              productModelItem,
-                                                                              r'''$.price''',
-                                                                            ),
-                                                                            0,
+                                                                            '0',
+                                                                            widget!.keywordPage == null || widget!.keywordPage == ''
+                                                                                ? (_model.textController.text.trimRight())
+                                                                                : widget!.keywordPage!,
+                                                                            'search product',
                                                                             0.0,
-                                                                            'wishList',
+                                                                            (getJsonField(
+                                                                              (_model.searchProductAPIResponsefilter5?.jsonBody ?? ''),
+                                                                              r'''$.data''',
+                                                                            ).toList().map<ProductCountStruct?>(ProductCountStruct.maybeFromMap).toList() as Iterable<ProductCountStruct?>)
+                                                                                .withoutNulls
+                                                                                .length,
+                                                                            0.0,
+                                                                            'search',
                                                                             FFAppState().emptyJson,
-                                                                            'c',
                                                                             ' ',
                                                                             ' ',
                                                                             ' ',
                                                                             ' ',
+                                                                            ' ',
+                                                                          );
+                                                                          logFirebaseEvent(
+                                                                              'Icon2_google_analytics_event');
+                                                                          logFirebaseEvent(
+                                                                            'SearchScreenAnalytics',
+                                                                            parameters: {
+                                                                              'Keyword': FFAppState().keyword,
+                                                                              'apiName': 'searchbystoreproduct',
+                                                                            },
                                                                           );
                                                                         } else {
                                                                           logFirebaseEvent(
@@ -3301,19 +3395,25 @@ class _SearchProductScreenWidgetState extends State<SearchProductScreenWidget> {
                                                                             SnackBar(
                                                                               content: Text(
                                                                                 getJsonField(
-                                                                                  (_model.apiResultbf11?.jsonBody ?? ''),
+                                                                                  (_model.searchProductAPIResponsefilter5?.jsonBody ?? ''),
                                                                                   r'''$.message''',
                                                                                 ).toString(),
                                                                                 style: GoogleFonts.montserrat(
-                                                                                  color: FFAppConstants.indigoColor,
+                                                                                  color: FFAppConstants.blackColor0A0A0A,
                                                                                   fontWeight: FontWeight.w500,
-                                                                                  fontSize: 15.0,
+                                                                                  fontSize: 12.0,
                                                                                 ),
                                                                               ),
-                                                                              duration: Duration(milliseconds: 1500),
-                                                                              backgroundColor: FFAppConstants.primaryPurpleE4D8F5,
+                                                                              duration: Duration(milliseconds: 4000),
+                                                                              backgroundColor: FFAppConstants.NeutralBlack50Color,
                                                                             ),
                                                                           );
+                                                                          logFirebaseEvent(
+                                                                              'Icon2_update_app_state');
+                                                                          FFAppState().searchLoader =
+                                                                              true;
+                                                                          safeSetState(
+                                                                              () {});
                                                                         }
                                                                       } else {
                                                                         logFirebaseEvent(

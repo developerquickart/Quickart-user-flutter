@@ -5,6 +5,7 @@ import '/components/custom_alert_dailog/custom_alert_dailog_widget.dart';
 import '/components/date_time_slot_bottom_sheet/date_time_slot_bottom_sheet_widget.dart';
 import '/components/empty_data_two_line_component/empty_data_two_line_component_widget.dart';
 import '/components/products_list_view/products_list_view_widget.dart';
+import '/components/save_letterproducts_list/save_letterproducts_list_widget.dart';
 import '/components/varient_botttom_sheet/varient_botttom_sheet_widget.dart';
 import '/flutter_flow/flutter_flow_button_tabbar.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -84,6 +85,8 @@ class DailyCartScreenCopyModel
 
   bool isSuccessTP = false;
 
+  String? isRefWalletCheckBoxSelected = 'remove';
+
   ///  State fields for stateful widgets in this page.
 
   // Stores action output result for [Backend Call - API (userbankdetails)] action in dailyCartScreenCopy widget.
@@ -96,12 +99,12 @@ class DailyCartScreenCopyModel
       tabBarController != null ? tabBarController!.previousIndex : 0;
 
   Completer<ApiCallResponse>? apiRequestCompleter;
-  // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
-  bool? internetCheck;
-  // Stores action output result for [Backend Call - API (upquickordertimeslot)] action in Container widget.
-  ApiCallResponse? apiResultsqz;
   // Stores action output result for [Backend Call - API (addtosubcart)] action in Container widget.
   ApiCallResponse? apiResultAddSubc;
+  // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
+  bool? networkCheck1;
+  // Stores action output result for [Backend Call - API (addtosavecart)] action in Button widget.
+  ApiCallResponse? addtoSaveLetter;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Button widget.
   bool? internetCheckdc;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
@@ -110,10 +113,6 @@ class DailyCartScreenCopyModel
   bool? internetCheckcp;
   // Stores action output result for [Backend Call - API (Add to Cart)] action in Button widget.
   ApiCallResponse? addtoCartAPIDCP;
-  // Stores action output result for [Custom Action - checkInternetConnection] action in IconButton widget.
-  bool? internet;
-  // Stores action output result for [Backend Call - API (Add to Cart)] action in IconButton widget.
-  ApiCallResponse? removedailycartproduct;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? isInternet4;
   // Stores action output result for [Backend Call - API (updatecart)] action in Container widget.
@@ -125,15 +124,21 @@ class DailyCartScreenCopyModel
   // Model for productsListView component.
   late ProductsListViewModel productsListViewModel;
   // State field(s) for CheckboxWallet widget.
-  bool? checkboxWalletValue;
+  bool? checkboxWalletValue1;
+  // State field(s) for CheckboxWallet widget.
+  bool? checkboxWalletValue2;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // Model for saveLetterproductsList component.
+  late SaveLetterproductsListModel saveLetterproductsListModel;
   // State field(s) for DailyCartPaymentRadioButton widget.
   FormFieldController<String>? dailyCartPaymentRadioButtonValueController;
   // Stores action output result for [Custom Action - checkInternetConnection] action in ApplePayContainer widget.
   bool? connectivityResult666Copy;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in ApplePayContainer widget.
+  bool? isVpnON;
   // Stores action output result for [Backend Call - API (upquickordertimeslot)] action in ApplePayContainer widget.
   ApiCallResponse? apiResultkgz;
   // Stores action output result for [Backend Call - API (payment)] action in ApplePayContainer widget.
@@ -146,6 +151,8 @@ class DailyCartScreenCopyModel
   ApiCallResponse? apiResults5yy66;
   // Stores action output result for [Custom Action - checkInternetConnection] action in Container widget.
   bool? connectivityResult1Copy;
+  // Stores action output result for [Custom Action - isVpnEnabled] action in Container widget.
+  bool? isVpnONQP;
   // Stores action output result for [Backend Call - API (upquickordertimeslot)] action in Container widget.
   ApiCallResponse? apiResultyfq;
   // Stores action output result for [Backend Call - API (payment)] action in Container widget.
@@ -188,6 +195,8 @@ class DailyCartScreenCopyModel
   @override
   void initState(BuildContext context) {
     productsListViewModel = createModel(context, () => ProductsListViewModel());
+    saveLetterproductsListModel =
+        createModel(context, () => SaveLetterproductsListModel());
     emptyDataTwoLineComponentModel =
         createModel(context, () => EmptyDataTwoLineComponentModel());
   }
@@ -199,6 +208,7 @@ class DailyCartScreenCopyModel
     textFieldFocusNode?.dispose();
     textController?.dispose();
 
+    saveLetterproductsListModel.dispose();
     emptyDataTwoLineComponentModel.dispose();
   }
 

@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/components/custom_alert_dailog_width_action/custom_alert_dailog_width_action_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -13,6 +14,7 @@ import 'subscription_order_products_widget.dart'
     show SubscriptionOrderProductsWidget;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -59,6 +61,16 @@ class SubscriptionOrderProductsModel
   dynamic refreshedJson;
 
   String? selectedCartID;
+
+  bool isViewBillDetail = false;
+
+  dynamic billDetailJson;
+
+  String discount = 'discount';
+
+  String walletUsed = 'paid_by_wallet';
+
+  String totalPrice = 'total_price';
 
   ///  State fields for stateful widgets in this page.
 

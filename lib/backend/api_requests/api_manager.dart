@@ -609,7 +609,7 @@ class ApiManager {
     } catch (e) {
       result = ApiCallResponse(null, {}, -1, exception: e);
     }
-
+print("Api result----->${result.toString()}");
     return result;
   }
 }

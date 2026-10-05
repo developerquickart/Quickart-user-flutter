@@ -30,8 +30,6 @@ class CouponsandOffersModel extends FlutterFlowModel<CouponsandOffersWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - checkInternetConnection] action in CouponsandOffers widget.
-  bool? internetConnection;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;

@@ -114,35 +114,6 @@ class _OrderSuccessFailScreenWidgetState
                                   .fontStyle,
                             ),
                       ),
-                       if ((FFAppState().screenName == 'subscription') &&
-                          (FFAppState().cartTotalCount > 0))
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 30.0, 0.0, 0.0),
-                          child: Text(
-                            'You\'re almost done! Your Subscription Cart is checked out. Complete your order by checking out your Daily Cart.',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  font: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                                  color: FFAppConstants.blackColor666666,
-                                  fontSize: 13.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w500,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
-                                ),
-                          ),
-                        ),
-                     
-                      
                       if ((FFAppState().screenName == 'daily') &&
                           (FFAppState().subCartTotalItem > 0))
                         Padding(
@@ -170,8 +141,33 @@ class _OrderSuccessFailScreenWidgetState
                                 ),
                           ),
                         ),
-                      
-                     
+                      if ((FFAppState().screenName == 'subscription') &&
+                          (FFAppState().cartTotalCount > 0))
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 30.0, 0.0, 0.0),
+                          child: Text(
+                            'You\'re almost done! Your Subscription Cart is checked out. Complete your order by checking out your Daily Cart.',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: FFAppConstants.blackColor666666,
+                                  fontSize: 13.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                          ),
+                        ),
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
@@ -345,10 +341,10 @@ class _OrderSuccessFailScreenWidgetState
                                 width: 1.0,
                               ),
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(6.0),
-                                bottomRight: Radius.circular(6.0),
                                 topLeft: Radius.circular(6.0),
                                 topRight: Radius.circular(6.0),
+                                bottomLeft: Radius.circular(6.0),
+                                bottomRight: Radius.circular(6.0),
                               ),
                               hoverColor: FFAppConstants.indigoColor,
                               hoverTextColor: FFAppConstants.whiteColor,

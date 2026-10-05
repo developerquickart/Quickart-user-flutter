@@ -329,7 +329,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                     ..complete(QuickartGroup
                                         .searchbypopupbannerCall
                                         .call(
-                                      storeid: FFAppState().storeID,
+                                      storeid: getJsonField(
+                                        FFAppState().zoneInfo,
+                                        r'''$.store_id''',
+                                      ).toString(),
                                       userid: FFAppState().userID,
                                       bannerid:
                                           widget!.id == null || widget!.id == ''
@@ -359,6 +362,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                       page: FFAppState().page,
                                       pagePer: FFAppState().pageCount,
                                       platform: isiOS ? 'ios' : 'android',
+                                      zoneID: getJsonField(
+                                        FFAppState().zoneInfo,
+                                        r'''$.zone_id''',
+                                      ).toString(),
                                     )))
                                   .future,
                               builder: (context, snapshot) {
@@ -695,7 +702,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                                                                       _model.cartAdd = await QuickartGroup.addToCartCall.call(
                                                                                         userid: FFAppState().userID,
                                                                                         qty: '1',
-                                                                                        storeid: FFAppState().storeID,
+                                                                                        storeid: getJsonField(
+                                                                                          FFAppState().zoneInfo,
+                                                                                          r'''$.store_id''',
+                                                                                        ).toString(),
                                                                                         varientid: getJsonField(
                                                                                           productModelItem,
                                                                                           r'''$.varient_id''',
@@ -928,7 +938,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                                                                             logFirebaseEvent('Button_backend_call');
                                                                                             _model.addtoCartAPI1 = await QuickartGroup.addToCartCall.call(
                                                                                               userid: FFAppState().userID,
-                                                                                              storeid: FFAppState().storeID,
+                                                                                              storeid: getJsonField(
+                                                                                                FFAppState().zoneInfo,
+                                                                                                r'''$.store_id''',
+                                                                                              ).toString(),
                                                                                               deviceid: FFAppState().deviceID,
                                                                                               qty: functions.addRemoveQTY(
                                                                                                   getJsonField(
@@ -1193,7 +1206,10 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                                                                                       r'''$.cart_qty''',
                                                                                                     ),
                                                                                                     'add'),
-                                                                                                storeid: FFAppState().storeID,
+                                                                                                storeid: getJsonField(
+                                                                                                  FFAppState().zoneInfo,
+                                                                                                  r'''$.store_id''',
+                                                                                                ).toString(),
                                                                                                 varientid: getJsonField(
                                                                                                   productModelItem,
                                                                                                   r'''$.varient_id''',
@@ -2648,8 +2664,11 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                                                     userid: FFAppState()
                                                                         .userID,
                                                                     storeID:
-                                                                        FFAppState()
-                                                                            .storeID,
+                                                                        getJsonField(
+                                                                      FFAppState()
+                                                                          .zoneInfo,
+                                                                      r'''$.store_id''',
+                                                                    ).toString(),
                                                                     varientID:
                                                                         getJsonField(
                                                                       productModelItem,
@@ -2853,8 +2872,11 @@ class _SearchbyPopupBannerWidgetState extends State<SearchbyPopupBannerWidget>
                                                                     userid: FFAppState()
                                                                         .userID,
                                                                     storeID:
-                                                                        FFAppState()
-                                                                            .storeID,
+                                                                        getJsonField(
+                                                                      FFAppState()
+                                                                          .zoneInfo,
+                                                                      r'''$.store_id''',
+                                                                    ).toString(),
                                                                     varientID:
                                                                         getJsonField(
                                                                       productModelItem,

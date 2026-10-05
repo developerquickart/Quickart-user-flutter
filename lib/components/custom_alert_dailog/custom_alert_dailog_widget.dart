@@ -52,102 +52,142 @@ class _CustomAlertDailogWidgetState extends State<CustomAlertDailogWidget> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: const AlignmentDirectional(0.0, 0.0),
+      alignment: AlignmentDirectional(0.0, 0.0),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(
-              maxWidth: 530.0,
+        padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
+        child: Container(
+          width: double.infinity,
+          height: widget!.height,
+          constraints: BoxConstraints(
+            maxWidth: 530.0,
+          ),
+          decoration: BoxDecoration(
+            color: FlutterFlowTheme.of(context).secondaryBackground,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 3.0,
+                color: Color(0x33000000),
+                offset: Offset(
+                  0.0,
+                  1.0,
+                ),
+              )
+            ],
+            borderRadius: BorderRadius.circular(24.0),
+            border: Border.all(
+              color: FlutterFlowTheme.of(context).primaryBackground,
+              width: 1.0,
             ),
-            decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 3.0,
-                  color: Color(0x33000000),
-                  offset: Offset(0.0, 1.0),
-                )
-              ],
-              borderRadius: BorderRadius.circular(24.0),
-              border: Border.all(
-                color: FlutterFlowTheme.of(context).primaryBackground,
-                width: 1.0,
-              ),
-            ),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                    0.0, 0.0, 0.0, 12.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // 🔥 IMPORTANT
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    /// Title
-                    if (widget.title != null && widget.title!.trim().isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            0.0, 16.0, 0.0, 0.0),
-                        child: Text(
-                          widget.title!,
-                          textAlign: TextAlign.center,
-                          style: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .override(
-                                font: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                color: FFAppConstants.blackColor0A0A0A,
-                              ),
-                        ),
-                      ),
-
-                    /// Description
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                          12.0, 12.0, 12.0, 20.0),
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget!.title != ' ')
+                  Align(
+                    alignment: AlignmentDirectional(0.0, 0.0),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                       child: Text(
-                        widget.des ?? '',
+                        widget!.title!,
                         textAlign: TextAlign.center,
                         style: FlutterFlowTheme.of(context)
-                            .labelMedium
+                            .headlineMedium
                             .override(
                               font: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .fontStyle,
                               ),
+                              color: FFAppConstants.blackColor0A0A0A,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w600,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .headlineMedium
+                                  .fontStyle,
                             ),
                       ),
                     ),
-
-                    /// Button
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                          24.0, 0.0, 24.0, 0.0),
-                      child: FFButtonWidget(
+                  ),
+                Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 12.0, 20.0),
+                    child: Text(
+                      widget!.des!,
+                      textAlign: TextAlign.center,
+                      style: FlutterFlowTheme.of(context).labelMedium.override(
+                            font: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .fontStyle,
+                            ),
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .labelMedium
+                                .fontStyle,
+                          ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FFButtonWidget(
                         onPressed: () async {
+                          logFirebaseEvent(
+                              'CUSTOM_ALERT_DAILOG_COMP_OK_BTN_ON_TAP');
+                          logFirebaseEvent('Button_close_dialog_drawer_etc');
                           Navigator.pop(context);
                         },
                         text: 'OK',
                         options: FFButtonOptions(
                           height: 40.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               20.0, 0.0, 20.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
                           color: FlutterFlowTheme.of(context).primary,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .override(
-                                font: GoogleFonts.readexPro(),
-                              ),
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    font: GoogleFonts.readexPro(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontStyle,
+                                  ),
                           elevation: 0.0,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
                           borderRadius: BorderRadius.circular(40.0),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

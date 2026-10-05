@@ -14,14 +14,10 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 /// Start Quickart Group Code
 
 class QuickartGroup {
-  
-  // static String getBaseUrl() => 'https://supaapioriginal-production.up.railway.app/testnodejsapp/';
+  // static String getBaseUrl() =>
+  //     'https://zoneapi-production.up.railway.app/testnodejsapp/';
+  static String getBaseUrl() => 'https://zoneapi.quickart.ae/testnodejsapp/';
 
- //Demo server
-    // static String getBaseUrl() => 'https://demoapi.quickart.ae/testnodejsapp/';
-//Live server
-  static String getBaseUrl() => 'https://api.quickart.ae/testnodejsapp/';
-  
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
   static VerifyOTPCall verifyOTPCall = VerifyOTPCall();
@@ -127,8 +123,6 @@ class QuickartGroup {
       OccasionalcatsearchCall();
   static TrialproductlistCall trialproductlistCall = TrialproductlistCall();
   static TrialPackDetailsCall trialPackDetailsCall = TrialPackDetailsCall();
-  static SearchbybannerpageCall searchbybannerpageCall =
-      SearchbybannerpageCall();
   static AddtrailpackCall addtrailpackCall = AddtrailpackCall();
   static ShowtrailpackCall showtrailpackCall = ShowtrailpackCall();
   static CheckouttrailpackCall checkouttrailpackCall = CheckouttrailpackCall();
@@ -149,10 +143,12 @@ class QuickartGroup {
   static UpdatecartCall updatecartCall = UpdatecartCall();
   static UpdatessubcartCall updatessubcartCall = UpdatessubcartCall();
   static SpentbywalletCall spentbywalletCall = SpentbywalletCall();
-  static AddtosavecartCall addtosavecartCall = AddtosavecartCall();
+  static UpdateselectedaddressCall updateselectedaddressCall =
+      UpdateselectedaddressCall();
   static AddtosavesubcartCall addtosavesubcartCall = AddtosavesubcartCall();
+  static AddtosavecartCall addtosavecartCall = AddtosavecartCall();
   static RemovesavecartCall removesavecartCall = RemovesavecartCall();
-
+  static PaymentabandonCall paymentabandonCall = PaymentabandonCall();
 }
 
 class LoginCall {
@@ -334,20 +330,19 @@ class OneAPICall {
     String? userID = '',
     String? deviceID = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeID}",
   "user_id": "${userID}",
   "is_subscription": 1,
   "device_id": "${deviceID}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}"
 }''';
-print("G1---oneapi--> store_id: ${storeID}, user_id: ${userID}, is_subscription: 1, device_id: ${deviceID}, platform: ${platform} ");
-print("G1---one api-->${baseUrl}api/oneapi");
-
     return ApiManager.instance.makeApiCall(
       callName: 'oneAPI',
       apiUrl: '${baseUrl}api/oneapi',
@@ -445,15 +440,21 @@ class CateeCall {
     String? latest = '',
     String? byname = '',
     String? platform = '',
+    String? zoneID = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeID}",
   "byname": "${latest}",
   "latest": "${byname}",
-   "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'Catee',
@@ -573,6 +574,7 @@ class ProductDetailCall {
     String? userID = '',
     String? productID = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -580,9 +582,10 @@ class ProductDetailCall {
 {
   "user_id": "${userID}",
   "product_id": "${productID}",
-  "store_id": "7",
+  "store_id": "${storeID}",
   "is_subscription": 1,
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'ProductDetail',
@@ -688,7 +691,7 @@ class AddremwishlistCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeID}",
   "varient_id": "${varientID}",
   "device_id": "${deviceid}",
   "platform": "${platform}"
@@ -738,12 +741,15 @@ class TopsellingCall {
     int? page,
     int? perpage,
     String? platform = '',
+    String? zoneid = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeid}",
   "user_id": "${userid}",
   "byname": "${byname}",
   "min_price": "${minPrice}",
@@ -758,7 +764,10 @@ class TopsellingCall {
   "sub_cat_id": "${subCatId}",
   "page": ${page},
   "perpage": ${perpage},
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneid}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'topselling',
@@ -806,12 +815,15 @@ class RecentsellingCall {
     int? page,
     int? pageper,
     String? platform = '',
+    String? zoneid = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeid}",
   "user_id": "${userid}",
   "byname": "${byname}",
   "min_price": "${minPrice}",
@@ -826,7 +838,10 @@ class RecentsellingCall {
   "sub_cat_id": "${subCatId}",
   "page": ${page},
   "perpage": ${pageper},
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneid}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'recentselling',
@@ -874,12 +889,15 @@ class AdditionalCatSearchCall {
     int? page,
     int? perpage,
     String? platform = '',
+    String? zoneid = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeid}",
   "user_id": "${userid}",
   "byname": "${byName}",
   "min_price": "${minPrice}",
@@ -894,7 +912,10 @@ class AdditionalCatSearchCall {
   "sub_cat_id": "${subCatId}",
   "page": ${page},
   "perpage": ${perpage},
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneid}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'additionalCatSearch',
@@ -962,12 +983,13 @@ class ShowwishlistCall {
     String? maxDiscount = '',
     String? deviceid = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeid}",
   "user_id": "${userid}",
   "byname": "${byname}",
   "min_price": "${minPrice}",
@@ -976,8 +998,9 @@ class ShowwishlistCall {
   "min_discount": "${minDiscount}",
   "max_discount": "${maxDiscount}",
   "is_subscription": 1,
-  "device_id" : "${deviceid}",
-  "platform": "${platform}"
+  "device_id": "${deviceid}",
+  "platform": "${platform}",
+  "zone_id": "${zoneID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'showwishlist',
@@ -1101,7 +1124,7 @@ class SearchbystoreproductCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "keyword": "${keyword}",
   "byname": "${byName}",
   "min_price": "${minPrice}",
@@ -1124,7 +1147,8 @@ class SearchbystoreproductCall {
     return ApiManager.instance.makeApiCall(
       callName: 'searchbystoreproduct',
       // apiUrl: '${baseUrl}api/searchbystoreproduct',
-      apiUrl: 'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
+      apiUrl:
+          'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -1200,7 +1224,7 @@ class TrensearchproductsCall {
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeID}",
   "user_id":"${userid}",
   "platform": "${platform}"
 }''';
@@ -1237,14 +1261,20 @@ class SubcateeCall {
     String? storeid = '',
     String? catid = '',
     String? platform = '',
+    String? zoneID = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeid}",
   "cat_id": "${catid}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'subcatee',
@@ -1297,6 +1327,9 @@ class RepeatordersCall {
     String? sortPrice = '',
     String? minDiscount = '',
     String? maxDiscount = '',
+    String? zoneID = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -1308,7 +1341,10 @@ class RepeatordersCall {
   "platform": "${platform}",
   "min_discount": "${minDiscount}",
   "max_discount": "${maxDiscount}",
-  "sortprice": "${sortPrice}"
+  "sortprice": "${sortPrice}",
+  "zone_id": "${zoneID}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'repeatorders',
@@ -1355,9 +1391,8 @@ class AppinfoCall {
   "app_name": "customer",
   "device_id": "${fcmToken}",
   "actual_device_id": "${deviceid}",
-  "store_id": "7"
+  "store_id": "${stroreid}"
 }''';
-print("G1---appinfo----->$ffApiRequestBody");
     return ApiManager.instance.makeApiCall(
       callName: 'appinfo',
       apiUrl: '${baseUrl}api/app_info',
@@ -1411,7 +1446,7 @@ class AddToCartCall {
 {
   "user_id": "${userid}",
   "qty": "${qty}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "varient_id": "${varientid}",
   "device_id": "${deviceid}",
   "platform": "${platform}",
@@ -1473,12 +1508,15 @@ class CatproductCall {
     String? sortPrice = '',
     String? subCatID = '',
     String? platform = '',
+    String? zoneID = '',
+    String? lat = '',
+    String? lng = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeid}",
   "cat_id": "${catid}",
   "user_id": "${userid}",
   "byname": "${byName}",
@@ -1491,7 +1529,10 @@ class CatproductCall {
   "sortname": "${sortName}",
   "sortprice": "${sortPrice}",
   "sub_cat_id": "${subCatID}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}",
+  "lat": "${lat}",
+  "lng": "${lng}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'catproduct',
@@ -1533,7 +1574,7 @@ class ShowaddressCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "device_id": "${deviceId}",
   "platform": "${platform}"
 }''';
@@ -1649,7 +1690,7 @@ class AddaddressCall {
         'dial_code': dialCode,
         'device_id': deviceId,
         'image': image,
-        'platfomr': platform,
+        'platform': platform,
       },
       bodyType: BodyType.MULTIPART,
       returnBody: true,
@@ -1679,7 +1720,7 @@ class MyorderssubscriptionCall {
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeId}",
   "user_id": "${userid}",
   "page": ${page},
   "perpage": ${pageCount},
@@ -1921,13 +1962,14 @@ class SearchByBannerCall {
     int? pageper,
     String? bannerType = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
   "user_id": "${userId}",
-  "store_id": "7",
+  "store_id": "${storeId}",
   "keyword": "${keyword} ",
   "byname": "${byName}",
   "min_price": "${minPrice}",
@@ -1943,11 +1985,11 @@ class SearchByBannerCall {
   "device_id": "${deviceid}",
   "brand_id": "${brandID}",
   "banner_id": "${bannerID}",
-  "banner_type":"${bannerType}",
+  "banner_type": "${bannerType}",
   "perpage": ${pageper},
   "page": ${page},
-  "platform": "${platform}"
-
+  "platform": "${platform}",
+  "zone_id": "${zoneID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'searchByBanner',
@@ -2010,12 +2052,14 @@ class TotaldeliveriesCall {
         true,
       ) as List?;
 }
+
 class TimeslotCall {
   Future<ApiCallResponse> call({
     String? storeID = '',
     String? selectedDate = '',
     String? repeatedDays = '',
     String? platform = '',
+    String? zoneID = '',
     String? variantID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
@@ -2026,7 +2070,8 @@ class TimeslotCall {
   "selected_date": "${selectedDate}",
   "repeated_days": "${repeatedDays}",
   "platform": "${platform}",
-   "varient_id": "${variantID}"
+  "zone_id": "${zoneID}",
+  "varient_id": "${variantID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'timeslot',
@@ -2061,7 +2106,6 @@ class TimeslotCall {
       ));
 }
 
-
 class SneakyproductlistCall {
   Future<ApiCallResponse> call({
     String? storeid = '',
@@ -2073,6 +2117,7 @@ class SneakyproductlistCall {
     String? sortPrice = '',
     String? minPrice = '',
     String? maxPrice = '',
+    String? zoneid = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -2086,7 +2131,8 @@ class SneakyproductlistCall {
   "platform": "${platform}",
   "min_discount": "${minPrice}",
   "max_discount": "${maxPrice}",
-  "sortprice": "${sortPrice}"
+  "sortprice": "${sortPrice}",
+  "zone_id": "${zoneid}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'sneakyproductlist',
@@ -2308,12 +2354,11 @@ class CancelledproductorderCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-      final safecancelReason = (cancelReason ?? '')
-    .replaceAll('\\', '\\\\')
-    .replaceAll('"', '\\"')
-    .replaceAll('\r', '\\r')
-    .replaceAll('\n', '\\n');
-
+    final safecancelReason = (cancelReason ?? '')
+        .replaceAll('\\', '\\\\')
+        .replaceAll('"', '\\"')
+        .replaceAll('\r', '\\r')
+        .replaceAll('\n', '\\n');
     final ffApiRequestBody = '''
 {
   "cart_id": "${cartID}",
@@ -2368,7 +2413,7 @@ class AddtosubcartCall {
 {
   "user_id": "${userid}",
   "qty": "${qty}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "varient_id": "${varientid}",
   "is_subscription": 1,
   "percentage": 20,
@@ -2426,6 +2471,8 @@ class ShowsubcartCall {
     String? userid = '',
     String? deviceid = '',
     String? platform = '',
+    String? zoneID = '',
+    String? storeID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -2433,7 +2480,9 @@ class ShowsubcartCall {
 {
   "user_id": "${userid}",
   "device_id": "${deviceid}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}",
+  "store_id": "${storeID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'showsubcart',
@@ -2484,16 +2533,18 @@ class CouponListCall {
     String? totalDelievery = '',
     String? cartId = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
   "user_id": "${userId}",
-  "store_id": "7",
+  "store_id": "${storeId}",
   "total_delivery": "${totalDelievery}",
   "cart_id": "${cartId}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "zone_id": "${zoneID}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'CouponList',
@@ -2539,7 +2590,7 @@ class ApplyCouponCall {
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeId}",
   "coupon_code": "${couponCode}",
   "user_id": "${userId}",
   "order_type": "${orderType}",
@@ -2702,12 +2753,11 @@ class CancelledquickorderCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-
-final safecancelReason = (cancelResoan ?? '')
-    .replaceAll('\\', '\\\\')
-    .replaceAll('"', '\\"')
-    .replaceAll('\r', '\\r')
-    .replaceAll('\n', '\\n');
+    final safecancelReason = (cancelResoan ?? '')
+        .replaceAll('\\', '\\\\')
+        .replaceAll('"', '\\"')
+        .replaceAll('\r', '\\r')
+        .replaceAll('\n', '\\n');
     final ffApiRequestBody = '''
 {
   "group_id": "${cartID}",
@@ -2758,13 +2808,16 @@ class CheckoutsubcribtionorderCall {
     String? autorenewSubCart = '',
     String? platform = '',
     String? totalrefwalletamt = '',
+    dynamic? zoneProductWiseChargesJson,
+    dynamic? zonePermanentChargesJson,
+    dynamic? zoneDeliveryAddonsJson,
+    String? zoneId = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-     final safeOrderInstruction = (orderInstruction ?? '')
-    .replaceAll('\\', '\\\\')
-    .replaceAll('"', '\\"')
-    .replaceAll('\r', '\\r')
-    .replaceAll('\n', '\\n');
+
+    final zoneProductWiseCharges = _serializeJson(zoneProductWiseChargesJson);
+    final zonePermanentCharges = _serializeJson(zonePermanentChargesJson);
+    final zoneDeliveryAddons = _serializeJson(zoneDeliveryAddonsJson);
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
@@ -2772,7 +2825,7 @@ class CheckoutsubcribtionorderCall {
   "address_id": "${addressID}",
   "bank_id": 0,
   "si_sub_ref_no": "${siNo}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "payment_method": "${paymentMethod}",
   "payment_status": "pending",
   "wallet": "${wallet}",
@@ -2786,10 +2839,14 @@ class CheckoutsubcribtionorderCall {
   "payment_type": "${paymentType}",
   "del_partner_tip": "0",
   "totalwalletamt": "${totalwalletamt}",
-  "order_instruction": "${safeOrderInstruction}",
+  "order_instruction": "${orderInstruction}",
   "AutoRenewSubCart": "${autorenewSubCart}",
   "platform": "${platform}",
-  "totalrefwalletamt": "${totalrefwalletamt}"
+  "totalrefwalletamt": "${totalrefwalletamt}",
+  "zone_id": "${zoneId}",
+  "zone_delivery_addons": ${zoneDeliveryAddons},
+  "zone_permanent_charges": ${zonePermanentCharges},
+  "zone_product_wise_charges": ${zoneProductWiseCharges}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'checkoutsubcribtionorder',
@@ -2845,14 +2902,19 @@ class CheckoutquickorderCall {
     String? orderInstruction = '',
     String? platform = '',
     String? totalrefwalletamt = '',
+    String? zoneID = '',
+    String? pricingType = '',
+    String? priceEffect = '',
+    dynamic? zoneDeliveryAddonsJson,
+    dynamic? zonePermanentChargesJson,
+    dynamic? zoneCategoryWiseTimeslotChargesJson,
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-    final safeOrderInstruction = (orderInstruction ?? '')
-    .replaceAll('\\', '\\\\')
-    .replaceAll('"', '\\"')
-    .replaceAll('\r', '\\r')
-    .replaceAll('\n', '\\n');
 
+    final zoneDeliveryAddons = _serializeJson(zoneDeliveryAddonsJson);
+    final zonePermanentCharges = _serializeJson(zonePermanentChargesJson);
+    final zoneCategoryWiseTimeslotCharges =
+        _serializeJson(zoneCategoryWiseTimeslotChargesJson);
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
@@ -2860,7 +2922,7 @@ class CheckoutquickorderCall {
   "address_id": "${addressID}",
   "bank_id": "${bankID}",
   "si_sub_ref_no": "${siNo}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "payment_method": "${paymentMethod}",
   "payment_status": "pending",
   "wallet": "${wallet}",
@@ -2874,12 +2936,16 @@ class CheckoutquickorderCall {
   "del_partner_tip": "${deliveryPartnerTip}",
   "del_partner_instruction": "${deliveryPartnerInstruction}",
   "totalwalletamt": ${totalwalletamt},
-  "order_instruction": "${safeOrderInstruction}",
+  "order_instruction": "${orderInstruction}",
   "platform": "${platform}",
-  "totalrefwalletamt": "${totalrefwalletamt}"
+  "totalrefwalletamt": "${totalrefwalletamt}",
+  "pricing_type": "${pricingType}",
+  "price_effect": "${priceEffect}",
+  "zone_delivery_addons": ${zoneDeliveryAddons},
+  "zone_id": "${zoneID}",
+  "zone_permanent_charges": ${zonePermanentCharges},
+  "zone_category_wise_timeslot_charges": ${zoneCategoryWiseTimeslotCharges}
 }''';
-
-
     return ApiManager.instance.makeApiCall(
       callName: 'checkoutquickorder',
       apiUrl: '${baseUrl}api/checkout_quickorder',
@@ -2955,7 +3021,7 @@ class ResumeOrderCall {
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${storeId}",
   "selected_date": "${selectedDate}",
   "platform": "${platform}"
 }''';
@@ -3163,16 +3229,26 @@ class PaymentCall {
     String? orderInstruction = '',
     String? platform = '',
     String? totalrefwalletamt = '',
+    String? zoneID = '',
+    String? pricingType = '',
+    String? priceEffect = '',
+    dynamic? zoneDeliveryAddonsJson,
+    dynamic? zonePermanentChargesJson,
+    dynamic? zoneCategoryWiseTimeslotChargesJson,
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
+    final zoneDeliveryAddons = _serializeJson(zoneDeliveryAddonsJson);
+    final zonePermanentCharges = _serializeJson(zonePermanentChargesJson);
+    final zoneCategoryWiseTimeslotCharges =
+        _serializeJson(zoneCategoryWiseTimeslotChargesJson);
     final ffApiRequestBody = '''
 {
   "address_id": "${addressid}",
   "user_id": "${userid}",
   "bank_id": 0,
   "si_sub_ref_no": "${siNO}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "payment_method": "${paymentMethod}",
   "payment_status": "success",
   "wallet": "${walllet}",
@@ -3191,7 +3267,13 @@ class PaymentCall {
   "payment_type": "${paymentType}",
   "order_instruction": "${orderInstruction}",
   "platform": "${platform}",
-  "totalrefwalletamt": "${totalrefwalletamt}"
+  "totalrefwalletamt": "${totalrefwalletamt}",
+  "zone_id": "${zoneID}",
+  "pricing_type": "${pricingType}",
+  "price_effect": "${priceEffect}",
+  "zone_delivery_addons": ${zoneDeliveryAddons},
+  "zone_permanent_charges": ${zonePermanentCharges},
+  "zone_category_wise_timeslot_charges": ${zoneCategoryWiseTimeslotCharges}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'payment',
@@ -3232,12 +3314,11 @@ class CancelledquickorderprodCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-      final safecancelReason = (cancelReason ?? '')
-    .replaceAll('\\', '\\\\')
-    .replaceAll('"', '\\"')
-    .replaceAll('\r', '\\r')
-    .replaceAll('\n', '\\n');
-
+    final safecancelReason = (cancelReason ?? '')
+        .replaceAll('\\', '\\\\')
+        .replaceAll('"', '\\"')
+        .replaceAll('\r', '\\r')
+        .replaceAll('\n', '\\n');
     final ffApiRequestBody = '''
 {
   "cart_id": "${cartid}",
@@ -3371,9 +3452,16 @@ class SubpaymentCall {
     String? orderInstruction = '',
     String? platform = '',
     String? totalrefwalletamt = '',
+    String? zoneId = '',
+    dynamic? zoneDeliveryAddonsJson,
+    dynamic? zonePermanentChargesJson,
+    dynamic? zoneProductWiseChargesJson,
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
+    final zoneDeliveryAddons = _serializeJson(zoneDeliveryAddonsJson);
+    final zonePermanentCharges = _serializeJson(zonePermanentChargesJson);
+    final zoneProductWiseCharges = _serializeJson(zoneProductWiseChargesJson);
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
@@ -3381,7 +3469,7 @@ class SubpaymentCall {
   "address_id": "${addressid}",
   "bank_id": 0,
   "si_sub_ref_no": "${siNo}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "payment_method": "${paymentMethod}",
   "payment_status": "success",
   "wallet": "${wallet}",
@@ -3397,7 +3485,11 @@ class SubpaymentCall {
   "del_partner_instruction": "${delPartnerInstruction}",
   "order_instruction": "${orderInstruction}",
   "platform": "${platform}",
-  "totalrefwalletamt": "${totalrefwalletamt}"
+  "totalrefwalletamt": "${totalrefwalletamt}",
+   "zone_id": "${zoneId}",
+  "zone_delivery_addons": ${zoneDeliveryAddons},
+  "zone_permanent_charges": ${zonePermanentCharges},
+  "zone_product_wise_charges": ${zoneProductWiseCharges}
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'subpayment',
@@ -3424,6 +3516,10 @@ class SubpaymentCall {
         response,
         r'''$.data.redirect_url''',
       ));
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
 }
 
 class GuestloginCall {
@@ -3544,15 +3640,16 @@ class UpdateproductdetailsCall {
   Future<ApiCallResponse> call({
     String? userid = '',
     String? platform = '',
+    String? storeId = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "platform": "${platform}"
+  "platform": "${platform}",
+  "store_id": "${storeId}"
 }''';
-
     return ApiManager.instance.makeApiCall(
       callName: 'updateproductdetails',
       apiUrl: '${baseUrl}api/updateproductdetails',
@@ -3687,7 +3784,7 @@ class OrderssubscriptionproductCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "group_id": "${groupid}",
   "platform": "${platform}"
 }''';
@@ -3743,7 +3840,7 @@ class SearchbybrandsCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "keyword": "${keyword}",
   "byname": "${byName}",
   "min_price": "${minPrice}",
@@ -3871,7 +3968,7 @@ class ShownotifymeCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${userid}",
-  "store_id": "7",
+  "store_id": "${storeid}",
   "platform": "${platform}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -4053,7 +4150,7 @@ class AddproductratingCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userID)}",
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeid)}",
   "varient_id": "${escapeStringForJson(varientID)}",
   "rating": ${rating},
   "description": "${escapeStringForJson(description)}",
@@ -4061,9 +4158,6 @@ class AddproductratingCall {
   "subscription_id": "${escapeStringForJson(subscriptionID)}",
   "platform": "${escapeStringForJson(platform)}"
 }''';
-
-print("G1---->${ffApiRequestBody}");
-print("G2---->${baseUrl}api/add_product_rating");
     return ApiManager.instance.makeApiCall(
       callName: 'addproductrating',
       apiUrl: '${baseUrl}api/add_product_rating',
@@ -4092,6 +4186,8 @@ class ShowspcatcartCall {
     String? userid = '',
     String? deviceid = '',
     String? platform = '',
+    String? zoneID = '',
+    String? storeId = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -4099,14 +4195,13 @@ class ShowspcatcartCall {
 {
   "user_id": "${escapeStringForJson(userid)}",
   "device_id": "${escapeStringForJson(deviceid)}",
- "selected_date":"null",
- "selected_time":"null",
- "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}",
+  "store_id": "${escapeStringForJson(storeId)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'showspcatcart',
-      // apiUrl: '${baseUrl}api/show_spcatcart',
-      apiUrl: '${baseUrl}api/show_spcatcart_new',
+      apiUrl: '${baseUrl}api/show_spcatcart',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -4158,14 +4253,11 @@ class MyorderssubscriptionlistCall {
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
-  "user_id": "$userid",
+  "user_id": "${escapeStringForJson(userid)}",
   "page": ${page},
   "perpage": ${pageper},
-  "platform": "${platform}"
+  "platform": "${escapeStringForJson(platform)}"
 }''';
-print("G1---->${ffApiRequestBody}");
-print("G2---->${baseUrl}api/my_orders_subscription_list");
     return ApiManager.instance.makeApiCall(
       callName: 'myorderssubscriptionlist',
       apiUrl: '${baseUrl}api/my_orders_subscription_list',
@@ -4283,6 +4375,7 @@ class OccasionalcatsearchCall {
     String? sortPrice = '',
     String? minDiscount = '',
     String? maxDiscount = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -4304,7 +4397,8 @@ class OccasionalcatsearchCall {
   "cattype": "occasional",
   "page": ${page},
   "perpage": ${pageCount},
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'occasionalcatsearch',
@@ -4338,13 +4432,17 @@ class TrialproductlistCall {
   Future<ApiCallResponse> call({
     String? userId = '',
     String? platform = '',
+    String? zoneID = '',
+    String? storeID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userId)}",
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}",
+  "store_id": "${escapeStringForJson(storeID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'trialproductlist',
@@ -4369,14 +4467,18 @@ class TrialPackDetailsCall {
     String? trialId = '',
     String? userId = '',
     String? platform = '',
+    String? zoneID = '',
+    String? storeID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-    "trail_id" : "${escapeStringForJson(trialId)}" ,
-    "user_id": "${escapeStringForJson(userId)}",
-    "platform": "${escapeStringForJson(platform)}"
+  "trail_id": "${escapeStringForJson(trialId)}",
+  "user_id": "${escapeStringForJson(userId)}",
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}",
+  "store_id": "${escapeStringForJson(storeID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'trialPackDetails',
@@ -4396,75 +4498,13 @@ class TrialPackDetailsCall {
   }
 }
 
-class SearchbybannerpageCall {
-  Future<ApiCallResponse> call({
-    String? userid = '',
-    int? page,
-    int? pageCount,
-    String? keyword = '',
-    String? brandid = '',
-    String? bannerid = '',
-    String? platform = '',
-  }) async {
-    final baseUrl = QuickartGroup.getBaseUrl();
-
-    final ffApiRequestBody = '''
-{
-  "user_id": "${escapeStringForJson(userid)}",
-  "store_id": "7",
-  "keyword": "${escapeStringForJson(keyword)}",
-  "byname": "null",
-  "min_price": "null",
-  "max_price": "null",
-  "stock": "null",
-  "min_discount": "null",
-  "max_discount": "null",
-  "sort": "null",
-  "sortname": "null",
-  "sortprice": "null",
-  "cat_id": "null",
-  "sub_cat_id": "null",
-  "device_id": "UP1A.231005.007",
-  "brand_id": "${escapeStringForJson(brandid)}",
-  "banner_id": "${escapeStringForJson(bannerid)}",
-  "perpage": ${pageCount},
-  "page": ${page},
-  "platform": "${escapeStringForJson(platform)}"
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'searchbybannerpage',
-      apiUrl: '${baseUrl}api/searchbybanner',
-      callType: ApiCallType.POST,
-      headers: {},
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
-
-  String? message(dynamic response) => castToType<String>(getJsonField(
-        response,
-        r'''$.message''',
-      ));
-  List? date(dynamic response) => getJsonField(
-        response,
-        r'''$.data''',
-        true,
-      ) as List?;
-}
-
 class AddtrailpackCall {
   Future<ApiCallResponse> call({
     String? trialid = '',
     String? userid = '',
     String? qty = '',
     String? platform = '',
+    String? storeID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -4473,7 +4513,8 @@ class AddtrailpackCall {
   "trail_id": "${escapeStringForJson(trialid)}",
   "user_id": "${escapeStringForJson(userid)}",
   "qty": "${escapeStringForJson(qty)}",
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "store_id": "${escapeStringForJson(storeID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'addtrailpack',
@@ -4507,6 +4548,7 @@ class ShowtrailpackCall {
     String? userid = '',
     String? deviceid = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -4514,7 +4556,8 @@ class ShowtrailpackCall {
 {
   "user_id": "${escapeStringForJson(userid)}",
   "device_id": "${escapeStringForJson(deviceid)}",
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'showtrailpack',
@@ -4574,18 +4617,14 @@ class CheckouttrailpackCall {
     String? platform = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
-    final safeOrderInstruction = (orderInstruction ?? '')
-    .replaceAll('\\', '\\\\')
-    .replaceAll('"', '\\"')
-    .replaceAll('\r', '\\r')
-    .replaceAll('\n', '\\n');
+
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userid)}",
   "address_id": "${escapeStringForJson(addressid)}",
   "bank_id": 0,
   "si_sub_ref_no": "${escapeStringForJson(sino)}",
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeid)}",
   "payment_method": "${escapeStringForJson(paymentMethod)}",
   "payment_status": "Pending",
   "payment_id": null,
@@ -4596,7 +4635,7 @@ class CheckouttrailpackCall {
   "device_id": "${escapeStringForJson(deviceid)}",
   "del_partner_tip": "${escapeStringForJson(deliverypartnerTip)}",
   "del_partner_instruction": "${escapeStringForJson(deliveryInstruction)}",
-  "order_instruction": "${escapeStringForJson(safeOrderInstruction)}",
+  "order_instruction": "${escapeStringForJson(orderInstruction)}",
   "platform": "${escapeStringForJson(platform)}"
 }''';
     return ApiManager.instance.makeApiCall(
@@ -4645,7 +4684,7 @@ class TrailpaymentCall {
   "address_id": "${escapeStringForJson(addressid)}",
   "bank_id": 0,
   "si_sub_ref_no": "${escapeStringForJson(sino)}",
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeid)}",
   "payment_method": "${escapeStringForJson(paymentMethod)}",
   "payment_status": "Pending",
   "wallet": "no",
@@ -4704,6 +4743,7 @@ class FeaturedCategoryCall {
     String? minDiscount = '',
     String? maxDiscount = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
@@ -4723,7 +4763,8 @@ class FeaturedCategoryCall {
   "sort": "${escapeStringForJson(sort)}",
   "sortname": "${escapeStringForJson(sortName)}",
   "sortprice": "${escapeStringForJson(sortPrice)}",
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'FeaturedCategory',
@@ -4750,16 +4791,18 @@ class MightHaveMissedCall {
     String? deviceId = '',
     String? orderType = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeId)}",
   "user_id": "${escapeStringForJson(userId)}",
   "device_id": "${escapeStringForJson(deviceId)}",
   "type": "${escapeStringForJson(orderType)}",
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'MightHaveMissed',
@@ -4790,10 +4833,10 @@ class UserOrderListCall {
 
     final ffApiRequestBody = '''
 {
-  "user_id": "${userId}",
-  "store_id": "7",
-  "device_id": "${deviceId}",
-  "platform": "${platform}"
+  "user_id": "${escapeStringForJson(userId)}",
+  "store_id": "${escapeStringForJson(storeId)}",
+  "device_id": "${escapeStringForJson(deviceId)}",
+  "platform": "${escapeStringForJson(platform)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'UserOrderList',
@@ -4822,8 +4865,8 @@ class SubscriptionMergedCall {
 
     final ffApiRequestBody = '''
 {
-  "group_id": "${groupId}",
-  "platform": "${platform}"
+  "group_id": "${escapeStringForJson(groupId)}",
+  "platform": "${escapeStringForJson(platform)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'SubscriptionMerged',
@@ -4947,14 +4990,16 @@ class TrendingrecentsearchCall {
     String? userid = '',
     String? storeid = '',
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
-  "user_id" :"${escapeStringForJson(userid)}",
-  "platform": "${escapeStringForJson(platform)}"
+  "store_id": "${escapeStringForJson(storeid)}",
+  "user_id": "${escapeStringForJson(userid)}",
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'trendingrecentsearch',
@@ -5059,12 +5104,13 @@ class SearchbypopupbannerCall {
     int? page,
     int? pagePer,
     String? platform = '',
+    String? zoneID = '',
   }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
 {
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeid)}",
   "user_id": "${escapeStringForJson(userid)}",
   "bannerid": "${escapeStringForJson(bannerid)}",
   "min_price": "${escapeStringForJson(minPrice)}",
@@ -5079,7 +5125,8 @@ class SearchbypopupbannerCall {
   "sub_cat_id": "null",
   "page": ${page},
   "perpage": ${pagePer},
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneID)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'searchbypopupbanner',
@@ -5114,7 +5161,9 @@ class SearchbypopupbannerCall {
 }
 
 class FeaturecategoryCall {
-  Future<ApiCallResponse> call() async {
+  Future<ApiCallResponse> call({
+    String? zoneID = '',
+  }) async {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     return ApiManager.instance.makeApiCall(
@@ -5122,7 +5171,9 @@ class FeaturecategoryCall {
       apiUrl: '${baseUrl}api/feature_category',
       callType: ApiCallType.GET,
       headers: {},
-      params: {},
+      params: {
+        'zone_id': zoneID,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -5156,7 +5207,7 @@ class UpdatecartCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userID)}",
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeID)}",
   "varient_id": ${varientID},
   "product_feature_id": "${escapeStringForJson(productFeatureID)}"
 }''';
@@ -5200,7 +5251,7 @@ class UpdatessubcartCall {
     final ffApiRequestBody = '''
 {
   "user_id": "${escapeStringForJson(userID)}",
-  "store_id": "7",
+  "store_id": "${escapeStringForJson(storeID)}",
   "varient_id": ${varientID},
   "product_feature_id": "${escapeStringForJson(productFeatureID)}"
 }''';
@@ -5241,12 +5292,12 @@ class SpentbywalletCall {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
-    {
-      "user_id": "${escapeStringForJson(userID)}",
-      "start_date": "${escapeStringForJson(startDate)}",
-      "end_date": "${escapeStringForJson(endDate)}",
-      "type": "${escapeStringForJson(type)}"
-    }''';
+{
+  "user_id": "${escapeStringForJson(userID)}",
+  "start_date": "${escapeStringForJson(startDate)}",
+  "end_date": "${escapeStringForJson(endDate)}",
+  "type": "${escapeStringForJson(type)}"
+}''';
     return ApiManager.instance.makeApiCall(
       callName: 'spentbywallet',
       apiUrl: '${baseUrl}api/spent_by_wallet',
@@ -5272,6 +5323,103 @@ class SpentbywalletCall {
         true,
       ) as List?;
 }
+
+class UpdateselectedaddressCall {
+  Future<ApiCallResponse> call({
+    String? storeID = '',
+    String? zoneID = '',
+    String? userID = '',
+    String? lat = '',
+    String? lng = '',
+  }) async {
+    final baseUrl = QuickartGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "zone_id": "${escapeStringForJson(zoneID)}",
+  "user_id": "${escapeStringForJson(userID)}",
+  "store_id": "${escapeStringForJson(storeID)}",
+  "lat": "${escapeStringForJson(lat)}",
+  "lng": "${escapeStringForJson(lng)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'updateselectedaddress',
+      apiUrl: '${baseUrl}api/update_selected_address',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.status''',
+      ));
+  dynamic? data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+  String? zoneid(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.zone_id''',
+      ));
+}
+
+class AddtosavesubcartCall {
+  Future<ApiCallResponse> call({
+    String? userID = '',
+    String? variantID = '',
+    String? orderCartID = '',
+    String? platform = '',
+  }) async {
+    final baseUrl = QuickartGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "user_id": "${escapeStringForJson(userID)}",
+  "varient_id": "${escapeStringForJson(variantID)}",
+  "order_cart_id": "${escapeStringForJson(orderCartID)}",
+  "platform": "${escapeStringForJson(platform)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'addtosavesubcart',
+      apiUrl: '${baseUrl}api/add_to_save_subcart',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.status''',
+      ));
+  String? message(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  dynamic? data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+}
+
 class AddtosavecartCall {
   Future<ApiCallResponse> call({
     String? userID = '',
@@ -5282,13 +5430,12 @@ class AddtosavecartCall {
     final baseUrl = QuickartGroup.getBaseUrl();
 
     final ffApiRequestBody = '''
-    {
-      "user_id": "${escapeStringForJson(userID)}",
-      "varient_id": "${escapeStringForJson(variantID)}",
-      "order_cart_id": "${escapeStringForJson(orderCartID)}",
-      "platform": "${escapeStringForJson(platform)}"
-    }''';
-    print("G1---->add_to_save_cart--->$ffApiRequestBody");
+{
+  "user_id": "${escapeStringForJson(userID)}",
+  "varient_id": "${escapeStringForJson(variantID)}",
+  "order_cart_id": "${escapeStringForJson(orderCartID)}",
+  "platform": "${escapeStringForJson(platform)}"
+}''';
     return ApiManager.instance.makeApiCall(
       callName: 'addtosavecart',
       apiUrl: '${baseUrl}api/add_to_save_cart',
@@ -5314,51 +5461,12 @@ class AddtosavecartCall {
         response,
         r'''$.message''',
       ));
+  dynamic? data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
 }
 
-class AddtosavesubcartCall {
-  Future<ApiCallResponse> call({
-    String? userID = '',
-    String? variantID = '',
-    String? orderCartID = '',
-    String? platform = '',
-  }) async {
-
-    final baseUrl = QuickartGroup.getBaseUrl();
-
-    final ffApiRequestBody = '''
-      {
-        "user_id": "${escapeStringForJson(userID)}",
-        "varient_id": "${escapeStringForJson(variantID)}",
-        "order_cart_id": "${escapeStringForJson(orderCartID)}",
-        "platform": "${escapeStringForJson(platform)}"
-      }''';
-          return ApiManager.instance.makeApiCall(
-            callName: 'addtosavesubcart',
-            apiUrl: '${baseUrl}api/add_to_save_subcart',
-            callType: ApiCallType.POST,
-            headers: {},
-            params: {},
-            body: ffApiRequestBody,
-            bodyType: BodyType.JSON,
-            returnBody: true,
-            encodeBodyUtf8: false,
-            decodeUtf8: false,
-            cache: false,
-            isStreamingApi: false,
-            alwaysAllowBody: false,
-          );
-        }
-
-        String? status(dynamic response) => castToType<String>(getJsonField(
-              response,
-              r'''$.status''',
-            ));
-        String? message(dynamic response) => castToType<String>(getJsonField(
-              response,
-              r'''$.message''',
-            ));
-}
 class RemovesavecartCall {
   Future<ApiCallResponse> call({
     String? userID = '',
@@ -5404,8 +5512,118 @@ class RemovesavecartCall {
       );
 }
 
+class PaymentabandonCall {
+  Future<ApiCallResponse> call({
+    String? userID = '',
+    String? groupID = '',
+  }) async {
+    final baseUrl = QuickartGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "user_id": "${escapeStringForJson(userID)}",
+  "group_id": "${escapeStringForJson(groupID)}",
+  "reason": "user_back_from_payment"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'paymentabandon',
+      apiUrl: '${baseUrl}api/payment/abandon',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? status(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.status''',
+      ));
+  String? message(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  dynamic? data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+}
 
 /// End Quickart Group Code
+
+/// Start Quickart Zone Group Code
+
+class QuickartZoneGroup {
+  static String getBaseUrl() => 'https://ckxrmeapgvkllpxjgheg.supabase.co/';
+  static Map<String, String> headers = {};
+  static GetZoneIDCall getZoneIDCall = GetZoneIDCall();
+}
+
+class GetZoneIDCall {
+  Future<ApiCallResponse> call({
+    String? lat = '',
+    String? lng = '',
+    String? userid = '',
+    String? addressID = '',
+  }) async {
+    final baseUrl = QuickartZoneGroup.getBaseUrl();
+
+    final ffApiRequestBody = '''
+{
+  "lat": "${escapeStringForJson(lat)}",
+  "lng": "${escapeStringForJson(lng)}",
+  "user_id": "${escapeStringForJson(userid)}",
+  "address_id": "${escapeStringForJson(addressID)}"
+}''';
+    print("G1---resolve zone--->$ffApiRequestBody");
+    print("G1---url->${baseUrl}functions/v1/resolve-zone-live");
+    return ApiManager.instance.makeApiCall(
+      callName: 'getZoneID',
+      apiUrl: '${baseUrl}functions/v1/resolve-zone-live',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  String? message(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.message''',
+      ));
+  dynamic? data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
+  int? status(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.status''',
+      ));
+  String? zoneID(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.data.zone_id''',
+      ));
+  dynamic? zoneAddress(dynamic response) => getJsonField(
+        response,
+        r'''$.data.address''',
+      );
+}
+
+/// End Quickart Zone Group Code
 
 class NearbySearchGoogleMapsCall {
   static Future<ApiCallResponse> call({
@@ -5494,7 +5712,6 @@ class AutocompleteCall {
           .toList();
 }
 
-
 class ProductsearchCall {
   static Future<ApiCallResponse> call({
     String? userid = '',
@@ -5504,6 +5721,7 @@ class ProductsearchCall {
     String? sortPrice = '',
     String? minDiscount = '',
     String? maxDiscount = '',
+    String? zoneId = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -5526,10 +5744,12 @@ class ProductsearchCall {
   "max_rating": "null",
   "perpage": 200,
   "page": 1,
-  "platform": "${escapeStringForJson(platform)}"
+  "platform": "${escapeStringForJson(platform)}",
+  "zone_id": "${escapeStringForJson(zoneId)}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'productsearch',
+      // apiUrl: 'https://pvtiycfiimwxnruqyvqq.supabase.co/functions/v1/rapid-api',
       apiUrl:
           'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
       callType: ApiCallType.POST,

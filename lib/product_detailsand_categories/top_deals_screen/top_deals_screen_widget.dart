@@ -182,19 +182,9 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                 FFAppState().isCartShow = false;
                 safeSetState(() {});
               } else {
-                if (FFAppState().isUserLogin == true) {
-                  logFirebaseEvent('IconButton_navigate_to');
+                logFirebaseEvent('IconButton_navigate_to');
 
-                  context.pushNamed(DashboardScreenWidget.routeName);
-
-                  logFirebaseEvent('IconButton_update_app_state');
-                  FFAppState().isCartShow = false;
-                  safeSetState(() {});
-                } else {
-                  logFirebaseEvent('IconButton_navigate_to');
-
-                  context.pushNamed(LoginOnBoardScreenWidget.routeName);
-                }
+                context.pushNamed(LoginOnBoardScreenWidget.routeName);
 
                 logFirebaseEvent('IconButton_update_app_state');
                 FFAppState().isCartShow = false;
@@ -311,7 +301,10 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                     ApiCallResponse>()
                                   ..complete(QuickartGroup.topsellingCall.call(
                                     userid: FFAppState().userID,
-                                    storeid: FFAppState().storeID,
+                                    storeid: getJsonField(
+                                      FFAppState().zoneInfo,
+                                      r'''$.store_id''',
+                                    ).toString(),
                                     byname: FFAppState().byName,
                                     minPrice: FFAppState().minPrice,
                                     maxPrice: FFAppState().maxPrice,
@@ -338,6 +331,10 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                     page: FFAppState().page,
                                     perpage: 50,
                                     platform: FFAppState().platform,
+                                    zoneid: getJsonField(
+                                      FFAppState().zoneInfo,
+                                      r'''$.zone_id''',
+                                    ).toString(),
                                   )))
                                 .future,
                             builder: (context, snapshot) {
@@ -395,7 +392,7 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                         crossAxisCount: 2,
                                         crossAxisSpacing: 5.0,
                                         mainAxisSpacing: 5.0,
-                                        childAspectRatio: 0.68,
+                                        childAspectRatio: 0.64,
                                       ),
                                       scrollDirection: Axis.vertical,
                                       itemCount: productModel.length,
@@ -693,7 +690,10 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                                                                     _model.cartAdd = await QuickartGroup.addToCartCall.call(
                                                                                       userid: FFAppState().userID,
                                                                                       qty: '1',
-                                                                                      storeid: FFAppState().storeID,
+                                                                                      storeid: getJsonField(
+                                                                                        FFAppState().zoneInfo,
+                                                                                        r'''$.store_id''',
+                                                                                      ).toString(),
                                                                                       varientid: getJsonField(
                                                                                         productModelItem,
                                                                                         r'''$.varient_id''',
@@ -953,7 +953,10 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                                                                         logFirebaseEvent('Button_backend_call');
                                                                                         _model.addtoCartAPI1 = await QuickartGroup.addToCartCall.call(
                                                                                           userid: FFAppState().userID,
-                                                                                          storeid: FFAppState().storeID,
+                                                                                          storeid: getJsonField(
+                                                                                            FFAppState().zoneInfo,
+                                                                                            r'''$.store_id''',
+                                                                                          ).toString(),
                                                                                           deviceid: FFAppState().deviceID,
                                                                                           qty: functions.addRemoveQTY(
                                                                                               getJsonField(
@@ -1223,7 +1226,10 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                                                                                   r'''$.cart_qty''',
                                                                                                 ),
                                                                                                 'add'),
-                                                                                            storeid: FFAppState().storeID,
+                                                                                            storeid: getJsonField(
+                                                                                              FFAppState().zoneInfo,
+                                                                                              r'''$.store_id''',
+                                                                                            ).toString(),
                                                                                             varientid: getJsonField(
                                                                                               productModelItem,
                                                                                               r'''$.varient_id''',
@@ -1435,6 +1441,90 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                                           mainAxisSize:
                                                               MainAxisSize.max,
                                                           children: [
+                                                            Align(
+                                                              alignment:
+                                                                  AlignmentDirectional(
+                                                                      -1.0,
+                                                                      0.0),
+                                                              child: Wrap(
+                                                                spacing: 0.0,
+                                                                runSpacing: 0.0,
+                                                                alignment:
+                                                                    WrapAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    WrapCrossAlignment
+                                                                        .start,
+                                                                direction: Axis
+                                                                    .horizontal,
+                                                                runAlignment:
+                                                                    WrapAlignment
+                                                                        .start,
+                                                                verticalDirection:
+                                                                    VerticalDirection
+                                                                        .down,
+                                                                clipBehavior: Clip
+                                                                    .antiAlias,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            5.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        Material(
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                      elevation:
+                                                                          3.0,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(24.0),
+                                                                      ),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            15.0,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FFAppConstants.greyF4F6F4,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(24.0),
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              5.0,
+                                                                              2.0,
+                                                                              5.0,
+                                                                              2.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Low Shelf Life',
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  font: GoogleFonts.montserrat(
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                    fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                  ),
+                                                                                  fontSize: 10.0,
+                                                                                  letterSpacing: 0.0,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  fontStyle: FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
                                                             Align(
                                                               alignment:
                                                                   AlignmentDirectional(
@@ -2766,8 +2856,11 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                                                       FFAppState()
                                                                           .userID,
                                                                   storeID:
-                                                                      FFAppState()
-                                                                          .storeID,
+                                                                      getJsonField(
+                                                                    FFAppState()
+                                                                        .zoneInfo,
+                                                                    r'''$.store_id''',
+                                                                  ).toString(),
                                                                   varientID:
                                                                       getJsonField(
                                                                     productModelItem,
@@ -2973,8 +3066,11 @@ class _TopDealsScreenWidgetState extends State<TopDealsScreenWidget>
                                                                       FFAppState()
                                                                           .userID,
                                                                   storeID:
-                                                                      FFAppState()
-                                                                          .storeID,
+                                                                      getJsonField(
+                                                                    FFAppState()
+                                                                        .zoneInfo,
+                                                                    r'''$.store_id''',
+                                                                  ).toString(),
                                                                   varientID:
                                                                       getJsonField(
                                                                     productModelItem,
