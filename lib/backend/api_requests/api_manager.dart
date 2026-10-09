@@ -363,6 +363,7 @@ class ApiManager {
     }[type]!;
     final response = await requestFn(Uri.parse(apiUrl),
         headers: toStringMap(headers), body: postBody);
+        print("G1---response--->$response");
     return ApiCallResponse.fromHttpResponse(response, returnBody, decodeUtf8);
   }
 
@@ -609,7 +610,7 @@ class ApiManager {
     } catch (e) {
       result = ApiCallResponse(null, {}, -1, exception: e);
     }
-print("Api result----->${result.toString()}");
+print("Api result----->${result.response.toString()}");
     return result;
   }
 }

@@ -14,9 +14,8 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 /// Start Quickart Group Code
 
 class QuickartGroup {
-  // static String getBaseUrl() =>
-  //     'https://zoneapi-production.up.railway.app/testnodejsapp/';
-  static String getBaseUrl() => 'https://zoneapi.quickart.ae/testnodejsapp/';
+  static String getBaseUrl() => 'https://web-production-31cac.up.railway.app/testnodejsapp/';
+  // static String getBaseUrl() => 'https://zoneapi.quickart.ae/testnodejsapp/';
 
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
@@ -1147,8 +1146,10 @@ class SearchbystoreproductCall {
     return ApiManager.instance.makeApiCall(
       callName: 'searchbystoreproduct',
       // apiUrl: '${baseUrl}api/searchbystoreproduct',
+      // apiUrl:
+      //     'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
       apiUrl:
-          'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
+          'https://joxuekpahnwqfhpwpyky.supabase.co/functions/v1/product-search',
       callType: ApiCallType.POST,
       headers: {},
       params: {},
@@ -5561,7 +5562,7 @@ class PaymentabandonCall {
 /// Start Quickart Zone Group Code
 
 class QuickartZoneGroup {
-  static String getBaseUrl() => 'https://ckxrmeapgvkllpxjgheg.supabase.co/';
+  static String getBaseUrl() => 'https://joxuekpahnwqfhpwpyky.supabase.co/';
   static Map<String, String> headers = {};
   static GetZoneIDCall getZoneIDCall = GetZoneIDCall();
 }
@@ -5751,7 +5752,7 @@ class ProductsearchCall {
       callName: 'productsearch',
       // apiUrl: 'https://pvtiycfiimwxnruqyvqq.supabase.co/functions/v1/rapid-api',
       apiUrl:
-          'https://ckxrmeapgvkllpxjgheg.supabase.co/functions/v1/product-search',
+          'https://joxuekpahnwqfhpwpyky.supabase.co/functions/v1/product-search',
       callType: ApiCallType.POST,
       headers: {},
       params: {},

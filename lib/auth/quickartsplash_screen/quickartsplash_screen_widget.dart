@@ -739,8 +739,8 @@ FFAppState().fcmToken = "$fcmToken";
                   width: MediaQuery.sizeOf(context).width * 1.0,
                   height: MediaQuery.sizeOf(context).height * 1.0,
                   imageUrl:
-                      // 'https://quickart.b-cdn.net/images/app-home-splash-screeneid1.gif',
-                      "https://quickart.b-cdn.net/images/app-home-loadernew.gif",
+                      'https://quickart.b-cdn.net/images/app-home-splash-screeneid1.gif',
+                      // "https://quickart.b-cdn.net/images/app-home-loadernew.gif",
                   version: '$imageVersion',
                 ),
               ),
